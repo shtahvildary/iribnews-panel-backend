@@ -5,7 +5,7 @@
         post('/messages/search', {
             query: query
         }, function (response) {
-            console.log('search messages', response)
+            // console.log('search messages', response)
             $('#messages-list').empty();
             response.messages.map(function (item) {
                 $('#messages-list').append(`
@@ -29,22 +29,22 @@
         })
     }
     $(function () {
-        if (!$.cookie("token")) {
-            window.location.replace("../login.html");
-        }
+        // if ($.cookie("token")&&!$.cookie("id")) {
+        //     window.location.replace("../login.html");
+        // }
         $('#search').keypress(function (e) {
             if (e.which == 13) {
                 var value = $('#search').val();
-                console.log('query', {
-                    text: value
-                })
+                // console.log('query', {
+                //     text: value
+                // })
                 search_message(value);
                 return false; //<---- Add this line
             }
         });
 
         post('/messages/select/all/date', {}, function (response) {
-            console.log('all messages', response)
+            // console.log('all messages', response)
             var reply;
             
             response.messages.map(function (item) {
@@ -73,21 +73,19 @@
                 </div>`);
                 
                 jQuery(item.replys).each(function(i, reply) {
-                    jQuery('#replys-'+item._id).append(`<p> کاربر:`+reply.userId.username + ' پاسخ:' + reply.text+' تاریخ:'+reply.date+`</p>`);
+                    jQuery('#replys-'+item._id).append(`<p> کاربر`+reply.userId.username +' در تاریخ '+reply.date+'    در پاسخ به این پیام گفته است: ' + reply.text+`</p>`);
                    
                 });
-                // $('#replys-'+item._id).append(`<p>‍‍ سلام`+item.replys.map(function (reply) {+`<p>` + reply.text + `</p>کاربر:`+ reply.userId + `</p>تاریخ: `+ reply.date + `</p>`})+`</div>`);
 
                 $('#replys-' + item._id).click(function (e) {
-                    console.log('I like to show replys');
+                    
                     replys = $(this).attr(item.replys);
-                    console.log(replys)
+                    // console.log(replys)
 
                 })
             });
 
             $('.reply').click(function (e) {
-                console.log('btn reply is clicked');
                 reply = {
 
                     msgId: $(this).attr('msgId'),
@@ -149,7 +147,7 @@
                     // userId= .... CORRECT IT AS SOON AS POSSIBLE
                     ////////////////////////////////////////////////////////////////////
 
-                    console.log('reply:', reply)
+                    // console.log('reply:', reply)
 
                     if (replyToMsg(reply)) {
                         // if (status==true) {
@@ -163,7 +161,7 @@
         })
 
         function replyToMsg(reply) {
-            console.log('replyToMsg: ', reply);
+            // console.log('replyToMsg: ', reply);
 
             post('/messages/reply', {
                 _id: reply.msgId,
@@ -173,7 +171,7 @@
                 userId: reply.userId
 
             }, function (response) {
-                console.log('message which U replied:', response);
+                // console.log('message which U replied:', response);
 
             })
         }

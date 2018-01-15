@@ -1,10 +1,10 @@
 (function ($) {
     $(function () {
-        console.log('test auth')
+        // console.log('test auth')
         $( "#btnsubmit" ).click(function() {
             var username=$("#username").val();
             var password=$("#password").val();
-            console.log(username,password);
+            // console.log(username,password);
             login({username:username,password:password});
           });
         
@@ -20,16 +20,16 @@
         });
     }
     var login=function(auth){
-        console.log('hey')
+        // console.log('hey')
         
         post('/users/login',auth,function(response){
-            console.log('response:',response)
+            // console.log('response:',response)
             if(response.auth==false){
                 alert("عملیات ورود با موفقیت همراه نبود. لطفا دوباره سعی کنید.")
             }
             else{
                 //console.log(response.token)
-                console.log(response.cookie)
+                // console.log(response.cookie)
                 //$.cookie("token", response.token);
                 $.cookie("token", JSON.stringify(response.cookie));
                  window.location.replace("index.html");

@@ -29,9 +29,10 @@
 //         })
 //     }
      $(function () {
-        if (!$.cookie("token")) {
-            window.location.replace("login2.html");
-        }
+    //     if ($.cookie("token")&&!$.cookie("id")) {
+    //         window.location.replace("../login.html");
+    //     }
+    // isloggedin();
 
 //         $('#search').keypress(function (e) {
 //             if (e.which == 13) {
@@ -45,12 +46,12 @@
 //         });
 
          post('/votes/all/scores', {}, function (response) {
-            console.log('all votes', response)
+            // console.log('all votes', response)
 //             var reply;
 
             
             response.votesArray.map(function (item) {
-                console.log(item)
+                // console.log(item)
 
                 $('#votingResult-list').append(`
                 <div class="card">

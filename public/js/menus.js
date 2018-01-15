@@ -1,8 +1,6 @@
 
 (function($){
-  // $(function(){
-//console.log("sdfjaks")
-//$("#navbar").load("../navbar.html"); 
+  
 $("#navbar").append(`
 
   <div id="navbar">
@@ -67,7 +65,4 @@ $("#navbar").append(`
 
 `
 ); 
-    
-    
-  // })
   })(jQuery);

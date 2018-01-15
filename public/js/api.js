@@ -16,7 +16,7 @@ var post = function (endpoint, data,callback) {
             headers:{'x-access-token':$.cookie("token")}
         })
         .done(function (msg) {
-            console.log(msg)
+            // console.log(msg)
             callback(msg)
         });
 }

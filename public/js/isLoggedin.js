@@ -1,8 +1,9 @@
-(function($){
+(function isloggedin($){
     //update user profile
-    $(function isLoggedin(){
+    $(function () {
         if (!$.cookie("token")) {
+
             window.location.replace("../login.html");
-        };
+        }
     })
 })(jQuery)

@@ -1,9 +1,9 @@
 (function($){
     //update user profile
     $(function(){
-        if (!$.cookie("token")) {
-            window.location.replace("../login.html");
-        }
+        // if ($.cookie("token")&&!$.cookie("id")) {
+        //     window.location.replace("../login.html");
+        // }
         // isLoggedin();
         $("#btnUpdateUser").click(function(){
             var firstName=$("#first_name").val();

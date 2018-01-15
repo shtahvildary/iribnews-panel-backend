@@ -110,16 +110,16 @@ function drawLineChart(element, data) {
 }
 (function ($) {
     $(function () {
-        if (!$.cookie("token")) {
-            window.location.replace("../login.html");
-        }
+        // if ($.cookie("token")&&!$.cookie("id")) {
+        //     window.location.replace("../login.html");
+        // }
 
 
         var now = new Date();
         post('/messages/chart/daily', {
             date: now
         }, function (response) {
-            console.log(response)
+            // console.log(response)
             // response=JSON.parse(response);
             drawLineChart('chart-msg-today', {
                 labels: [

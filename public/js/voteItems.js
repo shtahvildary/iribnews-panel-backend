@@ -48,7 +48,7 @@
         post('/voteItems/all', {
             query: query
         }, function (response) {
-            console.log('search vote items', response)
+            // console.log('search vote items', response)
             $('#voteItems-list').empty();
             response.voteItemsArray.map(function (item) {
                 $('#voteItems-list').append(`
@@ -62,12 +62,9 @@
         })
     }
 
-
-
-    $(function () {
-        if (!$.cookie("token")) {
-            window.location.replace("../login.html");
-        }
+    // if ($.cookie("token")&&!$.cookie("id")) {
+    //     window.location.replace("../login.html");
+    // }
         ////////////////////////////////////
         //TODO: search should be completed 
         ////////////////////////////////////
@@ -75,16 +72,16 @@
         $('#search').keypress(function (e) {
             if (e.which == 13) {
                 var value = $('#search').val();
-                console.log('query', {
-                    text: value
-                })
+                // console.log('query', {
+                //     text: value
+                // })
                 search_voteItems(value);
                 return false;
             }
         });
 
         post('/voteItems/all', {}, function (response) {
-            console.log('all vote items', response)
+    
             response.voteItemsArray.map(function (item) {
                 $('#voteItems-list').append(`
 
@@ -111,7 +108,7 @@
             // };
 
             $('.edit').click(function (e) {
-                console.log('btn edit is clicked');
+                
                 //console.log($(this).attr('editItem'));
 
                 // var voteItemEdit=JSON.parse($(this).attr('editItem'));
@@ -121,9 +118,7 @@
                     title: $(this).attr('editItem_title'),
                     personnels: $(this).attr('editItem_personnels'),
                     description: $(this).attr('editItem_description'),
-                };
-                console.log(voteItemEdit);
-
+                }
                 $('#voteItems-list').after(`
             
             <!-- Modal Trigger -->
@@ -166,7 +161,6 @@
 
                 $('#btnVoteItemsUpdate').click(function (e) {
 
-                    console.log('btn Update is clicked!');
                     // console.log(voteItemEdit);
                     voteItemEdit.title = $('#voteItemTitle').val();
                     //id: $(this).attr('editItem_id'),
@@ -174,7 +168,7 @@
                     //personnels: $(this).attr('editItem_personnels'),
                     voteItemEdit.description = $('#description').val();
 
-                    console.log('voteItemEdit:', voteItemEdit)
+                    // console.log('voteItemEdit:', voteItemEdit)
                     // var status=edit_voteItems(voteItemEdit);
                     // console.log('status:',status)
                     if (edit_voteItems(voteItemEdit)) {
@@ -188,14 +182,14 @@
             })
 
             $('.delete').click(function (e) {
-                console.log('btn clicked')
+                
                 var del = confirm("آیا قصد پاک کردن « " + $(this).attr('title') + " » را دارید؟");
                 if (del == true) {
                     var voteItemId = $(this).attr('uniqueId');
 
-                    console.log('query', {
-                        text: voteItemId
-                    })
+                    // console.log('query', {
+                    //     text: voteItemId
+                    // })
                     $('.card[uniqueId=' + voteItemId + ']').fadeOut();
                     delete_voteItems(voteItemId);
                     alert("«" + $(this).attr('title') + "» با موفقیت پاک شد.");
@@ -204,7 +198,7 @@
         })
 
         function edit_voteItems(voteItemEdit) {
-            console.log('voteItemEdit: ', voteItemEdit);
+            // console.log('voteItemEdit: ', voteItemEdit);
             post('/voteItems/update', {
                 _id: voteItemEdit.id,
                 title: voteItemEdit.title,
@@ -213,7 +207,7 @@
                 channelId: voteItemEdit.channelId,
                 personnels: voteItemEdit.personnels,
             }, function (response) {
-                console.log('edit vote item', response);
+                // console.log('edit vote item', response);
                 return new Promise(function (resolve, reject) {
                     resolve(response)
                 })
@@ -225,14 +219,15 @@
         }
 
         function delete_voteItems(voteItemId) {
-            console.log('voteItemId: ', voteItemId);
+            // console.log('voteItemId: ', voteItemId);
 
             post('/voteItems/disable', {
                 _id: voteItemId
             }, function (response) {
-                console.log('delete vote item', response);
+                // console.log('delete vote item', response);
 
             })
         }
     });
-})(jQuery);
+
+(jQuery);

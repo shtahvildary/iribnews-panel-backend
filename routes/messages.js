@@ -34,22 +34,20 @@ router.post('/select/all/date', auth, function (req, res, next) {
 //search
 router.post('/search', auth, function (req, res) {
 
-    console.log('query', req.body)
+    // console.log('query', req.body)
     message_sc.find({
         "message": {
             $regex: req.body.query,
             $options: 'i'
         }
     }).sort('-date').exec(function (err, result) {
-        console.log(err)
+        // console.log(err)
         //pagination should be handled
         if (!err) {
             res.status(200).json({
                 messages: result,
                 // userId: req.body.token
-                userId:req.session.userId
-                
-                
+                userId:req.session.userId   
             });
         } else {
             res.status(500).json({
@@ -81,10 +79,10 @@ router.post('/select/last/date', auth, function (req, res) {
 
 //date.gethours
 router.post('/chart/daily', auth, function (req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     var h0 = new Date(req.body.date);
     var h24 = new Date(req.body.date);
-    console.log(h0);
+    // console.log(h0);
     h0.setHours(0, 0, 0, 0);
     h24.setHours(23, 59, 59, 999);
 
@@ -98,6 +96,7 @@ router.post('/chart/daily', auth, function (req, res) {
         }
     }).exec(function (err, result) {
         //pagination should be handled
+        console.log(result)
         if (!err) {
 
             var msgCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -129,7 +128,7 @@ router.post('/chart/weekly', auth, function (req, res) {
     var curr = new Date; // get current date
     var first = today.getDate() - today.getDay() - 1; // First day is the day of the month - the day of the week
     var last = first + 5; // last day is the first day + 6
-    console.log(first, last)
+    
 
     var firstday = new Date(today.setDate(first));
     var lastday = new Date(today.setDate(last));
@@ -144,6 +143,7 @@ router.post('/chart/weekly', auth, function (req, res) {
             $lt: lastday
         }
     }).exec(function (err, result) {
+        
         //pagination should be handled
         if (!err) {
 
@@ -152,7 +152,7 @@ router.post('/chart/weekly', auth, function (req, res) {
 
 
             result.forEach(function (message) {
-                msgCounts[message.date.getHours()] += 1;
+                msgCounts[message._doc.date.getDay()] += 1;
             });
             res.status(200).json({
                 text: msgCounts
@@ -170,12 +170,13 @@ router.post('/chart/monthly', auth, function (req, res) {
     var sat = new Date(req.body.date);
     var fri = new Date(req.body.date);
     var curr = new Date; // get current date
-    var first = curr.getDate() - curr.getDay() - 1; // First day is the day of the month - the day of the week
-    var last = first + 5; // last day is the first day + 6
-    console.log(first, last)
+    
+    // var first = curr.getDate() - curr.getDay() - 1; // First day is the day of the month - the day of the week
+    // var last = first + 5; // last day is the first day + 6
+    // console.log(first, last)
 
-    var firstday = new Date(curr.setDate(first));
-    var lastday = new Date(curr.setDate(last));
+    var firstday = new Date(curr.setDate(1));
+    var lastday = new Date(curr.setDate(30));
     // sat=new Date(today.getFullYear(),today.getMonth,)
     // if(sat.getDay)
     firstday.setHours(0, 0, 0, 0);
@@ -190,12 +191,12 @@ router.post('/chart/monthly', auth, function (req, res) {
         //pagination should be handled
         if (!err) {
 
-            var msgCounts = [0, 0, 0, 0, 0, 0, 0];
+            var msgCounts = [0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0,0,0];
             // console.log(msgCounts.length)
 
 
             result.forEach(function (message) {
-                msgCounts[message.date.getHours()] += 1;
+                msgCounts[message._doc.date.getDate()] += 1;
             });
             res.status(200).json({
                 text: msgCounts
