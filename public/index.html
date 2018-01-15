@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>واحد مرکزی خبر - داشبورد</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+  <!--NAVBAR-->
+  <div id="navbar"></div>
+  <div id="navbar">
+    <ul id="dropdown1" class="dropdown-content">
+        <li>
+            <a href="html/useraccount.html">حساب کاربری</a>
+        </li>
+        <li>
+            <a href="#" class="logout">خروج</a>
+        </li>
+  
+    </ul>
+    <nav class="light-blue darken-3">
+        <div class="nav-wrapper">
+            <a href="#" data-activates="mobile-demo" class="right button-collapse">
+                <i class="material-icons">menu</i>
+            </a>
+            <a href="#!" class="right local-nav-title">واحد مرکزی خبر</a>
+  
+            <ul class="left">
+                <li id="nav-logout" class="local-nav-items-large">
+                    <a href="#" class="logout">خروج</a>
+                </li>
+                <li id="nav-account" class="local-nav-items-large">
+                    <a href="html/useraccount.html">حساب کاربری</a>
+                </li>
+  
+                <li class="local-nav-items-small">
+                    <a class="dropdown-button" href="#!" data-activates="dropdown1">منو
+                        <i class="material-icons right">arrow_drop_down</i>
+                    </a>
+                </li>
+            </ul>
+  
+            <ul class="right side-nav fixed " id="mobile-demo">
+                <li>
+                    <a href="index.html">داشبورد</a>
+                </li>
+                <li>
+                    <a href="html/charts.html">نمودار ها</a>
+                </li>
+  
+                <li>
+                    <a href="html/messages.html">پیام ها</a>
+                </li>
+                <li>
+                    <a href="html/voteItems.html">برنامه ها و کانال ها</a>
+                </li>
+                <li>
+                  <a href="html/votingResult.html">نظرسنجی ها</a>
+              </li>
+                <li>
+                    <a href="html/settings.html">تنظیمات</a>
+                </li>
+                <li>
+                  <a href="html/ConnectAdmin.html">ارتباط با ادمین</a>
+              </li>
+            </ul>
+        </div>
+    </nav>
+  </div>
+
+
+
+<!-- charts -->
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m6">
+        <div class="card ">
+          <div class="card-content">
+            <span class="card-title">نمودار محتوا</span>
+            <div class="card-tabs">
+                <ul class="tabs tabs-fixed-width blue-text">
+                  <li class="tab">
+                    <a class="active" href="#tab-chart-msg-today">امروز</a>
+                  </li>
+                  <li class="tab">
+                    <a href="#tab-chart-msg-thisweek">این هفته</a>
+                  </li>
+                  <li class="tab">
+                    <a href="#tab-chart-msg-thismonth">این ماه</a>
+                  </li>
+  
+                </ul>
+              </div>
+              <div class="tab-inside card-content grey lighten-4">
+                <div id="tab-chart-msg-today">
+                  <canvas id="chart-msg-today" width="400" height="400"></canvas>
+                </div>
+                <div id="tab-chart-msg-thisweek">
+                  <canvas id="chart-msg-thisweek" width="400" height="400">
+                </div>
+                <div id="tab-chart-msg-thismonth">
+                  <canvas id="chart-msg-thismonth" width="400" height="400">
+                </div>
+              </div> 
+          </div>
+        </div>
+
+
+<!-- messages -->
+      </div>
+      <div class="col s12 m6">
+        <div class="card ">
+          <div class="card-content">
+            <span class="card-title">آخرین پیام ها</span>
+            <ul id="last-messages" class="collection">
+              
+              
+              
+            </ul>
+          </div>
+          <div class="card-action">
+              <a href="html/messages.html">بیشتر</a>
+              
+            </div>
+        </div>
+      </div>
+      <!-- <div class="col s12 m6">
+          <div class="card ">
+            <div class="card-content">
+              <span class="card-title">آخرین درخواست ها</span>
+              <div class="card-tabs">
+                  <ul class="tabs tabs-fixed-width blue-text">
+                    <li class="tab">
+                      <a class="active" href="#tab-keyword-popular-today">امروز</a>
+                    </li>
+                    <li class="tab">
+                      <a href="#tab-keyword-popular-thisweek">این هفته</a>
+                    </li>
+                    <li class="tab">
+                      <a href="#tab-keyword-popular-thismonth">این ماه</a>
+                    </li>
+    
+                  </ul>
+                </div>
+                <div class="tab-inside card-content grey lighten-4">
+                  <div id="tab-keyword-popular-today">
+                      <div class="chip">
+                        فیلم
+                      </div>
+                      <div class="chip">
+                          سریال
+                        </div>
+                        <div class="chip">
+                            مناظره
+                        </div>
+                  </div>
+                  <div id="tab-keyword-popular-thisweek">
+                    <canvas id="keyword-popular-thisweek" width="400" height="400">
+                  </div>
+                  <div id="tab-keyword-popular-thismonth">
+                    <canvas id="keyword-popular-thismonth" width="400" height="400">
+                  </div>
+                </div>
+            </div>
+            <div class="card-action">
+                <a href="#">لیست پیام ها</a>
+                
+              </div>
+          </div>
+        </div> -->
+
+    </div>
+
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>    
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>    
+    <script src="js/materialize.js"></script>
+    <script src="js/init.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+    <script src="js/charts.js"></script>
+    <!-- <script src="js/menus.js"></script> -->
+    
+    
+</body>
+
+</html>

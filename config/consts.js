@@ -1,0 +1,1 @@
+module.exports={secret: "Authentication secret key is here but you can't access it."}

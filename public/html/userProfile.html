@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>واحد مرکزی خبر - تنظیمات</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <div class="container">
+        <div class="row">
+            <form class="col s12" id="userUpdateForm">
+                <div class="row">
+                    <div class="input-field col s6">
+                            <i class="material-icons prefix">account_circle</i>
+                        <input id="first_name" type="text" class="validate">
+                        <label for="first_name">نام: </label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="last_name" type="text" class="validate">
+                        <label for="last_name">نام خانوادگی:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input disabled value="I am not editable" id="disabled" type="text" class="validate">
+                        <label for="disabled">شناسه کاربر: </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                                                   
+                        <input disabled id="password1" type="password" class="validate">
+                        <label for="password1">کلمه عبور: </label>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="input-field col s12">
+                                                       
+                            <input disabled hidden id="password2" type="password" class="validate">
+                            <label hidden for="password2">تکرار کلمه عبور: </label>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                            <i class="material-icons prefix">email</i>                        
+                        <input id="email" type="email" class="validate">
+                        <label for="email">ایمیل: </label>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="input-field col s12">
+                                <i class="material-icons prefix">phone</i>
+                            <input id="phone" type="tel" class="validate">
+                            <label for="phone">شماره تماس: </label>
+                        </div>
+                    </div>
+            </form>
+            <button class="btn waves-effect waves-light" type="submit" id="btnUpdateUser">اصلاح
+                    <i class="material-icons right">edit</i>
+                </button>
+        </div>
+    </div>
+
+
+
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="../js/jquery.cookie.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/materialize.js"></script>
+    <script src="../js/init.js"></script>
+    <script src="../js/users.js"></script>
+    <script src="../js/userFormValidation.js"></script>
+    <script src="../js/isLoggedin.js"></script>    
+    <script src="../js/menus.js"></script>
+    <script src="../js/logout.js"></script>
+    
+
+
+</body>
+
+</html>

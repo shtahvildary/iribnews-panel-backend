@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>واحد مرکزی خبر - افزودن کانال یا برنامه</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <div class="container">
+        <!-- <div class="container" dir="rtl"> -->
+
+        <p>
+            <input name="voteItemType" type="radio" id="rdbtnChannel" value="0" />
+            <label for="rdbtnChannel">کانال</label>
+        </p>
+        <p>
+            <input name="voteItemType" type="radio" id="rdbtnProgram" value="1" />
+            <label for="rdbtnProgram">برنامه</label>
+
+        </p>
+
+        <div class="row">
+
+            <form id="newVoteItemForm" >
+                <div class="input-field col s12">
+                    <input id="voteItemTitle" type="text" class="validate">
+                    <label for="voteItemTitle">عنوان</label>
+                </div>
+                <div class="input-field col s12">
+                    <textarea id="description" class="materialize-textarea"></textarea>
+                    <label for="description">توضیحات</label>
+                </div>
+            </form>
+
+            <button class="btn waves-effect waves-light" type="submit" id="btnVoteItemsAdd">ثبت
+                <i class="material-icons right">send</i>
+            </button>
+        </div>
+
+
+    </div>
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="../js/jquery.cookie.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/materialize.js"></script>
+    <script src="../js/init.js"></script>
+    <script src="../js/voteItems.js"></script>
+    <script src="../js/menus.js"></script>
+    <script src="../js/logout.js"></script>
+
+
+</body>
+
+</html>

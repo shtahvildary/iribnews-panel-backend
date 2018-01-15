@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>واحد مرکزی خبر</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <div class="container">
+
+
+
+
+        <div class="row">
+            <div class="card ">
+                <div class="card-content">
+                    <span class="card-title">نمودار محتوا</span>
+
+
+
+                    <div class="card-tabs">
+                        <ul class="tabs tabs-fixed-width blue-text">
+                            <li class="tab">
+                                <a class="active" href="#tab-chart-msg-today">امروز</a>
+                            </li>
+                            <li class="tab">
+                                <a href="#tab-chart-msg-thisweek">این هفته</a>
+                            </li>
+                            <li class="tab">
+                                <a href="#tab-chart-msg-thismonth">این ماه</a>
+                            </li>
+                            <li class="tab">
+                                <a href="#tab-chart-msg-selectedDate"> تاریخ دلخواه</a>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="tab-inside card-content grey lighten-4">
+                        <div id="tab-chart-msg-today">
+                            <canvas id="chart-msg-today" width="400" height="400"></canvas>
+                        </div>
+                        <div id="tab-chart-msg-thisweek">
+                            <canvas id="chart-msg-thisweek" width="400" height="400">
+                        </div>
+                        <div id="tab-chart-msg-thismonth">
+                            <canvas id="chart-msg-thismonth" width="400" height="400">
+                        </div>
+                        <div id="tab-chart-msg-selectedDate">
+
+                            <label for="firstday">از:</label>
+                            <input id="firstday" type="text" class="datepicker">
+
+                            <label for="lastday">تا:</label>
+                            <input id="lastday" type="text" class="datepicker">
+                            <canvas id="chart-msg-selectedDate" width="400" height="400">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="../js/jquery.cookie.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/materialize.js"></script>
+    <script src="../js/init.js"></script>
+    <script src="../js/logout.js"></script>
+    <script src="../js/voteItems.js"></script>
+    <script src="../js/menus.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+    <script src="../js/charts.js"></script>
+    <script src="../js/datepicker.js"></script>
+
+</body>
+
+</html>
+
+
+ <!-- http://demo.geekslabs.com/materialize-v1.0/charts-chartist.html -->
