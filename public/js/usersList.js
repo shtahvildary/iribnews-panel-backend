@@ -4,7 +4,7 @@
     //Add a new vote item
     $(function () {
 
-        var userEdit;
+        var voteItemEdit;
         // function update_voteItem(){
         //     post('/voteItems/update', voteItemEdit,
 

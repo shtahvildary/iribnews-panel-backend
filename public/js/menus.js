@@ -53,7 +53,7 @@ $("#navbar").append(`
                   <a href="votingResult.html">نظرسنجی ها</a>
               </li>
               <li>
-                  <a href="settings.html">تنظیمات</a>
+                  <a href="usersList.html">تنظیمات</a>
               </li>
               <li>
               <a href="ConnectAdmin.html">ارتباط با ادمین</a>
