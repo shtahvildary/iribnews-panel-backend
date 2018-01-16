@@ -4,6 +4,7 @@ var user_sc = require("../Schema/user");
 var auth = require('../tools/authentication');
 //var auth=require('../tools/auth');
 var bcrypt = require('bcrypt');
+var userType = require('../tools/privilege.js')
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -11,24 +12,31 @@ router.get('/', function (req, res, next) {
 });
 
 //Add new user
-router.post('/register', auth, function (req, res) {
-  console.log('Now U can register a new user...');
-  var user = new user_sc(req.body);
-  user.save(function (err, result) {
-    if (!err) {
+router.post('/register', auth, userType, function (req, res) {
+  console.log("userType: ", userType);
+  if (userType != 0) {
+    res.json({
+      error: err
+    })
+  } else {
+    console.log('Now U can register a new user...');
+    var user = new user_sc(req.body);
+    user.save(function (err, result) {
+      if (!err) {
 
-      //var token=auth.tokenize(result._id);
-      req.session.userId = result._id;
-      res.json({
-        user: result,
-        //token: token
-      });
-    } else {
-      res.json({
-        error: err
-      })
-    };
-  });
+        //var token=auth.tokenize(result._id);
+        req.session.userId = result._id;
+        res.json({
+          user: result,
+          //token: token
+        });
+      } else {
+        res.json({
+          error: err
+        })
+      };
+    });
+  }
 });
 
 //update user
@@ -45,7 +53,7 @@ router.post('/update', auth, function (req, res) {
     console.log("user: ", result);
     result.firstName = req.body.firstName || result.firstName;
     result.lastName = req.body.lastName || result.lastName;
-    
+
     result.password = req.body.password || result.password;
     result.email = req.body.email || result.email;
     result.phoneNumber = req.body.phoneNumber || result.phoneNumber;

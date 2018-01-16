@@ -23,6 +23,7 @@
                 phoneNumber:phoneNumber,
                 // status:status,
                 // permitedChannelsId:permitedChannelsId,
+                // type:type
             });
         });
     });

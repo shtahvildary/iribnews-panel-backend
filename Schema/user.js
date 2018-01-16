@@ -9,7 +9,8 @@ var sc_user = mongoose.Schema({
     email:{type:'string',unique : true, required : true,trim: true},
     phoneNumber:{type:["number"]},
     status:{type:'number',default:0},//0:active - 1:deactive - -1:deleted - 3:banned
-    permitedChannelsId:{type:["string"]}
+    permitedChannelsId:{type:["string"]},
+    type:{type:'number',default:1}//0:MainAdmin - 1:admin - 2:user
 });
 //user collection
 
