@@ -4,7 +4,9 @@ var user_sc = require("../Schema/user");
 var auth = require('../tools/authentication');
 //var auth=require('../tools/auth');
 var bcrypt = require('bcrypt');
-var userType = require('../tools/privilege.js')
+
+
+
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -12,8 +14,9 @@ router.get('/', function (req, res, next) {
 });
 
 //Add new user
-router.post('/register', auth, userType, function (req, res) {
-  console.log("userType: ", userType);
+router.post('/register', auth, function (req, res) {
+  var userType = req.session.type;
+  // console.log("userType: ", userType);
   if (userType != 0) {
     res.json({
       error: err
@@ -57,8 +60,18 @@ router.post('/update', auth, function (req, res) {
     result.password = req.body.password || result.password;
     result.email = req.body.email || result.email;
     result.phoneNumber = req.body.phoneNumber || result.phoneNumber;
-    result.status = req.body.status || result.status;
-    result.permitedChannelsId = req.body.permitedChannelsId || result.permitedChannelsId;
+    var userType = req.session.type;
+    // console.log("userType: ", userType);
+    if (userType == 2) { //user privilege
+      console.log("U can't change some parameters!");
+      // res.json({
+      //   error: "U can't change some parameters!"
+      // })
+    } else {//admin privilege
+      result.status = req.body.status || result.status;
+      result.permitedChannelsId = req.body.permitedChannelsId || result.permitedChannelsId;
+      result.type = req.body.type || result.type;
+    }
     //save updated user
     result.save(function (err, result) {
       if (err) {
@@ -97,7 +110,8 @@ router.post('/login', function (req, res) {
           }
 
           //var token=auth.tokenize(result._id);
-          req.session.userId = result._id;
+          req.session.userId = result._doc._id;
+          req.session.type = result._doc.type;
           console.log(req.session.cookie)
           console.plain(req.session.userId)
 
@@ -121,8 +135,6 @@ router.post('/login', function (req, res) {
         auth: false
       })
     }
-
-
   })
 })
 
