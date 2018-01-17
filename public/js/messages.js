@@ -46,7 +46,7 @@
         post('/messages/select/all/date', {}, function (response) {
             // console.log('all messages', response)
             var reply;
-            
+
             response.messages.map(function (item) {
 
                 $('#messages-list').append(`
@@ -71,14 +71,14 @@
                 
                </p></div>`) : '') + `
                 </div>`);
-                
-                jQuery(item.replys).each(function(i, reply) {
-                    jQuery('#replys-'+item._id).append(`<p> کاربر`+reply.userId.username +' در تاریخ '+reply.date+'    در پاسخ به این پیام گفته است: ' + reply.text+`</p>`);
-                   
+
+                jQuery(item.replys).each(function (i, reply) {
+                    jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + reply.date + '    در پاسخ به این پیام گفته است: ' + reply.text + `</p>`);
+
                 });
 
                 $('#replys-' + item._id).click(function (e) {
-                    
+
                     replys = $(this).attr(item.replys);
                     // console.log(replys)
 
@@ -175,7 +175,6 @@
 
             })
         }
-
 
     });
 })(jQuery);

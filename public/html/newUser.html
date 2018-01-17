@@ -21,22 +21,26 @@
 
 
         <div class="row">
-            <form class="col s12" id="userUpdateForm">
+            <form class="col s12" id="newUserForm">
                 <div class="row">
                     <div class="input-field col s6">
                         <i class="material-icons prefix">account_circle</i>
-                        <input id="first_name" type="text" class="validate">
-                        <label for="first_name">نام: </label>
+                        <input id="firstName" type="text" class="validate">
+                        <label for="firstName">نام: </label>
                     </div>
                     <div class="input-field col s6">
-                        <input id="last_name" type="text" class="validate">
-                        <label for="last_name">نام خانوادگی:</label>
+                        <input id="lastName" type="text" class="validate">
+                        <label for="lastName">نام خانوادگی:</label>
                     </div>
+                </div>
+                <div class="input-field col s6">
+                    <input id="personelNumber" type="text" class="validate">
+                    <label for="personelNumber">شماره کارمندی :</label>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input disabled value="I am not editable" id="disabled" type="text" class="validate">
-                        <label for="disabled">شناسه کاربر: </label>
+                        <input disabled value="I am not editable" id="username" type="text" class="validate">
+                        <label for="username">شناسه کاربر: </label>
                     </div>
                 </div>
                 <div class="row">
@@ -70,13 +74,13 @@
                 <div class="row">
                     <p>
                         <input type="checkbox" id="permitedChannels" />
-                        <label for="test5">permitedChannels</label>
+                        <label for="permitedChannels">permitedChannels</label>
                     </p>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
                         <p>
-                        <select>
+                        <select id="type">
                             <option value="" disabled selected>انتخاب کنید...</option>
                             <option value="1">مدیر</option>
                             <option value="2">کاربر</option>
@@ -87,7 +91,7 @@
                     </div>
                 </div>
             </form>
-            <button class="btn waves-effect waves-light" type="submit" id="btnUpdateUser">ذخیره
+            <button class="btn waves-effect waves-light" type="submit" id="btnAddUser">ذخیره
                 <i class="material-icons right">save</i>
             </button>
         </div>

@@ -6,7 +6,7 @@ $("#navbar").append(`
   <div id="navbar">
   <ul id="dropdown1" class="dropdown-content">
       <li>
-          <a href="useraccount.html">حساب کاربری</a>
+          <a href="userProfile.html">حساب کاربری</a>
       </li>
       <li>
           <a href="#" class="logout">خروج</a>
@@ -25,7 +25,7 @@ $("#navbar").append(`
                   <a href="#" class="logout">خروج</a>
               </li>
               <li id="nav-account" class="local-nav-items-large">
-                  <a href="userAccount.html">حساب کاربری</a>
+                  <a href="userProfile.html">حساب کاربری</a>
               </li>
 
               <li class="local-nav-items-small">
@@ -53,7 +53,7 @@ $("#navbar").append(`
                   <a href="votingResult.html">نظرسنجی ها</a>
               </li>
               <li>
-                  <a href="usersList.html">تنظیمات</a>
+                  <a href="usersList.html">مدیریت کاربران</a>
               </li>
               <li>
               <a href="ConnectAdmin.html">ارتباط با ادمین</a>

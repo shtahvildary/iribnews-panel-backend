@@ -46,7 +46,7 @@ router.post('/register', auth, function (req, res) {
 router.post('/update', auth, function (req, res) {
   console.log('U can update user...');
   console.log('query:', req.body);
-  user_sc.findById(req.session.userId).exec(function (err, result) {
+  user_sc.findById(req.body._id).exec(function (err, result) {
     if (err) {
       res.status(500).json({
         error: err
@@ -54,12 +54,13 @@ router.post('/update', auth, function (req, res) {
     }
     //else
     console.log("user: ", result);
-    result.firstName = req.body.firstName || result.firstName;
-    result.lastName = req.body.lastName || result.lastName;
+    result.firstName = req.body.firstName || result._doc.firstName;
+    result.lastName = req.body.lastName || result._doc.lastName;
+    result.personelNumber = req.body.personelNumber || result._doc.personelNumber;
 
-    result.password = req.body.password || result.password;
-    result.email = req.body.email || result.email;
-    result.phoneNumber = req.body.phoneNumber || result.phoneNumber;
+    result.password = req.body.password || result._doc.password;
+    result.email = req.body.email || result._doc.email;
+    result.phoneNumber = req.body.phoneNumber || result._doc.phoneNumber;
     var userType = req.session.type;
     // console.log("userType: ", userType);
     if (userType == 2) { //user privilege
@@ -68,9 +69,9 @@ router.post('/update', auth, function (req, res) {
       //   error: "U can't change some parameters!"
       // })
     } else {//admin privilege
-      result.status = req.body.status || result.status;
-      result.permitedChannelsId = req.body.permitedChannelsId || result.permitedChannelsId;
-      result.type = req.body.type || result.type;
+      result.status = req.body.status || result._doc.status;
+      result.permitedChannelsId = req.body.permitedChannelsId || result._doc.permitedChannelsId;
+      result.type = req.body.type || result._doc.type;
     }
     //save updated user
     result.save(function (err, result) {
@@ -139,7 +140,7 @@ router.post('/login', function (req, res) {
 })
 
 //Get all users
-router.post('/selectAllUsers', auth, function (req, res) {
+router.post('/all', auth, function (req, res) {
   user_sc.find({}, function (err, result) {
     if (!err) {
       if (result) {
@@ -175,5 +176,34 @@ router.post('/logout', function (req, res, next) {
     });
   }
 });
+
+//change status of a user (by id): 0:active - 1:deactive - -1:deleted - 3:banned
+//URL: localhost:5010/users/status
+//INPUT:{"_id":"5a1e711ed411741d84d10a29"}
+
+router.post('/status',auth, function (req, res) {
+  console.log('query', req.body)
+    user_sc.findById(req.body._id).exec(function (err, result) {
+    if (!err) {
+      console.log("user:",result) 
+      result.status=req.body.status;  
+      result.save(function(err,result){
+        if(!err){
+          res.status(200).send(result);
+        }
+        else{
+          res.status(500).send(err)
+        }
+      })   
+      res.status(200);
+      console.log('status of user changed...');
+    } else {
+      res.status(500).json({
+        error: err
+      });
+    }
+  })
+})
+
 
 module.exports = router;
