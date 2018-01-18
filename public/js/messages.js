@@ -1,4 +1,9 @@
+// ` + (item.type == 'photo' ? '<img src="../public/files/photos/sample-1.jpg" alt="" class=" responsive-img"> <!-- notice the "circle" class --></div>' : '') + `<p>
+// ` + (item.type == 'video' ? '<video class="responsive-video" controls><source src="../public/files/videos/big_buck_bunny.mp4" type="video/mp4"></video>' : '') + `<p>
+// ` + (item.type == ('voice' || 'music') ? '<audio controls><source src="../public/files/music/file_3.mp3" type="audio/mp3">Your browser does not support the audio element.</audio>' : '') + `<p>
+
 (function ($) {
+    const fileserver="http://localhost:9000";
 
     var search_message = function (query) {
 
@@ -55,9 +60,9 @@
 
                 <div class="card-content activator ">
                 
-                  ` + (item.type == 'video' ? '<video class="responsive-video" controls><source src="../public/files/videos/big_buck_bunny.mp4" type="video/mp4"></video>' : '') + `<p>
-                  ` + (item.type == 'photo' ? '<img src="../public/files/photos/sample-1.jpg" alt="" class=" responsive-img"> <!-- notice the "circle" class --></div>' : '') + `<p>
-                  ` + (item.type == ('voice' || 'music') ? '<audio controls><source src="../public/files/music/file_3.mp3" type="audio/mp3">Your browser does not support the audio element.</audio>' : '') + `<p>
+                  ` + (item.type == 'video' ? '<video class="responsive-video" controls><source src="'+fileserver+'/big_buck_bunny.mp4" type="video/mp4"></video><p><i class="material-icons">movie</i></p></a>' : '') + `<p>
+                  ` + (item.type == 'photo' ? '<img src="'+fileserver+'/file_2.jpg" alt="" class=" responsive-img"> <!-- notice the "circle" class --></div><p><i class="material-icons">photo</i></p></a>' : '') + `<p>
+                  ` + (item.type == ('voice' || 'music'||'audio') ? '<audio controls><source src="'+fileserver+'/file_3.mp3" type="audio"></audio><p><i class="material-icons">audiotrack</i></p></a>' : '') + `<p>
                   
                   <p>` + item.message + `</p>
                   <p>تاریخ :` + item.date + `</p>

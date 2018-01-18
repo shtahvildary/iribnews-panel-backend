@@ -258,9 +258,9 @@ router.post('/chart/selectedDate', auth, function (req, res) {
 })
 
 //shmt_bot
-// var botToken = "449968526:AAGY4Tz48MiN8uxUD_0nWHFZSQscD9OQ_Vk";
+var botToken = "449968526:AAGY4Tz48MiN8uxUD_0nWHFZSQscD9OQ_Vk";
 //iribnews
-var botToken = "545443179:AAGEKFAT_mg5H2aTZbCKEPXr2Pkee11b8l4";
+// var botToken = "545443179:AAGEKFAT_mg5H2aTZbCKEPXr2Pkee11b8l4";
 
 
 //save reply for a message
