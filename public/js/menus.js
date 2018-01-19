@@ -56,8 +56,9 @@
 
     post('/users/type', {}, function (response) {
         var userType = response.type;
-        $("#navbar").append(`
+        $("#mobile-demo").append(`
                 
+
             ` + (userType != 2 ? (`
             <li>
                 <a href="usersList.html">مدیریت کاربران</a>

@@ -69,7 +69,7 @@
                         ` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="'+fileserver+`/`+item.filePath+'" type="video/mp4"></video>' : '') + `
                         ` + (item.type == 'photo' ? '<img style="max-width:100%" src="'+fileserver+`/`+item.filePath+'" alt="" class=" responsive-img">' : '') + `
                         ` + (item.type == 'voice'||item.type =='audio' ? '<audio controls><source src="'+fileserver+`/`+item.filePath+'" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' : '') + `     
-                        ` + (item.type == 'document' ? '<a" href="'+fileserver+`/`+item.filePath+'" alt="" download> </a>' : '') + `</p>
+                        ` + (item.type == 'document' ? '<a href="'+fileserver+`/`+item.filePath+'" alt="" download> دانلود</a>' : '') + `</p>
 
                         </div>
 

@@ -151,7 +151,11 @@ router.post('/login', function (req, res) {
 
 //Get all users
 router.post('/all', auth, function (req, res) {
-  user_sc.find({}, function (err, result) {
+  user_sc.find({
+    'type': {
+        $gte: req.session.type,    //gte: greater than or equal to (i.e. >= )
+    }
+  }).exec(function (err, result) {
     if (!err) {
       if (result) {
         res.json({
