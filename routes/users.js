@@ -42,6 +42,16 @@ router.post('/register', auth, function (req, res) {
   }
 });
 
+//return user type
+router.post('/type',auth,function(req,res){
+  var userType = req.session.type;
+  
+  return res.status(200).json({
+    type:userType,
+  })
+
+})
+
 //update user
 router.post('/update', auth, function (req, res) {
   console.log('U can update user...');
@@ -83,7 +93,6 @@ router.post('/update', auth, function (req, res) {
     })
   })
 })
-
 //Login
 router.post('/login', function (req, res) {
   // bcrypt.hash(req.body.password, 10, function (err, hash){
@@ -115,6 +124,7 @@ router.post('/login', function (req, res) {
           req.session.type = result._doc.type;
           console.log(req.session.cookie)
           console.plain(req.session.userId)
+          console.plain('type: ',req.session.type)
 
           res.json({
             user: result,

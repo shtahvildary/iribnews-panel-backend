@@ -1,7 +1,8 @@
+(function ($) {
 
-(function($){
-  
-$("#navbar").append(`
+
+
+    $("#navbar").append(`
 
   <div id="navbar">
   <ul id="dropdown1" class="dropdown-content">
@@ -51,18 +52,27 @@ $("#navbar").append(`
               </li>
               <li>
                   <a href="votingResult.html">نظرسنجی ها</a>
-              </li>
-              <li>
-                  <a href="usersList.html">مدیریت کاربران</a>
-              </li>
-              <li>
-              <a href="ConnectAdmin.html">ارتباط با ادمین</a>
-          </li>
+              </li>`);
+
+    post('/users/type', {}, function (response) {
+        var userType = response.type;
+        $("#navbar").append(`
+                
+            ` + (userType != 2 ? (`
+            <li>
+                <a href="usersList.html">مدیریت کاربران</a>
+            </li>`) : '') + `
+            ` + (userType != 0 ? (
+            `
+            <li>
+                <a href="ConnectAdmin.html">ارتباط با ادمین</a>
+            </li>`) : '') + `
           </ul>
       </div>
   </nav>
 </div>
 
-`
-); 
-  })(jQuery);
+`);
+    })
+
+})(jQuery);

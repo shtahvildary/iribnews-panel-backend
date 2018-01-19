@@ -50,22 +50,42 @@
 
         post('/messages/select/all/date', {}, function (response) {
             // console.log('all messages', response)
+            
             var reply;
 
             response.messages.map(function (item) {
 
+                console.log('path: ', item.filePath)
+                console.log('path: ', item)
                 $('#messages-list').append(`
-                <div class="card ` + (item.replys.length > 0 ? '' : 'grey') + `">
+                <div class="card " style="`+ (item.replys.length > 0 ? 'background-color:#d8d8d8' : '') +`">
                 
 
                 <div class="card-content activator ">
+                <div class="container">
+                    <div class="row">
+                        <div class="col m6">
+                        <p>
+                        ` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="'+fileserver+`/`+item.filePath+'" type="video/mp4"></video>' : '') + `
+                        ` + (item.type == 'photo' ? '<img style="max-width:100%" src="'+fileserver+`/`+item.filePath+'" alt="" class=" responsive-img">' : '') + `
+                        ` + (item.type == 'voice'||item.type =='audio' ? '<audio controls><source src="'+fileserver+`/`+item.filePath+'" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' : '') + `     
+                        ` + (item.type == 'document' ? '<a" href="'+fileserver+`/`+item.filePath+'" alt="" download> </a>' : '') + `</p>
+
+                        </div>
+
+                        <div class="col m6">
+                            <p>` + (item.type == 'video' ? +item.caption+ `<p><i class="material-icons">movie</i></p>`:'')+`
+                            ` + (item.type == 'photo' ? +item.caption+`<p><i class="material-icons">photo</i></p>` :'')+`
+                            ` + (item.type == 'voice'||item.type =='audio'? +item.audioTitle+`<p><i class="material-icons">audiotrack</i></p>` :'')+`</p>
+                            ` + (item.type == 'text' ? +item.message :'')+ `</p>
+                            ` + (item.type == 'document' ? item.fileName :'')+ `</p>
+                            <p>تاریخ :` + item.date + `</p>
+                        </div>
+                    </div>
+                </div>
                 
-                  ` + (item.type == 'video' ? '<video class="responsive-video" controls><source src="'+fileserver+'/big_buck_bunny.mp4" type="video/mp4"></video><p><i class="material-icons">movie</i></p></a>' : '') + `<p>
-                  ` + (item.type == 'photo' ? '<img src="'+fileserver+'/file_2.jpg" alt="" class=" responsive-img"> <!-- notice the "circle" class --></div><p><i class="material-icons">photo</i></p></a>' : '') + `<p>
-                  ` + (item.type == ('voice' || 'music'||'audio') ? '<audio controls><source src="'+fileserver+'/file_3.mp3" type="audio"></audio><p><i class="material-icons">audiotrack</i></p></a>' : '') + `<p>
+                 
                   
-                  <p>` + item.message + `</p>
-                  <p>تاریخ :` + item.date + `</p>
                  
                 
                   <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
