@@ -7,7 +7,11 @@
             response.messages.map(function(item){
             $('#last-messages').append(`<li class="collection-item">
             
-            <p>`+item.message+`</p>
+            <p>` + (item.type == 'video' ? item.caption+ `<p><i class="material-icons">movie</i></p>`:
+            (item.type == 'photo' ? item.caption+`<p><i class="material-icons">photo</i></p>` :
+            (item.type == 'voice'||item.type =='audio'? item.audioTitle+`<p><i class="material-icons">audiotrack</i></p>` :
+            (item.type == 'text' ? item.message :
+            (item.type == 'document' ? item.fileName :'')))))+ `</p>
             
           </li>`);
           });
