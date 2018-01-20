@@ -36,10 +36,24 @@ router.post('/search', auth, function (req, res) {
 
     // console.log('query', req.body)
     message_sc.find({
-        "message": {
+        $or:[
+        {"message": {
             $regex: req.body.query,
             $options: 'i'
-        }
+        }},{"replys.text": {
+            $regex: req.body.query,
+            $options: 'i'
+        }},{"caption": {
+            $regex: req.body.query,
+            $options: 'i'
+        }},{"audioTitle": {
+            $regex: req.body.query,
+            $options: 'i'
+        }},{"fileName": {
+            $regex: req.body.query,
+            $options: 'i'
+        }}
+    ]
     }).sort('-date').exec(function (err, result) {
         // console.log(err)
         //pagination should be handled

@@ -9,6 +9,7 @@ var messageSchema=mongoose.Schema({
     message:String,
     date:{type:Date,default:Date.now},
     keywords:[{word:String,count:Number}],
+    isSeen:[{userId:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},date:{type:Date,default:Date.now}}],
     replys:[{text:String,userId:{type: mongoose.SchemaTypes.ObjectId, ref:'User'},date:{type:Date,default:Date.now}}],
     //video,Audio,voice,photo,document,sticker,videoNote
     fileId:String,

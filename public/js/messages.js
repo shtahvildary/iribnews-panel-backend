@@ -1,9 +1,5 @@
-// ` + (item.type == 'photo' ? '<img src="../public/files/photos/sample-1.jpg" alt="" class=" responsive-img"> <!-- notice the "circle" class --></div>' : '') + `<p>
-// ` + (item.type == 'video' ? '<video class="responsive-video" controls><source src="../public/files/videos/big_buck_bunny.mp4" type="video/mp4"></video>' : '') + `<p>
-// ` + (item.type == ('voice' || 'music') ? '<audio controls><source src="../public/files/music/file_3.mp3" type="audio/mp3">Your browser does not support the audio element.</audio>' : '') + `<p>
-
 (function ($) {
-    const fileserver="http://localhost:9000";
+    const fileserver = "http://localhost:9000";
 
     var search_message = function (query) {
 
@@ -13,23 +9,7 @@
             // console.log('search messages', response)
             $('#messages-list').empty();
             response.messages.map(function (item) {
-                $('#messages-list').append(`
-                <div class="card ` + (item.replys.length > 0 ? '' : 'grey') + `">
-
-                
-
-                <span class="card-title">Card Title</span>
-              </div>
-                <div class="card-content">
-                
-                  <p>` + item.message + `</p>
-                  <p>تاریخ :` + item.date + `</p>
-                  <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" href="#replyModal">پاسخ
-                  <i class="material-icons">reply</i></a>
-
-                </div>
-                
-              </div>`);
+                cardsAppend(item);
             });
         })
     }
@@ -50,83 +30,112 @@
 
         post('/messages/select/all/date', {}, function (response) {
             // console.log('all messages', response)
-            
             var reply;
-
             response.messages.map(function (item) {
 
                 console.log('path: ', item.filePath)
                 console.log('item: ', item.message)
-                $('#messages-list').append(`
-                <div class="card " style="`+ (item.replys.length > 0 ? 'background-color:#d8d8d8' : '') +`">
-                
+                cardsAppend(item, response.userId);
 
-                <div class="card-content activator ">
-                <div class="container">
-                    <div class="row">
-                        <div class="col m6">
-                        <p>
-                        ` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="'+fileserver+`/`+item.filePath+'" type="video/mp4"></video>' : 
-                         (item.type == 'photo' ? '<img style="max-width:100%" src="'+fileserver+`/`+item.filePath+'" alt="" class=" responsive-img">' :
-                         (item.type == 'voice'||item.type =='audio' ? '<audio controls><source src="'+fileserver+`/`+item.filePath+'" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :      
-                         (item.type == 'document' ? '<a href="'+fileserver+`/`+item.filePath+'" alt="" download> دانلود</a>' : '')))) + `</p>
+            });
+        })
+    });
 
-                        </div>
+    function replyToMsg(reply) {
+        // console.log('replyToMsg: ', reply);
 
-                        <div class="col m6">
-                            <p>` + (item.type == 'video' ? item.caption+ `<p><i class="material-icons">movie</i></p>`:
-                             (item.type == 'photo' ? item.caption+`<p><i class="material-icons">photo</i></p>` :
-                             (item.type == 'voice'||item.type =='audio'? item.audioTitle+`<p><i class="material-icons">audiotrack</i></p>` :
-                             (item.type == 'text' ? item.message :
-                             (item.type == 'document' ? item.fileName :'')))))+ `</p>
-                            <p>تاریخ :` + item.date + `</p>
+        post('/messages/reply', {
+            _id: reply.msgId,
+            // chatId: reply.chatId,
+
+            text: reply.text,
+            userId: reply.userId
+
+        }, function (response) {
+            // console.log('message which U replied:', response);
+
+        })
+    }
+
+    function cardsAppend(item, userId) {
+        $('#messages-list').append(`
+                    <div class="card " style="` + (item.replys.length > 0 ? 'background-color:#d8d8d8' : '') + `">
+                    <div class="card-content activator ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col m6">
+                            <p>
+                            ` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
+            (item.type == 'photo' ? '<img style="max-width:100%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
+                (item.type == 'voice' || item.type == 'audio' ? '<audio controls><source src="' + fileserver + `/` + item.filePath + '" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :
+                    (item.type == 'document' ? '<a href="' + fileserver + `/` + item.filePath + '" alt="" download> دانلود</a>' : '')))) + `</p>
+    
+                            </div>
+    
+                            <div class="col m6">
+                                <p>` + (item.type == 'video' ? item.caption + `<p><i class="material-icons">movie</i></p>` :
+            (item.type == 'photo' ? item.caption + `<p><i class="material-icons">photo</i></p>` :
+                (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
+                    (item.type == 'text' ? item.message :
+                        (item.type == 'document' ? item.fileName : ''))))) + `</p>
+                                <p>تاریخ :` + item.date + `</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                 
-                  
-                 
-                
-                  <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
-                  <i class="material-icons">reply</i></a>
-                  
-                </div>
-                ` + (item.replys.length > 0 ? (` <div class="card-reveal"><span class="card-title grey-text text-darken-4 >پاسخها<i class="material-icons right">close</i></span><p id="replys-` + item._id + `">
-                
-               </p></div>`) : '') + `
-                </div>`);
+                    
+                     
+                      
+                     
+                    
+                      <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
+                      <i class="material-icons">reply</i></a>
+                      
+                    </div>
+                    ` + (item.replys.length > 0 ? (` <div class="card-reveal"><span class="card-title grey-text text-darken-4 >پاسخها<i class="material-icons right">close</i></span><p id="replys-` + item._id + `">
+                    
+                   </p></div>`) : '') + `
+                    </div>`);
+        jQuery(item.replys).each(function (i, reply) {
+            jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + reply.date + '    در پاسخ به این پیام گفته است: ' + reply.text + `</p>`);
 
-                jQuery(item.replys).each(function (i, reply) {
-                    jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + reply.date + '    در پاسخ به این پیام گفته است: ' + reply.text + `</p>`);
+        });
 
-                });
+        $('#replys-' + item._id).click(function (e) {
 
-                $('#replys-' + item._id).click(function (e) {
+            replys = $(this).attr(item.replys);
+            // console.log(replys)
 
-                    replys = $(this).attr(item.replys);
-                    // console.log(replys)
-
-                })
-            });
-
-            $('.reply').click(function (e) {
-                reply = {
-
-                    msgId: $(this).attr('msgId'),
-                    //chatId: $(this).attr('chatId'),
-                    text: "",
-                    ////////////////////////////////////////////////////////////////////
-                    // userId= .... CORRECT IT AS SOON AS POSSIBLE
-                    ////////////////////////////////////////////////////////////////////
-                    userId: response.userId
-                    // userId: "5a16a4406fd1520f97e7ae86"
+        })
+        $('.reply').click(function (e) {
+            reply = {
+                msgId: $(this).attr('msgId'),
+                //chatId: $(this).attr('chatId'),
+                text: "",
+                userId: userId
+            }
+            cardsAfter();
+            $('.reply').modal();
 
 
+            $('#btnSendReply').click(function (e) {
+
+                reply.text = $('#replyTxt').val();
+
+                if (replyToMsg(reply)) {
+                    // if (status==true) {
+                    $('#replyModal').modal('close');
+                    alert("ارسال پیام با موفقیت انجام شد.");
+                } else {
+                    alert("پیام شما ارسال نشدء لطفا دوباره اقدام نمایید. کدخطا: " + status)
                 }
-                //console.log($(this).attr('replyItem'));
+            })
+        })
 
-                $('#messages-list').after(`
+
+    }
+
+    function cardsAfter() {
+        $('#messages-list').after(`
         
         <!-- Modal Trigger -->
         <div id="replyModal" class="modal reply">
@@ -158,48 +167,5 @@
             </div>
         </div>
         `);
-                $('.reply').modal();
-
-
-                $('#btnSendReply').click(function (e) {
-
-                    // reply.msgId= $(this).attr("msgId");
-                    // reply.chatId= $(this).attr('chatId');
-                    //reply.text = "jkjljljasga";
-
-                    reply.text = $('#replyTxt').val();
-                    ////////////////////////////////////////////////////////////////////
-                    // userId= .... CORRECT IT AS SOON AS POSSIBLE
-                    ////////////////////////////////////////////////////////////////////
-
-                    // console.log('reply:', reply)
-
-                    if (replyToMsg(reply)) {
-                        // if (status==true) {
-                        $('#replyModal').modal('close');
-                        alert("ارسال پیام با موفقیت انجام شد.");
-                    } else {
-                        alert("پیام شما ارسال نشدء لطفا دوباره اقدام نمایید. کدخطا: " + status)
-                    }
-                })
-            })
-        })
-
-        function replyToMsg(reply) {
-            // console.log('replyToMsg: ', reply);
-
-            post('/messages/reply', {
-                _id: reply.msgId,
-                // chatId: reply.chatId,
-
-                text: reply.text,
-                userId: reply.userId
-
-            }, function (response) {
-                // console.log('message which U replied:', response);
-
-            })
-        }
-
-    });
+    }
 })(jQuery);
