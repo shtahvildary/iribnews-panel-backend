@@ -335,5 +335,26 @@ router.post('/reply', auth, function (req, res) {
         }
     })
 })
+router.post('/view', auth, function (req, res) {
+    message_sc.findById(req.body._id).exec(function (err, result) {
+        if (!err) {
+            console.log("message:", result)
+            // console.log("req.body.reply:", req.body)
+            if (!err) {
+                res.status(200).json({
+                    messages: result,
+                    // userId: req.body.token
+                    userId:req.session.userId
+                    
+                });
+            } else {
+                res.status(500).json({
+                    error: err
+                });
+            }
+        }
+    })        
+})
+    
 
 module.exports = router;

@@ -1,3 +1,7 @@
+
+//  <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
+//  <i class="material-icons">reply</i></a>
+
 (function ($) {
     const fileserver = "http://localhost:9000";
 
@@ -56,7 +60,6 @@
 
         })
     }
-
     function cardsAppend(item, userId) {
         $('#messages-list').append(`
                     <div class="card " style="` + (item.replys.length > 0 ? 'background-color:#d8d8d8' : '') + `">
@@ -83,11 +86,8 @@
                         </div>
                     </div>
                     
-                     
-                      
-                     
                     
-                      <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
+                      <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" item="`+item+`" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">مشاهده
                       <i class="material-icons">reply</i></a>
                       
                     </div>
@@ -106,16 +106,20 @@
             // console.log(replys)
 
         })
-        $('.reply').click(function (e) {
+        // btnReply-` + item._id + `
+        $('#btnReply-' + item._id ).click(function (e) {
             reply = {
                 msgId: $(this).attr('msgId'),
                 //chatId: $(this).attr('chatId'),
                 text: "",
                 userId: userId
             }
-            cardsAfter();
-            $('.reply').modal();
-
+         
+            
+            cardsAfter(item);
+            // $('#btnReply-' + item._id).modal();
+            // $('.reply').modal();
+            $('#replyModal').modal();
 
             $('#btnSendReply').click(function (e) {
 
@@ -130,19 +134,39 @@
                 }
             })
         })
-
-
     }
 
-    function cardsAfter() {
+    function cardsAfter(item) {
+        console.log('item._id in cardsAfter: ',item);
+        // console.log('userId in cardsAfter: ',userId);
         $('#messages-list').after(`
         
         <!-- Modal Trigger -->
         <div id="replyModal" class="modal reply">
             <div class="modal-content">
-                <h5>پاسخ</h5>
+                <h5>پیام</h5>
                 <p>
                         <form>
+                        <div class="col m6">
+                        <p>
+                        
+                        ` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
+        (item.type == 'photo' ? '<img style="max-width:100%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
+            (item.type == 'voice' || item.type == 'audio' ? '<audio controls><source src="' + fileserver + `/` + item.filePath + '" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :
+                (item.type == 'document' ? '<a href="' + fileserver + `/` + item.filePath + '" alt="" download> دانلود</a>' : '')))) + `</p>
+
+                        </div>
+
+                        <div class="col m6">
+                        <p>` + (item.type == 'video' ? item.caption + `<p><i class="material-icons">movie</i></p>` :
+    (item.type == 'photo' ? item.caption + `<p><i class="material-icons">photo</i></p>` :
+        (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
+            (item.type == 'text' ? item.message :
+                (item.type == 'document' ? item.fileName : ''))))) + `</p>
+                        <p>تاریخ :` + item.date + `</p>
+                    </div>
+                </div>
+            </div>
                         <div class="row">
           
                             <div class="row">
@@ -165,7 +189,7 @@
                     </div>
                 </p>
             </div>
-        </div>
-        `);
+        </div>`);
     }
 })(jQuery);
+
