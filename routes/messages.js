@@ -9,14 +9,17 @@ var request = require('request');
 
 //select all sort by date
 router.post('/select/all/date', auth, function (req, res, next) {
-    message_sc.find({}).populate({path: 'replys.userId', select: 'username'}).sort('-date').exec(function (err, result) {
+    message_sc.find({}).populate({
+        path: 'replys.userId',
+        select: 'username'
+    }).sort('-date').exec(function (err, result) {
         //pagination should be handled
         if (!err) {
             res.status(200).json({
                 messages: result,
                 // userId: req.body.token
-                userId:req.session.userId
-                
+                userId: req.session.userId
+
             });
         } else {
             res.status(500).json({
@@ -36,24 +39,32 @@ router.post('/search', auth, function (req, res) {
 
     // console.log('query', req.body)
     message_sc.find({
-        $or:[
-        {"message": {
-            $regex: req.body.query,
-            $options: 'i'
-        }},{"replys.text": {
-            $regex: req.body.query,
-            $options: 'i'
-        }},{"caption": {
-            $regex: req.body.query,
-            $options: 'i'
-        }},{"audioTitle": {
-            $regex: req.body.query,
-            $options: 'i'
-        }},{"fileName": {
-            $regex: req.body.query,
-            $options: 'i'
-        }}
-    ]
+        $or: [{
+            "message": {
+                $regex: req.body.query,
+                $options: 'i'
+            }
+        }, {
+            "replys.text": {
+                $regex: req.body.query,
+                $options: 'i'
+            }
+        }, {
+            "caption": {
+                $regex: req.body.query,
+                $options: 'i'
+            }
+        }, {
+            "audioTitle": {
+                $regex: req.body.query,
+                $options: 'i'
+            }
+        }, {
+            "fileName": {
+                $regex: req.body.query,
+                $options: 'i'
+            }
+        }]
     }).sort('-date').exec(function (err, result) {
         // console.log(err)
         //pagination should be handled
@@ -61,7 +72,7 @@ router.post('/search', auth, function (req, res) {
             res.status(200).json({
                 messages: result,
                 // userId: req.body.token
-                userId:req.session.userId   
+                userId: req.session.userId
             });
         } else {
             res.status(500).json({
@@ -79,9 +90,9 @@ router.post('/select/last/date', auth, function (req, res) {
             res.status(200).json({
                 messages: result,
                 // userId: req.body.token
-                userId:req.session.userId
-                
-                
+                userId: req.session.userId
+
+
             });
         } else {
             res.status(500).json({
@@ -123,9 +134,9 @@ router.post('/chart/daily', auth, function (req, res) {
             res.status(200).json({
                 text: msgCounts,
                 // userId: req.body.token
-                userId:req.session.userId
-                
-                
+                userId: req.session.userId
+
+
             })
         } else {
             res.status(500).json({
@@ -142,7 +153,7 @@ router.post('/chart/weekly', auth, function (req, res) {
     var curr = new Date; // get current date
     var first = today.getDate() - today.getDay() - 1; // First day is the day of the month - the day of the week
     var last = first + 5; // last day is the first day + 6
-    
+
 
     var firstday = new Date(today.setDate(first));
     var lastday = new Date(today.setDate(last));
@@ -157,7 +168,7 @@ router.post('/chart/weekly', auth, function (req, res) {
             $lt: lastday
         }
     }).exec(function (err, result) {
-        
+
         //pagination should be handled
         if (!err) {
 
@@ -184,7 +195,7 @@ router.post('/chart/monthly', auth, function (req, res) {
     var sat = new Date(req.body.date);
     var fri = new Date(req.body.date);
     var curr = new Date; // get current date
-    
+
     // var first = curr.getDate() - curr.getDay() - 1; // First day is the day of the month - the day of the week
     // var last = first + 5; // last day is the first day + 6
     // console.log(first, last)
@@ -205,7 +216,7 @@ router.post('/chart/monthly', auth, function (req, res) {
         //pagination should be handled
         if (!err) {
 
-            var msgCounts = [0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0,0,0];
+            var msgCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             // console.log(msgCounts.length)
 
 
@@ -249,7 +260,7 @@ router.post('/chart/selectedDate', auth, function (req, res) {
 
 
             var diffDays = Math.round(Math.abs((firstday.getTime() - lastday.getTime()) / (oneDay)));
-            console.log('diffDays: '+diffDays)
+            console.log('diffDays: ' + diffDays)
 
 
             var msgCounts = Array(diffDays);
@@ -292,8 +303,8 @@ router.post('/reply', auth, function (req, res) {
                 //date:req.body.date,
                 // userId: req.body.userId
                 // userId: req.body.token
-                userId:req.session.userId
-                
+                userId: req.session.userId
+
             }
 
             request({
@@ -344,8 +355,8 @@ router.post('/view', auth, function (req, res) {
                 res.status(200).json({
                     messages: result,
                     // userId: req.body.token
-                    userId:req.session.userId
-                    
+                    userId: req.session.userId
+
                 });
             } else {
                 res.status(500).json({
@@ -353,8 +364,46 @@ router.post('/view', auth, function (req, res) {
                 });
             }
         }
-    })        
+    })
 })
-    
+
+router.post('/isSeen', auth, function (req, res) {
+    message_sc.findById(req.body).exec(function (err, result) {
+        if (!err) {
+            console.log("message:", result)
+            // console.log("req.body.reply:", req.body)
+            if (!err) {
+                res.status(200);
+                var isSeen = {
+                    userId: req.session.userId,
+                }
+
+                if (result._doc.isSeen.length > 0) {
+                    var repeatedUser = result._doc.filter(function (item) {
+                        return item.userId == isSeen.userId;
+                    });
+                    if (!repeatedUser)
+                        result._doc.isSeen.push(isSeen || result._doc.isSeen);
+                } else {
+                    result._doc.isSeen = isSeen || result._doc.isSeen;
+
+                }
+                // Save the updated document back to the database
+                result.save(function (err, result) {
+                    if (!err) {
+                        res.status(200).send(result);
+                    } else {
+                        res.status(500).send(err)
+                    }
+                })
+            } else {
+                res.status(500).json({
+                    error: err
+                });
+            }
+        }
+    })
+})
+
 
 module.exports = router;

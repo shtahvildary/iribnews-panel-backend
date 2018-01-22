@@ -1,4 +1,3 @@
-
 //  <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
 //  <i class="material-icons">reply</i></a>
 
@@ -51,7 +50,7 @@
         post('/messages/reply', {
             _id: reply.msgId,
             // chatId: reply.chatId,
-
+            
             text: reply.text,
             userId: reply.userId
 
@@ -60,6 +59,7 @@
 
         })
     }
+
     function cardsAppend(item, userId) {
         $('#messages-list').append(`
                     <div class="card " style="` + (item.replys.length > 0 ? 'background-color:#d8d8d8' : '') + `">
@@ -85,9 +85,9 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
-                      <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" item="`+item+`" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">مشاهده
+                    ` + (item.isSeen.length > 0 ? (`
+                    <img src="../icons/icons8-double-tick-50.png">`) : ``) + `
+                      <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" item="` + item + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">مشاهده
                       <i class="material-icons">reply</i></a>
                       
                     </div>
@@ -107,15 +107,23 @@
 
         })
         // btnReply-` + item._id + `
-        $('#btnReply-' + item._id ).click(function (e) {
-            reply = {
-                msgId: $(this).attr('msgId'),
+        $('#btnReply-' + item._id).click(function (e) {
+            var msgId=$(this).attr('msgId'); 
+            console.log('msgID::::::::::',msgId)           
+            // var msgIsSeen= {
+            //     msgId:msgId,
+            //     userId: userId,
+            //     date: Date.now(),
+            // };
+            post('/messages/isSeen',$(this).attr('msgId'),function(response){})
+            reply = {                
                 //chatId: $(this).attr('chatId'),
                 text: "",
-                userId: userId
+                userId: userId,
             }
-         
             
+
+
             cardsAfter(item);
             // $('#btnReply-' + item._id).modal();
             // $('.reply').modal();
@@ -136,9 +144,10 @@
         })
     }
 
-    function cardsAfter(item) {
-        console.log('item._id in cardsAfter: ',item);
+    function cardsAfter(item, userId) {
+        console.log('item._id in cardsAfter: ', item);
         // console.log('userId in cardsAfter: ',userId);
+       
         $('#messages-list').after(`
         
         <!-- Modal Trigger -->
@@ -151,22 +160,22 @@
                         <p>
                         
                         ` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
-        (item.type == 'photo' ? '<img style="max-width:100%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
-            (item.type == 'voice' || item.type == 'audio' ? '<audio controls><source src="' + fileserver + `/` + item.filePath + '" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :
-                (item.type == 'document' ? '<a href="' + fileserver + `/` + item.filePath + '" alt="" download> دانلود</a>' : '')))) + `</p>
+            (item.type == 'photo' ? '<img style="max-width:100%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
+                (item.type == 'voice' || item.type == 'audio' ? '<audio controls><source src="' + fileserver + `/` + item.filePath + '" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :
+                    (item.type == 'document' ? '<a href="' + fileserver + `/` + item.filePath + '" alt="" download> دانلود</a>' : '')))) + `</p>
 
                         </div>
 
                         <div class="col m6">
                         <p>` + (item.type == 'video' ? item.caption + `<p><i class="material-icons">movie</i></p>` :
-    (item.type == 'photo' ? item.caption + `<p><i class="material-icons">photo</i></p>` :
-        (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
-            (item.type == 'text' ? item.message :
-                (item.type == 'document' ? item.fileName : ''))))) + `</p>
+            (item.type == 'photo' ? item.caption + `<p><i class="material-icons">photo</i></p>` :
+                (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
+                    (item.type == 'text' ? item.message :
+                        (item.type == 'document' ? item.fileName : ''))))) + `</p>
                         <p>تاریخ :` + item.date + `</p>
                     </div>
-                </div>
-            </div>
+                
+           
                         <div class="row">
           
                             <div class="row">
@@ -192,4 +201,3 @@
         </div>`);
     }
 })(jQuery);
-
