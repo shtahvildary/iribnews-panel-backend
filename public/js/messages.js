@@ -2,7 +2,7 @@
 //  <i class="material-icons">reply</i></a>
 
 (function ($) {
-    var jalaali = require('jalaali-js')
+    // var jalaali = require('jalaali-js')
     const fileserver = "http://localhost:9000";
 
     var search_message = function (query) {
@@ -68,8 +68,10 @@
                     <div class="container">
                         <div class="row">
                             <div class="col m6">
-                            <p>
-                            ` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
+
+                            ` + (item.isSeen.length > 0 ? (`<img id="icnIsSeen-"`+item._id+`" src="../icons/icons8-double-tick-50.png" href="#isSeenModal">`) : ``) + `
+                            
+                            <p>` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
             (item.type == 'photo' ? '<img style="max-width:100%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
                 (item.type == 'voice' || item.type == 'audio' ? '<audio controls><source src="' + fileserver + `/` + item.filePath + '" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :
                     (item.type == 'document' ? '<a href="' + fileserver + `/` + item.filePath + '" alt="" download> دانلود</a>' : '')))) + `</p>
@@ -82,12 +84,12 @@
                 (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
                     (item.type == 'text' ? item.message :
                         (item.type == 'document' ? item.fileName : ''))))) + `</p>
-                                <p>تاریخ :` + jalaali.toJalaali(item.date) + `</p>
+                                <p>تاریخ :` + item.date + `</p>
+                                
                             </div>
                         </div>
                     </div>
-                    ` + (item.isSeen.length > 0 ? (`
-                    <img src="../icons/icons8-double-tick-50.png">`) : ``) + `
+                    
                       <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" item="` + item + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">مشاهده
                       <i class="material-icons">reply</i></a>
                       
@@ -100,6 +102,7 @@
             jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + reply.date + '    در پاسخ به این پیام گفته است: ' + reply.text + `</p>`);
 
         });
+        
 
         $('#replys-' + item._id).click(function (e) {
 
@@ -123,7 +126,12 @@
                 userId: userId,
             }
             
-
+            $('#icnIsSeen-' + item._id).click(function (e) {
+                console.log("isSeen click....")
+                alert('it works');
+                $('#isSeenModal').modal();
+                
+            })
 
             cardsAfter(item);
             // $('#btnReply-' + item._id).modal();
@@ -158,13 +166,10 @@
                 <p>
                         <form>
                         <div class="col m6">
-                        <p>
-                        
-                        ` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
+                        <p>` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
             (item.type == 'photo' ? '<img style="max-width:100%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
                 (item.type == 'voice' || item.type == 'audio' ? '<audio controls><source src="' + fileserver + `/` + item.filePath + '" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :
                     (item.type == 'document' ? '<a href="' + fileserver + `/` + item.filePath + '" alt="" download> دانلود</a>' : '')))) + `</p>
-
                         </div>
 
                         <div class="col m6">
@@ -199,6 +204,33 @@
                     </div>
                 </p>
             </div>
+        </div>
+        
+        
+        
+        <div id="isSeenModal" class="modal isSeen">
+            <div class="modal-content">
+                <h5>کاربرانی که این پیام را مشاهده کرده اند:</h5>
+                <p>
+                        <form>
+                        <div class="col m6">
+                        <p>`+item.isSeen+`</p>
+               
+                        </form>
+        
+                        <div class="modal-footer">
+                        
+                            <button class="btn waves-effect waves-light modal-close">
+                               <i class="material-icons right">cancel</i>
+                            </button>
+                        </div>
+                    </div>
+                </p>
+            </div>
         </div>`);
+        jQuery(item.isSeen).each(function (i, item) {
+            jQuery('#isSeenModal').append(`<p> کاربر` + item.userId + ' در تاریخ ' + item.date + `این پیام را خوانده است.   </p>`);
+
+        });
     }
 })(jQuery);
