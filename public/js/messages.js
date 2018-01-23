@@ -2,6 +2,7 @@
 //  <i class="material-icons">reply</i></a>
 
 (function ($) {
+    var jalaali = require('jalaali-js')
     const fileserver = "http://localhost:9000";
 
     var search_message = function (query) {
@@ -81,7 +82,7 @@
                 (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
                     (item.type == 'text' ? item.message :
                         (item.type == 'document' ? item.fileName : ''))))) + `</p>
-                                <p>تاریخ :` + item.date + `</p>
+                                <p>تاریخ :` + jalaali.toJalaali(item.date) + `</p>
                             </div>
                         </div>
                     </div>
@@ -115,7 +116,7 @@
             //     userId: userId,
             //     date: Date.now(),
             // };
-            post('/messages/isSeen',$(this).attr('msgId'),function(response){})
+            post('/messages/isSeen',msgId,function(response){})
             reply = {                
                 //chatId: $(this).attr('chatId'),
                 text: "",
