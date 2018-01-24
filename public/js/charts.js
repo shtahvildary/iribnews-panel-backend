@@ -1,4 +1,4 @@
-var jalaali = require('jalaali-js')
+// var jalaali = require('jalaali-js')
 const chartColors = [{
     red: 35,
     green: 198,

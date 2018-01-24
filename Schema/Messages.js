@@ -1,37 +1,68 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 
-var messageSchema=mongoose.Schema({
-    chatId:String,
-    chatTiltle:String,
-    voteItemId:String, //channel or program ID
-    type:String,    
-    chatType:String,
-    message:String,
-    date:{type:Date,default:Date.now},
-    keywords:[{word:String,count:Number}],
-    isSeen:[{userId:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},date:{type:Date,default:Date.now}}],
-    replys:[{text:String,userId:{type: mongoose.SchemaTypes.ObjectId, ref:'User'},date:{type:Date,default:Date.now}}],
+var messageSchema = mongoose.Schema({
+    chatId: String,
+    chatTiltle: String,
+    voteItemId: String, //channel or program ID
+    type: String,
+    chatType: String,
+    message: String,
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    keywords: [{
+        word: String,
+        count: Number
+    }],
+    tag: [ {like:{type:Number},//0:no idea  1:like  2:dislike
+        userId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'User'
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    isSeen: [{
+        userId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'User'
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    replys: [{
+        text: String,
+        userId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'User'
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }],
     //video,Audio,voice,photo,document,sticker,videoNote
-    fileId:String,
-    mime:String,
+    fileId: String,
+    mime: String,
     //video,photo
-    caption:String,
+    caption: String,
     //Audio
-    audioTitle:String,
-    
+    audioTitle: String,
+
     //photo
     //image:TYPE?????
 
     //document
-    fileName:String,
+    fileName: String,
 
     //emoji
-    emoji:String
-
-    
-
-
+    emoji: String
 })
 
 
-module.exports=mongoose.model("messages",messageSchema);
+module.exports = mongoose.model("messages", messageSchema);

@@ -2,7 +2,7 @@
     $(function () {
         // console.log('test auth')
         $( "#btnsubmit" ).click(function() {
-            var username=$("#username").val();
+            var username=$("#username").val().toLowerCase();
             var password=$("#password").val();
             // console.log(username,password);
             login({username:username,password:password});

@@ -17,9 +17,6 @@
 
     <div class="container">
         <!-- <div class="container" dir="rtl"> -->
-
-
-
         <div class="row">
             <form class="col s12" id="newUserForm">
                 <div class="row">
@@ -33,30 +30,32 @@
                         <label for="lastName">نام خانوادگی:</label>
                     </div>
                 </div>
-                <div class="input-field col s6">
-                    <input id="personelNumber" type="text" class="validate">
-                    <label for="personelNumber">شماره کارمندی :</label>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="personelNumber" type="number" class="validate">
+                        <label for="personelNumber">شماره کارمندی :</label>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="input-field col s12">
-                        <input disabled value="I am not editable" id="username" type="text" class="validate">
+                    <div class="input-field col s4">
+                        <input id="username" type="text" class="validate">
                         <label for="username">شناسه کاربر: </label>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-
-                        <input disabled id="password1" type="password" class="validate">
+                    <div class="input-field col s4">
+    
+                        <input id="password1" type="password" >
+                        <!-- <input disabled id="password1" type="password" class="validate"> -->
                         <label for="password1">کلمه عبور: </label>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-
-                        <input disabled hidden id="password2" type="password" class="validate">
-                        <label hidden for="password2">تکرار کلمه عبور: </label>
+                    <div class="input-field col s4">
+    
+                        <input id="password2" type="password" >
+                        <label for="password2">تکرار کلمه عبور: </label>
                     </div>
                 </div>
+                <div class="row">
+                </div>
+
                 <div class="row">
                     <div class="input-field col s12">
                         <i class="material-icons prefix">email</i>
@@ -78,15 +77,15 @@
                     </p>
                 </div>
                 <div class="row">
-                    <div class="input-field col s12">
+                    <div class="input-field col s12 ">
                         <p>
-                        <select id="type">
-                            <option value="" disabled selected>انتخاب کنید...</option>
-                            <option value="1">مدیر</option>
-                            <option value="2">کاربر</option>
-                            <option value="0">ادمین</option>
-                        </select>
-                        <label>گروه کاربری</label>
+                            <select id="type" class="dropdown-content select-dropdown">
+                                <option value="" disabled selected>انتخاب کنید...</option>
+                                <option value="1">مدیر</option>
+                                <option value="2">کاربر</option>
+                                <option value="0">ادمین</option>
+                            </select>
+                            <label for="type">گروه کاربری</label>
                         </p>
                     </div>
                 </div>
@@ -106,6 +105,7 @@
     <script src="../js/init.js"></script>
     <script src="../js/voteItems.js"></script>
     <script src="../js/menus.js"></script>
+    <script src="../js/users.js"></script>
     <script src="../js/logout.js"></script>
 
 
