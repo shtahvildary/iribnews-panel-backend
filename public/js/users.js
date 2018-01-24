@@ -166,7 +166,7 @@
                         <p>` + item.firstName + ` ` + item.lastName + `</p>
                         <p>` + item.phoneNumber + `</p>
                         <p>` + item.email + `</p>
-                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_phoneNumber="` + item.phoneNumber + `">ویرایش
+                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `">ویرایش
                         <i class="material-icons">edit</i></a>
                         <a class="waves-effect waves-light btn delete" id="btnDelete" username="` + item.username + `" uniqueId="` + item._id + `" >حذف
                         <i class="material-icons">delete</i></a>
@@ -183,13 +183,22 @@
                 //console.log($(this).attr('editItem'));
 
                 // var voteItemEdit=JSON.parse($(this).attr('editItem'));
+                var id= $(this).attr('editItem_id');
+                var firstName= $(this).attr('editItem_firstName');
+                var lastName= $(this).attr('editItem_lastName');
+                var phoneNumber= $(this).attr('editItem_phoneNumber');
+                var personelNumber=$(this).attr('editItem_personelNumber');
+                var email=$(this).attr('editItem_email');
 
                 userEdit = {
-                    id: $(this).attr('editItem_id'),
-                    firstName: $(this).attr('editItem_firstName'),
-                    lastName: $(this).attr('editItem_lastNames'),
-                    phoneNumber: $(this).attr('editItem_phoneNumber'),
+                    id: id,
+                    firstName: firstName,
+                    lastName: lastName,
+                    phoneNumber: phoneNumber,
+                    personelNumber:personalbar,
+                    email:email,
                 }
+                
                 function changePassword(checkbox) {
                     if(checkbox.checked == true){
                         document.getElementById("password1").removeAttribute("disabled");
@@ -206,7 +215,7 @@
                 $('#users-list').after(`
             
             <!-- Modal Trigger -->
-            <div id="editModal" class="modal edit">
+            <div id="editModal" class="modal modal-fixed-footer edit">
                 <div class="modal-content">
                     <h5>ویرایش</h5>
                     <p>
@@ -214,25 +223,25 @@
                     <div class="row">
                         <div class="input-field col s6">
                             <i class="material-icons prefix">account_circle</i>
-                            <input id="firstName" type="text" class="validate">
-                            <label for="firstName">نام: </label>
+                            <input id="firstName" value="`+firstName+`" type="text" class="validate">
+                            <label class="active" for="firstName">نام: </label>
                         </div>
                         <div class="input-field col s6">
-                            <input id="lastName" type="text" class="validate">
-                            <label for="lastName">نام خانوادگی:</label>
+                            <input id="lastName" value="`+lastName+`" type="text" class="validate">
+                            <label class="active" for="lastName">نام خانوادگی:</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            <input id="personelNumber" type="number" class="validate">
-                            <label for="personelNumber">شماره کارمندی :</label>
+                            <input id="personelNumber"  value="`+personelNumber+`" class="validate">
+                            <label class="active" for="personelNumber">شماره کارمندی :</label>
                         </div>
                     </div>
                     <div class="row">
                     <p>
                     <input type="checkbox" id="cbxChangePassword" onchange='changePassword(this);' />
                     <label for="cbxChangePassword">تغییر کلمه عبور</label>
-                </p>
+                    </p>
                         <div class="input-field col s6">
         
                             <input disabled hidden id="password1" type="password" >
@@ -251,15 +260,15 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">email</i>
-                            <input id="email" type="email" class="validate">
-                            <label for="email">ایمیل: </label>
+                            <input id="email" value="`+email+`" type="email" class="validate">
+                            <label class="active" for="email">ایمیل: </label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">phone</i>
-                            <input id="phone" type="tel" class="validate">
-                            <label for="phone">شماره تماس: </label>
+                            <input id="phone" value="`+phoneNumber+`" type="tel" class="validate">
+                            <label class="active" for="phone">شماره تماس: </label>
                         </div>
                     </div>
                     <div class="row">
@@ -283,21 +292,21 @@
                     </div>
                 </form>
             
-                            <div class="modal-footer">
-                                <button class="btn waves-effect waves-light" id="btnUpdateUser">ثبت
-                                   <i class="material-icons right">send</i>
-                                </button>
-                                <button class="btn waves-effect waves-light modal-close">انصراف
-                                   <i class="material-icons right">cancel</i>
-                                </button>
-                            </div>
-                        </div>
-                    </p>
                 </div>
+                <div class="modal-footer">
+                    <button class="btn waves-effect waves-light" id="btnUpdateUser">ثبت
+                       <i class="material-icons right">send</i>
+                    </button>
+                    <button class="btn waves-effect waves-light modal-close">انصراف
+                       <i class="material-icons right">cancel</i>
+                    </button>
+                        </div>
+                    
             </div>
             `);
 
                 $('.edit').modal();
+            
 
 
                 $('#btnUpdateUser').click(function (e) {
