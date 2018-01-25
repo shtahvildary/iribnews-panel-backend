@@ -219,5 +219,14 @@ router.post('/status',auth, function (req, res) {
   })
 })
 
+router.post('/findeUser',auth,function(req,res){
+  user_sc.findById(req.body._id).exec(function (err, result) {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.status(200).send(result)
+  })
+})
+
 
 module.exports = router;

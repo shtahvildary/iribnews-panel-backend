@@ -5,6 +5,8 @@
    if(!$.cookie("token")){
      window.location.replace("../login.html");
    }
+  
+   $('select').material_select();
 
 
   $(function(){

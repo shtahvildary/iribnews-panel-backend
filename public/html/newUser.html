@@ -14,10 +14,12 @@
 
 <body>
     <div id="navbar"></div>
-
+    
     <div class="container">
+
         <!-- <div class="container" dir="rtl"> -->
         <div class="row">
+                
             <form class="col s12" id="newUserForm">
                 <div class="row">
                     <div class="input-field col s6">
@@ -42,14 +44,14 @@
                         <label for="username">شناسه کاربر: </label>
                     </div>
                     <div class="input-field col s4">
-    
-                        <input id="password1" type="password" >
+
+                        <input id="password1" type="password">
                         <!-- <input disabled id="password1" type="password" class="validate"> -->
                         <label for="password1">کلمه عبور: </label>
                     </div>
                     <div class="input-field col s4">
-    
-                        <input id="password2" type="password" >
+
+                        <input id="password2" type="password">
                         <label for="password2">تکرار کلمه عبور: </label>
                     </div>
                 </div>
@@ -78,17 +80,18 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s12 ">
-                        <p>
-                            <select id="type" class="dropdown-content select-dropdown">
+                        
+                            <select id="type">
                                 <option value="" disabled selected>انتخاب کنید...</option>
                                 <option value="1">مدیر</option>
                                 <option value="2">کاربر</option>
                                 <option value="0">ادمین</option>
                             </select>
                             <label for="type">گروه کاربری</label>
-                        </p>
+                        
                     </div>
                 </div>
+
             </form>
             <button class="btn waves-effect waves-light" type="submit" id="btnAddUser">ذخیره
                 <i class="material-icons right">save</i>
@@ -97,8 +100,10 @@
 
     </div>
 
+
     <!--  Scripts-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="../js/jquery.cookie.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/materialize.js"></script>

@@ -5,6 +5,7 @@ var moment = require('moment');
 var auth = require('../tools/authentication');
 //var auth = require('../tools/auth');
 var request = require('request');
+var _ = require('lodash');
 
 
 //select all sort by date
@@ -151,7 +152,7 @@ router.post('/chart/weekly', auth, function (req, res) {
     var sat = new Date(req.body.date);
     var fri = new Date(req.body.date);
     var curr = new Date; // get current date
-    var first = today.getDate() - today.getDay() - 1; // First day is the day of the month - the day of the week
+    var first = today.getDate() - today.c() - 1; // First day is the day of the month - the day of the week
     var last = first + 5; // last day is the first day + 6
 
 
@@ -368,7 +369,7 @@ router.post('/view', auth, function (req, res) {
 })
 
 router.post('/isSeen', auth, function (req, res) {
-    message_sc.findById(req.body).exec(function (err, result) {
+    message_sc.findById(req.body._id).exec(function (err, result) {
         if (!err) {
             console.log("message:", result)
             // console.log("req.body.reply:", req.body)
@@ -379,13 +380,21 @@ router.post('/isSeen', auth, function (req, res) {
                 }
 
                 if (result._doc.isSeen.length > 0) {
-                    var repeatedUser = result._doc.filter(function (item) {
-                        return item.userId == isSeen.userId;
-                    });
+                    console.log("result._doc.isSeen:", result._doc.isSeen)
+
+                    var repeatedUser = _.findKey(result._doc.isSeen, ['userId',isSeen.userId])
+                    // function (item) {
+                    //     console.log('item: ', item.userId)
+                    //     // var repeatedUser = result._doc.isSeen.filter(function (item) {
+                    //     console.log('item._doc.userId: ', item._doc.userId.toString())
+                    //     return item._doc.userId.toString() == isSeen.userId;
+                    // });
+                    console.log('repeatedUser : ', repeatedUser)
                     if (!repeatedUser)
+                        // if(!_.findKey(result._doc.isSeen))
                         result._doc.isSeen.push(isSeen || result._doc.isSeen);
                 } else {
-                    result._doc.isSeen = isSeen || result._doc.isSeen;
+                    result._doc.isSeen.push(isSeen || result._doc.isSeen);
 
                 }
                 // Save the updated document back to the database

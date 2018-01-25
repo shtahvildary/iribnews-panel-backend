@@ -1,4 +1,10 @@
+/* <input type="checkbox" id="cbxChangePassword" onchange='changePassword(this);' /> */
+
 (function ($) {
+
+
+
+
     //update user profile
     $("#btnAddUser").click(function () {
         if ($("#password1").val() !== $("#password2").val()) {
@@ -118,6 +124,31 @@
 
 
     $(function () {
+
+        function changePassword(checkbox) {
+            // $('#cbxChangePassword').change(function(){
+            // $(".password").find("input[type=checkbox]").on("change",function() {
+            var status = $(this).prop('checked');
+
+            //  $.ajax(
+
+
+
+            console.log('heeeeyyyyyyy')
+            if (checkbox.checked == true) {
+                document.getElementById("password1").removeAttribute("disabled");
+                document.getElementById("password1").removeAttribute("hidden");
+                document.getElementById("password2").removeAttribute("disabled");
+                document.getElementById("password2").removeAttribute("hidden");
+            } else {
+                document.getElementById("password1").setAttribute("disabled", "disabled");
+                document.getElementById("password").setAttribute("hidden", "hidden");
+                document.getElementById("password2").setAttribute("disabled", "disabled");
+                document.getElementById("password2").setAttribute("hidden", "hidden");
+            }
+            // )
+            // })
+        }
         //search in users list   
         var search_users = function (query) {
 
@@ -183,35 +214,23 @@
                 //console.log($(this).attr('editItem'));
 
                 // var voteItemEdit=JSON.parse($(this).attr('editItem'));
-                var id= $(this).attr('editItem_id');
-                var firstName= $(this).attr('editItem_firstName');
-                var lastName= $(this).attr('editItem_lastName');
-                var phoneNumber= $(this).attr('editItem_phoneNumber');
-                var personelNumber=$(this).attr('editItem_personelNumber');
-                var email=$(this).attr('editItem_email');
+                var id = $(this).attr('editItem_id');
+                var firstName = $(this).attr('editItem_firstName');
+                var lastName = $(this).attr('editItem_lastName');
+                var phoneNumber = $(this).attr('editItem_phoneNumber');
+                var personelNumber = $(this).attr('editItem_personelNumber');
+                var email = $(this).attr('editItem_email');
 
                 userEdit = {
                     id: id,
                     firstName: firstName,
                     lastName: lastName,
                     phoneNumber: phoneNumber,
-                    personelNumber:personalbar,
-                    email:email,
+                    personelNumber: personalbar,
+                    email: email,
                 }
-                
-                function changePassword(checkbox) {
-                    if(checkbox.checked == true){
-                        document.getElementById("password1").removeAttribute("disabled");
-                        document.getElementById("password1").removeAttribute("hidden");
-                        document.getElementById("password2").removeAttribute("disabled");
-                        document.getElementById("password2").removeAttribute("hidden");
-                    }else{
-                        document.getElementById("password1").setAttribute("disabled", "disabled");
-                        document.getElementById("password").setAttribute("hidden", "hidden");
-                        document.getElementById("password2").setAttribute("disabled", "disabled");
-                        document.getElementById("password2").setAttribute("hidden", "hidden");
-                   }
-                }
+
+
                 $('#users-list').after(`
             
             <!-- Modal Trigger -->
@@ -223,23 +242,23 @@
                     <div class="row">
                         <div class="input-field col s6">
                             <i class="material-icons prefix">account_circle</i>
-                            <input id="firstName" value="`+firstName+`" type="text" class="validate">
+                            <input id="firstName" value="` + firstName + `" type="text" class="validate">
                             <label class="active" for="firstName">نام: </label>
                         </div>
                         <div class="input-field col s6">
-                            <input id="lastName" value="`+lastName+`" type="text" class="validate">
+                            <input id="lastName" value="` + lastName + `" type="text" class="validate">
                             <label class="active" for="lastName">نام خانوادگی:</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            <input id="personelNumber"  value="`+personelNumber+`" class="validate">
+                            <input id="personelNumber"  value="` + personelNumber + `" class="validate">
                             <label class="active" for="personelNumber">شماره کارمندی :</label>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row password">
                     <p>
-                    <input type="checkbox" id="cbxChangePassword" onchange='changePassword(this);' />
+                    <input type="checkbox" id="cbxChangePassword"  onchange='changePassword(this);'/>
                     <label for="cbxChangePassword">تغییر کلمه عبور</label>
                     </p>
                         <div class="input-field col s6">
@@ -260,14 +279,14 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">email</i>
-                            <input id="email" value="`+email+`" type="email" class="validate">
+                            <input id="email" value="` + email + `" type="email" class="validate">
                             <label class="active" for="email">ایمیل: </label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">phone</i>
-                            <input id="phone" value="`+phoneNumber+`" type="tel" class="validate">
+                            <input id="phone" value="` + phoneNumber + `" type="tel" class="validate">
                             <label class="active" for="phone">شماره تماس: </label>
                         </div>
                     </div>
@@ -306,7 +325,7 @@
             `);
 
                 $('.edit').modal();
-            
+
 
 
                 $('#btnUpdateUser').click(function (e) {
@@ -394,6 +413,6 @@
 
             })
         }
-      
+
     });
 })(jQuery);

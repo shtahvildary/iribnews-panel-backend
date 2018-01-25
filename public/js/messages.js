@@ -1,6 +1,6 @@
-//  <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
+//  <a class="waves-effect waves-light btn modal-trigger reply" id="btnView-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
 //  <i class="material-icons">reply</i></a>
-
+//class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="I am a tooltip"
 (function ($) {
     // var jalaali = require('jalaali-js')
     const fileserver = "http://localhost:9000";
@@ -69,7 +69,7 @@
                         <div class="row">
                             <div class="col m6">
 
-                            ` + (item.isSeen.length > 0 ? (`<img id="icnIsSeen-"`+item._id+`" src="../icons/icons8-double-tick-50.png" href="#isSeenModal">`) : ``) + `
+                            ` + (item.isSeen.length > 0 ? (`<img  id="icnIsSeen-"`+item._id+`" src="../icons/icons8-double-tick-50.png" href="#isSeenModal">`) : ``) + `
                             
                             <p>` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
             (item.type == 'photo' ? '<img style="max-width:100%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
@@ -84,13 +84,13 @@
                 (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
                     (item.type == 'text' ? item.message :
                         (item.type == 'document' ? item.fileName : ''))))) + `</p>
-                                <p>تاریخ :` + item.date + `</p>
+                                <p>تاریخ :` + gregorian_to_jalali(new Date(item.date)) + `</p>
                                 
                             </div>
                         </div>
                     </div>
                     
-                      <a class="waves-effect waves-light btn modal-trigger reply" id="btnReply-` + item._id + `" item="` + item + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">مشاهده
+                      <a class="waves-effect waves-light btn modal-trigger reply tooltipped" data-position="bottom" data-delay="50" data-tooltip="I am a tooltip" id="btnView-` + item._id + `" item="` + item + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">مشاهده
                       <i class="material-icons">reply</i></a>
                       
                     </div>
@@ -110,8 +110,8 @@
             // console.log(replys)
 
         })
-        // btnReply-` + item._id + `
-        $('#btnReply-' + item._id).click(function (e) {
+        // btnView-` + item._id + `
+        $('#btnView-' + item._id).click(function (e) {
             var msgId=$(this).attr('msgId'); 
             console.log('msgID::::::::::',msgId)           
             // var msgIsSeen= {
@@ -119,8 +119,9 @@
             //     userId: userId,
             //     date: Date.now(),
             // };
-            post('/messages/isSeen',msgId,function(response){})
-            reply = {                
+            post('/messages/isSeen',{_id:msgId},function(response){})
+            reply = {    
+                msgId:msgId,            
                 //chatId: $(this).attr('chatId'),
                 text: "",
                 userId: userId,
@@ -134,7 +135,7 @@
             })
 
             cardsAfter(item);
-            // $('#btnReply-' + item._id).modal();
+            // $('#btnView-' + item._id).modal();
             // $('.reply').modal();
             $('#replyModal').modal();
 

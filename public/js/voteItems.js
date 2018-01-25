@@ -1,34 +1,21 @@
 (function ($) {
 
 
-    //Add a new vote item
-    $(function () {
+    
+    $("#btnVoteItemsAdd").click(function () {
+        console.log('btnVoteItemsAdd clicked...')
+        var voteItemTitle = $("#voteItemTitle").val();
+        var type = $('input[name=voteItemType]:checked').val();
+        var description = $("#description").val();
 
-        var userEdit;
-        // function update_voteItem(){
-        //     post('/voteItems/update', voteItemEdit,
-
-        //      function (response) {
-        //         console.log('edit vote item', response);
-
-        //     })
-
-        // }
-
-        $("#btnVoteItemsAdd").click(function () {
-            var voteItemTitle = $("#voteItemTitle").val();
-            var type = $('input[name=voteItemType]:checked').val();
-            var description = $("#description").val();
-
-            addVoteItem({
-                title: voteItemTitle,
-                type: type,
-                description
-            });
+        addVoteItem({
+            title: voteItemTitle,
+            type: type,
+            description
         });
-
     });
     var addVoteItem = function (voteItem) {
+        console.log('addVoteItem.... hi...')
         post('/voteItems/new', voteItem, function (response) {
             if (response.voteItem == false) {
                 alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
@@ -228,6 +215,4 @@
 
             })
         }
-    });
-
-(jQuery);
+    })(jQuery);

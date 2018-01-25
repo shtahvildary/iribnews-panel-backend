@@ -1,5 +1,5 @@
 (function ($) {
-    
+
     $(function () {
         post('/messages/select/last/date',{token:$.cookie("token")},function(response){
             // console.log({token:$.cookie("token")})
@@ -16,5 +16,5 @@
           </li>`);
           });
         })
-    });
+   });
 })(jQuery);
