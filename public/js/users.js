@@ -1,5 +1,28 @@
 /* <input type="checkbox" id="cbxChangePassword" onchange='changePassword(this);' /> */
+function changePassword(checkbox) {
+    // $('#cbxChangePassword').change(function(){
+    // $(".password").find("input[type=checkbox]").on("change",function() {
+    var status = $(this).prop('checked');
 
+    //  $.ajax(
+
+
+
+    console.log('heeeeyyyyyyy')
+    if (checkbox.checked == true) {
+        document.getElementById("password1").removeAttribute("disabled");
+        document.getElementById("password1").removeAttribute("hidden");
+        document.getElementById("password2").removeAttribute("disabled");
+        document.getElementById("password2").removeAttribute("hidden");
+    } else {
+        document.getElementById("password1").setAttribute("disabled", "disabled");
+        document.getElementById("password").setAttribute("hidden", "hidden");
+        document.getElementById("password2").setAttribute("disabled", "disabled");
+        document.getElementById("password2").setAttribute("hidden", "hidden");
+    }
+    // )
+    // })
+}
 (function ($) {
 
 
@@ -125,30 +148,7 @@
 
     $(function () {
 
-        function changePassword(checkbox) {
-            // $('#cbxChangePassword').change(function(){
-            // $(".password").find("input[type=checkbox]").on("change",function() {
-            var status = $(this).prop('checked');
 
-            //  $.ajax(
-
-
-
-            console.log('heeeeyyyyyyy')
-            if (checkbox.checked == true) {
-                document.getElementById("password1").removeAttribute("disabled");
-                document.getElementById("password1").removeAttribute("hidden");
-                document.getElementById("password2").removeAttribute("disabled");
-                document.getElementById("password2").removeAttribute("hidden");
-            } else {
-                document.getElementById("password1").setAttribute("disabled", "disabled");
-                document.getElementById("password").setAttribute("hidden", "hidden");
-                document.getElementById("password2").setAttribute("disabled", "disabled");
-                document.getElementById("password2").setAttribute("hidden", "hidden");
-            }
-            // )
-            // })
-        }
         //search in users list   
         var search_users = function (query) {
 
@@ -226,7 +226,7 @@
                     firstName: firstName,
                     lastName: lastName,
                     phoneNumber: phoneNumber,
-                    personelNumber: personalbar,
+                    personelNumber: personelNumber,
                     email: email,
                 }
 
@@ -298,15 +298,15 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12 ">
-                            <p>
-                                <select id="type" class="dropdown-content select-dropdown">
+                            
+                                <select id="type" >
                                     <option value="" disabled selected>انتخاب کنید...</option>
                                     <option value="1">مدیر</option>
                                     <option value="2">کاربر</option>
                                     <option value="0">ادمین</option>
                                 </select>
                                 <label for="type">گروه کاربری</label>
-                            </p>
+                            
                         </div>
                     </div>
                 </form>
@@ -341,6 +341,7 @@
 
                     if ($("#password1").val() !== $("#password2").val()) {
                         return false;
+                        alert("کلمه عبور و تکرار آن مشابه نیستند!")
                     }
                     userEdit.password = $("#password1").val();
                     userEdit.email = $("#email").val();
@@ -348,16 +349,21 @@
                     userEdit.permitedChannels = $("#permitedChannels").val();
                     userEdit.type = $('input[name=type]:selected').val();
 
-                    // console.log('voteItemEdit:', voteItemEdit)
+
+                    console.log('userEdit:', userEdit)
                     // var status=edit_voteItems(voteItemEdit);
                     // console.log('status:',status)
-                    if (edit_users(userEdit)) {
-                        // if (status==true) {
-                        $('#editModal').modal('close');
-                        alert("به روز رسانی با موفقیت انجام شد.");
-                    } else {
-                        alert("در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. کدخطا: " + status)
-                    }
+                    edit_users(userEdit, function (response) {
+                        console.log('response',response)
+
+                        if (response.user) {
+                            // if (status==true) {
+                            $('#editModal').modal('close');
+                            alert("به روز رسانی با موفقیت انجام شد.");
+                        } else {
+                            alert("در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. کدخطا: " )
+                        }
+                    })
                 })
 
 
@@ -379,7 +385,7 @@
             })
         })
 
-        function edit_users(userEdit) {
+        function edit_users(userEdit, callback) {
             // console.log('voteItemEdit: ', voteItemEdit);
             post('/users/update', {
                 _id: userEdit.id,
@@ -388,16 +394,20 @@
                 password: userEdit.password,
                 email: userEdit.email,
                 phoneNumber: userEdit.phoneNumber,
+                personelNumber:userEdit.personelNumber,
                 permitedChannels: userEdit.permitedChannels,
                 type: userEdit.type,
 
             }, function (response) {
+                callback(response);
                 // console.log('edit vote item', response);
-                return new Promise(function (resolve, reject) {
-                    resolve(response)
-                })
+                // return new Promise(function (resolve, reject) {
+                //     resolve(response)
+                // })
                 // if(response){return true}
                 // return false
+
+
 
             })
         }

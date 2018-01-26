@@ -86,10 +86,15 @@ router.post('/update', auth, function (req, res) {
     //save updated user
     result.save(function (err, result) {
       if (err) {
-        res.status(500).send(err)
+        return res.status(500).json({
+          error:err
+        })
       }
-      //else
-      res.status(200).send(result);
+      // else
+      return res.status(200).json({
+        user:result
+      })
+
     })
   })
 })

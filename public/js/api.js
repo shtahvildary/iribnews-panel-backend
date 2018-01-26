@@ -16,6 +16,20 @@ var post = function (endpoint, data, callback) {
             data: data,
             headers: {
                 'x-access-token': $.cookie("token")
+            },
+            statusCode:{
+                401:function () {
+
+                    post('/users/logout');
+        
+                    $.removeCookie('token', {
+                        path: '/'
+                    });
+                    if (!$.cookie("token")) {
+                        window.location.replace("/login.html");
+                    }
+        
+                }
             }
         })
         .done(function (msg) {

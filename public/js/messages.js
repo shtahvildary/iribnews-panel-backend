@@ -1,6 +1,8 @@
 //  <a class="waves-effect waves-light btn modal-trigger reply" id="btnView-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
 //  <i class="material-icons">reply</i></a>
 //class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="I am a tooltip"
+
+// ` + (item.replys.length > 0 ? (` <div class="card-reveal"><span class="card-title grey-text text-darken-4 >پاسخها<i class="material-icons right">close</i></span><p id="replys-` + item._id + `"></p></div>`) : '') + `
 (function ($) {
     // var jalaali = require('jalaali-js')
     const fileserver = "http://localhost:9000";
@@ -36,9 +38,6 @@
             // console.log('all messages', response)
             var reply;
             response.messages.map(function (item) {
-
-                console.log('path: ', item.filePath)
-                console.log('item: ', item.message)
                 cardsAppend(item, response.userId);
 
             });
@@ -51,7 +50,7 @@
         post('/messages/reply', {
             _id: reply.msgId,
             // chatId: reply.chatId,
-            
+
             text: reply.text,
             userId: reply.userId
 
@@ -62,20 +61,17 @@
     }
 
     function cardsAppend(item, userId) {
+        if (!item.pin) item.pin = [];
         $('#messages-list').append(`
                     <div class="card " style="` + (item.replys.length > 0 ? 'background-color:#d8d8d8' : '') + `">
                     <div class="card-content activator ">
                     <div class="container">
                         <div class="row">
-                            <div class="col m6">
-
-                            ` + (item.isSeen.length > 0 ? (`<img  id="icnIsSeen-"`+item._id+`" src="../icons/icons8-double-tick-50.png" href="#isSeenModal">`) : ``) + `
-                            
-                            <p>` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:100%" controls><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
-            (item.type == 'photo' ? '<img style="max-width:100%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
-                (item.type == 'voice' || item.type == 'audio' ? '<audio controls><source src="' + fileserver + `/` + item.filePath + '" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :
-                    (item.type == 'document' ? '<a href="' + fileserver + `/` + item.filePath + '" alt="" download> دانلود</a>' : '')))) + `</p>
-    
+                            <div class="col m6">                            
+                            <p>` + (item.type == 'video' ? '<video class="responsive-video" style="max-width:50%" ><source src="' + fileserver + `/` + item.filePath + '" type="video/mp4"></video>' :
+            (item.type == 'photo' ? '<img style="max-width:50%" src="' + fileserver + `/` + item.filePath + '" alt="" class=" responsive-img">' :
+                (item.type == 'voice' || item.type == 'audio' ? '<audio><source src="' + fileserver + `/` + item.filePath + '" type="audio/mp3"></audio><p><i class="material-icons"></i></p></a>' :
+                    ''))) + `</p>
                             </div>
     
                             <div class="col m6">
@@ -83,26 +79,23 @@
             (item.type == 'photo' ? item.caption + `<p><i class="material-icons">photo</i></p>` :
                 (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
                     (item.type == 'text' ? item.message :
-                        (item.type == 'document' ? item.fileName : ''))))) + `</p>
+                        (item.type == 'document' ? item.fileName + `<p><i class="material-icons">insert_drive_file</i></p>` : ''))))) + `</p>
                                 <p>تاریخ :` + gregorian_to_jalali(new Date(item.date)) + `</p>
                                 
                             </div>
                         </div>
                     </div>
                     
-                      <a class="waves-effect waves-light btn modal-trigger reply tooltipped" data-position="bottom" data-delay="50" data-tooltip="I am a tooltip" id="btnView-` + item._id + `" item="` + item + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">مشاهده
+                      <a class="waves-effect waves-light btn modal-trigger view " id="btnView-` + item._id + `" item="` + item + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#viewModal">مشاهده
                       <i class="material-icons">reply</i></a>
+                      ` + (item.isSeen.length > 0 ? (`<img class="msg-icons"  id="icnIsSeen-"` + item._id + `" src="../icons/icons8-double-tick-50.png" href="#isSeenModal">`) : ``) + `
+                      <a id="icnPin-` + item._id + `" class="modal-trigger" href="#pinModal"><img class="msg-icons pin"   ` + (item.pin.length > 0 ? (` src="../icons/pin-blue.png" >`) : `src="../icons/pin-gray.png" >`) + `</a>
                       
                     </div>
-                    ` + (item.replys.length > 0 ? (` <div class="card-reveal"><span class="card-title grey-text text-darken-4 >پاسخها<i class="material-icons right">close</i></span><p id="replys-` + item._id + `">
                     
-                   </p></div>`) : '') + `
                     </div>`);
-        jQuery(item.replys).each(function (i, reply) {
-            jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + reply.date + '    در پاسخ به این پیام گفته است: ' + reply.text + `</p>`);
 
-        });
-        
+
 
         $('#replys-' + item._id).click(function (e) {
 
@@ -110,34 +103,42 @@
             // console.log(replys)
 
         })
+        $('#icnPin-' + item._id).click(function (e) {
+            $('#pinModal').modal();
+
+        });
+
         // btnView-` + item._id + `
         $('#btnView-' + item._id).click(function (e) {
-            var msgId=$(this).attr('msgId'); 
-            console.log('msgID::::::::::',msgId)           
+            var msgId = $(this).attr('msgId');
+            // console.log('msgID::::::::::', msgId)
             // var msgIsSeen= {
             //     msgId:msgId,
             //     userId: userId,
             //     date: Date.now(),
             // };
-            post('/messages/isSeen',{_id:msgId},function(response){})
-            reply = {    
-                msgId:msgId,            
+            post('/messages/isSeen', {
+                _id: msgId
+            }, function (response) {})
+            reply = {
+                msgId: msgId,
                 //chatId: $(this).attr('chatId'),
                 text: "",
                 userId: userId,
             }
-            
+
             $('#icnIsSeen-' + item._id).click(function (e) {
                 console.log("isSeen click....")
                 alert('it works');
                 $('#isSeenModal').modal();
-                
+
             })
 
             cardsAfter(item);
             // $('#btnView-' + item._id).modal();
             // $('.reply').modal();
-            $('#replyModal').modal();
+            $('#viewModal').modal();
+
 
             $('#btnSendReply').click(function (e) {
 
@@ -145,7 +146,7 @@
 
                 if (replyToMsg(reply)) {
                     // if (status==true) {
-                    $('#replyModal').modal('close');
+                    $('#viewModal').modal('close');
                     alert("ارسال پیام با موفقیت انجام شد.");
                 } else {
                     alert("پیام شما ارسال نشدء لطفا دوباره اقدام نمایید. کدخطا: " + status)
@@ -155,13 +156,13 @@
     }
 
     function cardsAfter(item, userId) {
-        console.log('item._id in cardsAfter: ', item);
+        // console.log('item._id in cardsAfter: ', item);
         // console.log('userId in cardsAfter: ',userId);
-       
+
         $('#messages-list').after(`
         
         <!-- Modal Trigger -->
-        <div id="replyModal" class="modal reply">
+        <div id="viewModal" class="modal view modal-fixed-footer">
             <div class="modal-content">
                 <h5>پیام</h5>
                 <p>
@@ -179,9 +180,12 @@
                 (item.type == 'voice' || item.type == 'audio' ? item.audioTitle + `<p><i class="material-icons">audiotrack</i></p>` :
                     (item.type == 'text' ? item.message :
                         (item.type == 'document' ? item.fileName : ''))))) + `</p>
-                        <p>تاریخ :` + item.date + `</p>
+                        <p>تاریخ :` + gregorian_to_jalali(new Date(item.date)) + `</p>
                     </div>
-                
+                    <div class="row">
+                    <div class="rtl">پاسخها</div>
+                    ` + (item.replys.length > 0 ? (`<div id="replys-` + item._id + `"></div>`) : `تاکنون هیچ پاسخی ارسال نشده است.`) + `
+                    </div>
            
                         <div class="row">
           
@@ -193,30 +197,32 @@
                             </div>
                             
                         </form>
+                        
         
-                        <div class="modal-footer">
-                            <button class="btn waves-effect waves-light" id="btnSendReply">ارسال
-                               <i class="material-icons right">send</i>
-                            </button>
-                            <button class="btn waves-effect waves-light modal-close">انصراف
-                               <i class="material-icons right">cancel</i>
-                            </button>
-                        </div>
+                      
+                        
                     </div>
-                </p>
-            </div>
-        </div>
+                    </p>
+                    </div>
+                    <div class="modal-footer">
+                    <button class="btn waves-effect waves-light" id="btnSendReply">ارسال
+                       <i class="material-icons right">send</i>
+                    </button>
+                    <button class="btn waves-effect waves-light modal-close">انصراف
+                       <i class="material-icons right">cancel</i>
+                    </button>
+                </div>
+                    </div>
         
         
         
-        <div id="isSeenModal" class="modal isSeen">
+        <div id="isSeenModal" class="modal isSeen modal-fixed-footer">
             <div class="modal-content">
                 <h5>کاربرانی که این پیام را مشاهده کرده اند:</h5>
                 <p>
                         <form>
                         <div class="col m6">
-                        <p>`+item.isSeen+`</p>
-               
+                        <p>` + item.isSeen + `</p>
                         </form>
         
                         <div class="modal-footer">
@@ -228,10 +234,66 @@
                     </div>
                 </p>
             </div>
-        </div>`);
+        </div>
+        
+        
+
+        <div id="pinModal" class="modal pin modal-fixed-footer">
+            <div class="modal-content">
+                <h5>انتخاب کاربران:</h5>
+                <p>
+                        <form>
+                        <p>
+                    <input type="checkbox" id="cbx0-` + item._id + `" value="0" onchange='selectedUsers(this);'/>
+                    <label for="cbx0-` + item._id + `">همه گروهها</label>
+                    </p>
+                    <p>
+                    <input type="checkbox" id="cbx1-` + item._id + `" value="1" onchange='selectedUsers(this);'/>
+                    <label for="cbx1-` + item._id + `">گروه مدیران</label>
+                    </p>    <p>
+                    <input type="checkbox" id="cbx2-` + item._id + `" value="2" onchange='selectedUsers(this);'/>
+                    <label for="cbx2-` + item._id + `">گروه کاربران</label>
+
+                    </p>
+                        </form>
+        
+                        <div class="modal-footer">
+                        
+                            <button class="btn waves-effect waves-light modal-close">
+                               <i class="material-icons right">cancel</i>
+                            </button>
+                        </div>
+                    </div>
+                </p>
+            </div>
+        </div>
+
+
+
+
+        </div>
+        `);
         jQuery(item.isSeen).each(function (i, item) {
-            jQuery('#isSeenModal').append(`<p> کاربر` + item.userId + ' در تاریخ ' + item.date + `این پیام را خوانده است.   </p>`);
+            jQuery('#isSeenModal').append(`<p> کاربر` + item.userId + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + `این پیام را خوانده است.   </p>`);
 
         });
+        jQuery(item.replys).each(function (i, reply) {
+            jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `</p>`);
+        });
+
+        function selectedUsers(checkbox) {
+
+        }
+
+
     }
+    //     $(document).ready(function(){
+    //     $('body').on('click', '.pin', function () {
+    //         console.log('PIN...')
+    //         $('#pinModal').modal('open');
+
+    //     })
+    // })
+
+
 })(jQuery);

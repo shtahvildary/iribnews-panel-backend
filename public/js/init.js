@@ -7,7 +7,18 @@
    }
   
    $('select').material_select();
+   
+   $('#goTop').click(function(){
 
+     $('html, body').animate({
+       scrollTop: $("body").offset().top
+      }, 800, function(){
+        
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        // window.location.hash = hash;
+      });
+    })
+      
 
   $(function(){
 

@@ -15,16 +15,7 @@ var messageSchema = mongoose.Schema({
         word: String,
         count: Number
     }],
-    tag: [ {like:{type:Number},//0:no idea  1:like  2:dislike
-        userId: {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: 'User'
-        },
-        date: {
-            type: Date,
-            default: Date.now
-        }
-    }],
+    pin: [Number],
     isSeen: [{
         userId: {
             type: mongoose.SchemaTypes.ObjectId,

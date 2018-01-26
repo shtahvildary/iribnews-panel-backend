@@ -5,7 +5,7 @@
     $("#navbar").append(`
 
   <div id="navbar">
-  <ul id="dropdown1" class="dropdown-content">
+  <ul id="dropdown1" class="dropdown-content" style="direction:ltr">
       <li>
           <a href="userProfile.html">حساب کاربری</a>
       </li>
@@ -21,7 +21,7 @@
           </a>
           <a href="#!" class="right local-nav-title">واحد مرکزی خبر</a>
 
-          <ul class="left">
+          <ul class="left" >
               <li id="nav-logout" class="local-nav-items-large">
                   <a href="#" class="logout">خروج</a>
               </li>

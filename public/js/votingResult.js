@@ -51,14 +51,14 @@
 
             
             response.votesArray.map(function (item) {
-                // console.log(item)
+                console.log(item)
 
                 $('#votingResult-list').append(`
-                <div class="card">
-                
+                <div class="card rtl">
+            
 
                 <div class="card-content activator ">
-                <p>"` + item.vote.destinationId.title + `" از آرای ثبت شده ` + item.vote.score + ` امتیاز کسب کرده است.</p>
+                <p>"` + item.title + `" از  `+item.count+` ر‌ای ثبت شده ` + item.score + ` امتیاز کسب کرده است.</p>
                  
                 </div>   
                 </div>`);

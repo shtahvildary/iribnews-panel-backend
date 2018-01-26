@@ -369,48 +369,41 @@ router.post('/view', auth, function (req, res) {
 })
 
 router.post('/isSeen', auth, function (req, res) {
-    message_sc.findById(req.body._id).exec(function (err, result) {
-        if (!err) {
-            console.log("message:", result)
-            // console.log("req.body.reply:", req.body)
-            if (!err) {
-                res.status(200);
-                var isSeen = {
-                    userId: req.session.userId,
+    message_sc.findOne({
+        _id: req.body._id
+    }).exec(function (err, msg) {
+        if (err) return res.status(500).json({
+            error: err
+        })
+        var {
+            userId
+        } = req.session; // var userId=req.session.userId;
+        var userSeen = msg.isSeen.map(seen => {
+            if (seen.userId == userId) return seen;
+        })
+        if (userSeen.length <= 0) message_sc.update({
+            _id: req.body._id
+        }, {
+            $push: {
+                isSeen: {
+                    userId
                 }
-
-                if (result._doc.isSeen.length > 0) {
-                    console.log("result._doc.isSeen:", result._doc.isSeen)
-
-                    var repeatedUser = _.findKey(result._doc.isSeen, ['userId',isSeen.userId])
-                    // function (item) {
-                    //     console.log('item: ', item.userId)
-                    //     // var repeatedUser = result._doc.isSeen.filter(function (item) {
-                    //     console.log('item._doc.userId: ', item._doc.userId.toString())
-                    //     return item._doc.userId.toString() == isSeen.userId;
-                    // });
-                    console.log('repeatedUser : ', repeatedUser)
-                    if (!repeatedUser)
-                        // if(!_.findKey(result._doc.isSeen))
-                        result._doc.isSeen.push(isSeen || result._doc.isSeen);
-                } else {
-                    result._doc.isSeen.push(isSeen || result._doc.isSeen);
-
-                }
-                // Save the updated document back to the database
-                result.save(function (err, result) {
-                    if (!err) {
-                        res.status(200).send(result);
-                    } else {
-                        res.status(500).send(err)
-                    }
-                })
-            } else {
-                res.status(500).json({
-                    error: err
-                });
             }
-        }
+        }).exec(function (err, updateInfo) {
+            console.log(updateInfo)
+            if (err) return res.status(500).json({
+                error: err
+            });
+
+            return res.status(200).json({
+                message: msg
+            })
+        })
+        else
+            return res.status(200).json({
+                message: msg
+            })
+
     })
 })
 
