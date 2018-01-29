@@ -1,7 +1,7 @@
 (function ($) {
-    console.log('HHHHIIIIII')
     
-    $(function () {
+    // $(function () {
+        console.log('HHHHIIIIII')
         post('/users/findeUser', {}, function (response) {
             console.log('user: ',response)
             $('#profileForm').append(`
@@ -59,5 +59,5 @@
                     </a>
             `)
         })
-    })
+    // })
 })

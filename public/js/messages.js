@@ -3,6 +3,15 @@
 //class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="I am a tooltip"
 
 // ` + (item.replys.length > 0 ? (` <div class="card-reveal"><span class="card-title grey-text text-darken-4 >پاسخها<i class="material-icons right">close</i></span><p id="replys-` + item._id + `"></p></div>`) : '') + `
+function searchFilter(checkbox) {
+    // if (checkbox.checked == true) {
+
+
+    // } else {
+
+    // }
+
+}
 (function ($) {
     // var jalaali = require('jalaali-js')
     const fileserver = "http://localhost:9000";
@@ -19,10 +28,124 @@
             });
         })
     }
+
     $(function () {
-        // if ($.cookie("token")&&!$.cookie("id")) {
-        //     window.location.replace("../login.html");
-        // }
+        ///////////////////////////////////search filters///////////////////////////////////
+        var filters = {
+            messages: 0,
+            replys: 0,
+            photos: 0,
+            movies: 0,
+            voices: 0
+        }
+
+        $('#cbxMessages').change(function () {
+            console.log($('#cbxMessages').val())
+            if ($('#cbxMessages').is(":checked")) filters.messages = 1
+            else filters.messages = 0
+
+            if ($('#cbxReplys').is(":checked")) filters.replys = 1
+            else filters.replys = 0
+            
+            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
+            else filters.photos = 0
+
+            if ($('#cbxMovies').is(":checked")) filters.movies = 1
+            else filters.movies = 0
+
+            if ($('#cbxVoices').is(":checked")) filters.voices = 1
+            else filters.voices = 0
+
+            console.log(filters)
+
+        })
+
+        $('#cbxReplys').change(function () {
+            console.log($('#cbxMessages').val())
+            if ($('#cbxMessages').is(":checked")) filters.message = 1
+            else filters.message = 0
+
+            if ($('#cbxReplys').is(":checked")) filters.replys = 1
+            else filters.replys = 0
+            
+            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
+            else filters.photos = 0
+
+            if ($('#cbxMovies').is(":checked")) filters.movies = 1
+            else filters.movies = 0
+
+            if ($('#cbxVoices').is(":checked")) filters.voices = 1
+            else filters.voices = 0
+
+            console.log(filters)
+
+        })
+
+        $('#cbxPhotos').change(function () {
+            console.log($('#cbxMessages').val())
+            if ($('#cbxMessages').is(":checked")) filters.message = 1
+            else filters.message = 0
+
+            if ($('#cbxReplys').is(":checked")) filters.replys = 1
+            else filters.replys = 0
+            
+            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
+            else filters.photos = 0
+
+            if ($('#cbxMovies').is(":checked")) filters.movies = 1
+            else filters.movies = 0
+
+            if ($('#cbxVoices').is(":checked")) filters.voices = 1
+            else filters.voices = 0
+
+            console.log(filters)
+
+        })
+
+        $('#cbxMovies').change(function () {
+            console.log($('#cbxMessages').val())
+            if ($('#cbxMessages').is(":checked")) filters.message = 1
+            else filters.message = 0
+
+            if ($('#cbxReplys').is(":checked")) filters.replys = 1
+            else filters.replys = 0
+            
+            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
+            else filters.photos = 0
+
+            if ($('#cbxMovies').is(":checked")) filters.movies = 1
+            else filters.movies = 0
+
+            if ($('#cbxVoices').is(":checked")) filters.voices = 1
+            else filters.voices = 0
+
+            console.log(filters)
+
+        })
+
+        $('#cbxVoices').change(function () {
+            console.log($('#cbxMessages').val())
+            if ($('#cbxMessages').is(":checked")) filters.message = 1
+            else filters.message = 0
+
+            if ($('#cbxReplys').is(":checked")) filters.replys = 1
+            else filters.replys = 0
+            
+            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
+            else filters.photos = 0
+
+            if ($('#cbxMovies').is(":checked")) filters.movies = 1
+            else filters.movies = 0
+
+            if ($('#cbxVoices').is(":checked")) filters.voices = 1
+            else filters.voices = 0
+
+            console.log(filters)
+
+        })
+        ///////////////////////////////////search///////////////////////////////////
+
+
         $('#search').keypress(function (e) {
             if (e.which == 13) {
                 var value = $('#search').val();
