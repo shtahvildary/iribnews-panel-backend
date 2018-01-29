@@ -37,39 +37,104 @@ router.post('/select/all/date', auth, function (req, res, next) {
 
 //search
 router.post('/search', auth, function (req, res) {
-
-    // console.log('query', req.body)
-    message_sc.find({
+    var {
+        filters,
+        query
+    } = req.body;
+    if (!query) query = "";
+    var dbQuery = {
         $or: [{
-            "message": {
-                $regex: req.body.query,
-                $options: 'i'
+                "message": {
+                    // $regex: "",
+                    $regex: query,
+                    $options: 'i'
+                }
+            }, {
+                "caption": {
+                    // $regex: "",
+                    $regex: query,
+                    $options: 'i'
+                }
+            }, {
+                "audioTitle": {
+                    // $regex: "",
+                    $regex: query,
+                    $options: 'i'
+                }
+            }, {
+                "fileName": {
+                    // $regex: "",
+                    $regex: query,
+                    $options: 'i'
+                }
+            }, {
+                "filePath": {
+                    // $regex: "",
+                    $regex: query,
+                    $options: 'i'
+                }
+            },
+            {
+                "replys.text": {
+                    // $regex: "",
+                    $regex: query,
+                    $options: 'i'
+                }
             }
-        }, {
-            "replys.text": {
-                $regex: req.body.query,
-                $options: 'i'
-            }
-        }, {
-            "caption": {
-                $regex: req.body.query,
-                $options: 'i'
-            }
-        }, {
-            "audioTitle": {
-                $regex: req.body.query,
-                $options: 'i'
-            }
-        }, {
-            "fileName": {
-                $regex: req.body.query,
-                $options: 'i'
-            }
-        }]
-    }).sort('-date').exec(function (err, result) {
+        ]
+    };
+    var filterTypes = [];
+    if (filters) {
+        if (filters.messages == 1) {
+            filterTypes.push("text");
+            // dbQuery.$or[0].message.$regex=query;
+
+        }
+        if (filters.photos == 1) {
+            filterTypes.push("photo");
+            // dbQuery.$or[1].caption.$regex=query;
+            // dbQuery.$or[1].filePath.$regex=query;
+        }
+        if (filters.movies == 1) {
+            filterTypes.push("video");
+            // dbQuery.$or[1].caption.$regex=query;
+            // dbQuery.$or[4].filePath.$regex=query;
+
+        }
+        if (filters.voices == 1) {
+            filterTypes.push("voice", "audio");
+            // dbQuery.$or[1].caption.$regex=query;
+            // dbQuery.$or[2].audioTitle.$regex=query;
+            // dbQuery.$or[4].filePath.$regex=query;
+        }
+        if (filters.files == 1) {
+            filterTypes.push("document");
+            // dbQuery.$or[1].caption.$regex=query;
+            // dbQuery.$or[3].fileName.$regex=query;
+        }
+        if (filterTypes.length > 0) dbQuery.type = {
+            $in: filterTypes
+        }
+        // if (filters.replys == 1) {
+        //     dbQuery.$or["replys.text"] = {
+        //         $regex: query,
+        //         $options: "i"
+        //     }
+        //     filterTypes.push("text", "photo", "video", "voice", "audio", "document");
+
+        //     // if(filters.replys==1) dbQuery["replys.text"]={$regex:query,$options:"i"}
+        // }
+    }
+
+
+    console.log('query', dbQuery)
+    console.log('req.body', req.body)
+    console.log('filterTypes', filterTypes)
+    message_sc.find(dbQuery).sort('-date').exec(function (err, result) {
         // console.log(err)
         //pagination should be handled
         if (!err) {
+            
             res.status(200).json({
                 messages: result,
                 // userId: req.body.token
@@ -81,7 +146,7 @@ router.post('/search', auth, function (req, res) {
             });
         }
     })
-})
+});
 
 //Select last 5 messages sort by date
 router.post('/select/last/date', auth, function (req, res) {
@@ -145,7 +210,7 @@ router.post('/chart/daily', auth, function (req, res) {
             });
         }
     })
-})
+});
 router.post('/chart/weekly', auth, function (req, res) {
     console.log('weekly', req.body);
     var today = new Date(req.body.date);
@@ -189,7 +254,7 @@ router.post('/chart/weekly', auth, function (req, res) {
             });
         }
     })
-})
+});
 router.post('/chart/monthly', auth, function (req, res) {
     console.log('monthly', req.body);
     var today = new Date(req.body.date);
@@ -346,8 +411,7 @@ router.post('/reply', auth, function (req, res) {
             });
         }
     })
-})
-router.post('/view', auth, function (req, res) {
+}); router.post('/view', auth, function (req, res) {
     message_sc.findById(req.body._id).exec(function (err, result) {
         if (!err) {
             console.log("message:", result)

@@ -66,7 +66,6 @@ var app = express();
 
 //use sessions for tracking logins
 
-//export default function sessionManagementConfig(app) {
 app.use(session({
   // secret: serverSettings.session.password,
   secret: 'work hard',
@@ -77,7 +76,7 @@ app.use(session({
     httpOnly: true,
     secure: false,
     // secure: true,
-    maxAge: 1800000 //30 mins
+    // maxAge: 1800000 //30 mins
   },
   ttl: (1 * 60 * 60),
   store: new MongoStore({
@@ -85,11 +84,6 @@ app.use(session({
   }),
   name: "id",
 }));
-// session.Session.prototype.login = function(user, cb){
-//   this.userInfo = user;
-//   cb();
-// };
-// }
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -108,7 +102,7 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

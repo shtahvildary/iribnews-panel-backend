@@ -16,12 +16,13 @@ function searchFilter(checkbox) {
     // var jalaali = require('jalaali-js')
     const fileserver = "http://localhost:9000";
 
-    var search_message = function (query) {
+    var search_message = function (query,filters) {
 
         post('/messages/search', {
+            filters:filters,
             query: query
         }, function (response) {
-            // console.log('search messages', response)
+            console.log('search messages', response)
             $('#messages-list').empty();
             response.messages.map(function (item) {
                 cardsAppend(item);
@@ -32,116 +33,68 @@ function searchFilter(checkbox) {
     $(function () {
         ///////////////////////////////////search filters///////////////////////////////////
         var filters = {
-            messages: 0,
-            replys: 0,
-            photos: 0,
-            movies: 0,
-            voices: 0
+            messages: 1,
+            // replys: 1,
+            photos: 1,
+            movies: 1,
+            voices: 1,
+            documents:1,
         }
+        // console.log(filters)
 
-        $('#cbxMessages').change(function () {
-            console.log($('#cbxMessages').val())
+        $('#cbxMessages').change(function () { 
             if ($('#cbxMessages').is(":checked")) filters.messages = 1
             else filters.messages = 0
-
-            if ($('#cbxReplys').is(":checked")) filters.replys = 1
-            else filters.replys = 0
-            
-            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
-            else filters.photos = 0
-
-            if ($('#cbxMovies').is(":checked")) filters.movies = 1
-            else filters.movies = 0
-
-            if ($('#cbxVoices').is(":checked")) filters.voices = 1
-            else filters.voices = 0
-
-            console.log(filters)
-
+            // console.log(filters)
+            search_message($('#search').val(),filters)
         })
 
-        $('#cbxReplys').change(function () {
-            console.log($('#cbxMessages').val())
-            if ($('#cbxMessages').is(":checked")) filters.message = 1
-            else filters.message = 0
-
-            if ($('#cbxReplys').is(":checked")) filters.replys = 1
-            else filters.replys = 0
-            
-            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
-            else filters.photos = 0
-
-            if ($('#cbxMovies').is(":checked")) filters.movies = 1
-            else filters.movies = 0
-
-            if ($('#cbxVoices').is(":checked")) filters.voices = 1
-            else filters.voices = 0
-
-            console.log(filters)
-
-        })
+        // $('#cbxReplys').change(function () {
+        //     console.log($('#cbxMessages').val())
+        //     if ($('#cbxReplys').is(":checked")) filters.replys = 1
+        //     else filters.replys = 0
+        //     console.log(filters)
+        //     search_message($('#search').val(),filters)
+        // })
 
         $('#cbxPhotos').change(function () {
             console.log($('#cbxMessages').val())
-            if ($('#cbxMessages').is(":checked")) filters.message = 1
-            else filters.message = 0
-
-            if ($('#cbxReplys').is(":checked")) filters.replys = 1
-            else filters.replys = 0
             
             if ($('#cbxPhotos').is(":checked")) filters.photos = 1
             else filters.photos = 0
 
-            if ($('#cbxMovies').is(":checked")) filters.movies = 1
-            else filters.movies = 0
-
-            if ($('#cbxVoices').is(":checked")) filters.voices = 1
-            else filters.voices = 0
-
             console.log(filters)
+            search_message($('#search').val(),filters)
+            
 
         })
 
         $('#cbxMovies').change(function () {
             console.log($('#cbxMessages').val())
-            if ($('#cbxMessages').is(":checked")) filters.message = 1
-            else filters.message = 0
-
-            if ($('#cbxReplys').is(":checked")) filters.replys = 1
-            else filters.replys = 0
             
-            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
-            else filters.photos = 0
 
             if ($('#cbxMovies').is(":checked")) filters.movies = 1
             else filters.movies = 0
 
-            if ($('#cbxVoices').is(":checked")) filters.voices = 1
-            else filters.voices = 0
+           
 
             console.log(filters)
+            search_message($('#search').val(),filters)
+            
 
         })
 
-        $('#cbxVoices').change(function () {
-            console.log($('#cbxMessages').val())
-            if ($('#cbxMessages').is(":checked")) filters.message = 1
-            else filters.message = 0
-
-            if ($('#cbxReplys').is(":checked")) filters.replys = 1
-            else filters.replys = 0
-            
-            if ($('#cbxPhotos').is(":checked")) filters.photos = 1
-            else filters.photos = 0
-
-            if ($('#cbxMovies').is(":checked")) filters.movies = 1
-            else filters.movies = 0
-
+        $('#cbxVoices').change(function () { 
             if ($('#cbxVoices').is(":checked")) filters.voices = 1
             else filters.voices = 0
-
             console.log(filters)
-
+            search_message($('#search').val(),filters)
+        })
+        $('#cbxDocs').change(function () { 
+            if ($('#cbxDocs').is(":checked")) filters.documents = 1
+            else filters.documents = 0
+            console.log(filters)
+            search_message($('#search').val(),filters)
         })
         ///////////////////////////////////search///////////////////////////////////
 
@@ -152,7 +105,7 @@ function searchFilter(checkbox) {
                 // console.log('query', {
                 //     text: value
                 // })
-                search_message(value);
+                search_message(value,filters);
                 return false; //<---- Add this line
             }
         });

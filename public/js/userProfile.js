@@ -1,6 +1,7 @@
 (function ($) {
+    console.log("shotor")
     
-    // $(function () {
+    $(function () {
         console.log('HHHHIIIIII')
         post('/users/findeUser', {}, function (response) {
             console.log('user: ',response)
@@ -59,5 +60,5 @@
                     </a>
             `)
         })
-    // })
-})
+    })
+})(jQuery)
