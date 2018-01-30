@@ -1,64 +1,53 @@
 (function ($) {
-    console.log("shotor")
-    
     $(function () {
-        console.log('HHHHIIIIII')
         post('/users/findeUser', {}, function (response) {
             console.log('user: ',response)
-            $('#profileForm').append(`
+            $('#profile').append(`
             <form class="col s12" >
 
+            <form class="col s12" id="UserProfileForm">
             <div class="row">
-                    <div class="input-field col s6">
-                            <i class="material-icons prefix">account_circle</i>
-                        <input id="first_name" disabled value="`+response.username+`" type="text" class="validate">
-                        <label class="active" for="first_name">نام: </label>
-                    </div>
-                    <div class="input-field col s6">
-                        <input id="last_name" type="text" class="validate">
-                        <label for="last_name">نام خانوادگی:</label>
-                    </div>
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input id="firstName" disabled value="` + response.firstName + `" type="text" class="validate">
+                    <label class="active" for="firstName">نام: </label>
                 </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input  id="username" type="text" class="validate">
-                        <label for="username">شناسه کاربر: </label>
-                    </div>
+                <div class="input-field col s6">
+                    <input id="lastName" disabled value="` + response.lastName + `" type="text" class="validate">
+                    <label class="active" for="lastName">نام خانوادگی:</label>
                 </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                                                   
-                        <input disabled id="password1" type="password" class="validate">
-                        <label for="password1">کلمه عبور: </label>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="personelNumber"  disabled value="` + response.personelNumber + `" class="validate">
+                    <label class="active" for="personelNumber">شماره کارمندی :</label>
                 </div>
-                <div class="row">
-                        <div class="input-field col s12">
-                                                       
-                            <input disabled hidden id="password2" type="password" class="validate">
-                            <label hidden for="password2">تکرار کلمه عبور: </label>
-                        </div>
-                    </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                            <i class="material-icons prefix">email</i>                        
-                        <input id="email" type="email" class="validate">
-                        <label for="email">ایمیل: </label>
-                    </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">email</i>
+                    <input id="email" disabled value="` + response.email + `" type="email" class="validate">
+                    <label class="active" for="email">ایمیل: </label>
                 </div>
-                <div class="row">
-                        <div class="input-field col s12">
-                                <i class="material-icons prefix">phone</i>
-                            <input id="phone" type="tel" class="validate">
-                            <label for="phone">شماره تماس: </label>
-                        </div>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">phone</i>
+                    <input id="phone" disabled value="` + response.phoneNumber + `" type="tel" class="validate">
+                    <label class="active" for="phone">شماره تماس: </label>
+                </div>
+            </div>
+            <div class="row">
                     </form>
             
-                    <a class="waves-effect waves-light btn" href="profileUpdate.html">اصلاح
+                    <a class="waves-effect waves-light btn" id="btnProfileEdit" href="#">اصلاح
                         <i class="material-icons">edit</i>
                     </a>
             `)
+        })
+        $("#btnProfileEdit").click(function(e){
+            $("input").prop('disabled', false);
         })
     })
 })(jQuery)

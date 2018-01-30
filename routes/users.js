@@ -225,7 +225,7 @@ router.post('/status',auth, function (req, res) {
 })
 
 router.post('/findeUser',auth,function(req,res){
-  user_sc.findById(req.body._id).exec(function (err, result) {
+  user_sc.findById(req.session.userId).exec(function (err, result) {
     if (err) {
       res.status(500).send(err)
     }
