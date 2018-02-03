@@ -6,7 +6,7 @@ var auth = require('../tools/authentication');
 
 //Add new program or channel
 router.post('/new', auth,function (req, res) {
-  console.log('Now U can save a new program or channel (voteItems)...');
+  // console.log('Now U can save a new program or channel (voteItems)...');
   var voteItem = new voteItem_sc(req.body);
   console.log(req.body);
   voteItem.save(function (err, result) {

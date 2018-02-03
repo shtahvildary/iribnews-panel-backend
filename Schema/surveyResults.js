@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 
-var surveysSchema=mongoose.Schema({
+var surveyResults=mongoose.Schema({
     chatId:String,    
     // botId:Number  
     surveyId:{
@@ -9,6 +9,10 @@ var surveysSchema=mongoose.Schema({
     },
     
     text:String,
+    date: {
+        type: Date,
+        default: Date.now
+    },
     
 });
-module.exports=mongoose.model("surveys",surveysSchema);
+module.exports=mongoose.model("surveyResults",surveyResults);

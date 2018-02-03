@@ -28,7 +28,7 @@ function changePassword(checkbox) {
 
 
 
-    //update user profile
+    //add user 
     $("#btnAddUser").click(function () {
         if ($("#password1").val() !== $("#password2").val()) {
 

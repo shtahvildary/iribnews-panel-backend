@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="../icons/favicon.ico">
+    <title>واحد مرکزی خبر - افزودن کاربر جدید</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/materialize-rtl.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <div class="container">
+
+        <!-- <div class="container" dir="rtl"> -->
+        <div class="row">
+
+            <form class="col s12 rtl" style="direction:rtl !important" id="newSurveyForm">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <!-- <i class="material-icons prefix">account_circle</i> -->
+                        <input id="tbxTitle" type="text" class="validate">
+                        <label for="tbxTitle">عنوان: </label>
+                    </div>
+
+                </div>
+  
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input id="tbxText" type="text" class="validate">
+                        <label for="tbxText"> پرسش نظرسنجی: </label>
+                    </div>
+                </div>
+                <label for="replys" style="direction:rtl"> پاسخ ها: </label>
+
+                <div class="row">
+                    
+                    <div class="input-field col s4" id="replys">
+                            <input id="tbxKeyboard1" type="text" class="validate">
+                            <input id="tbxKeyboard2" type="text" class="validate">
+                    </div>
+                    
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12 ">
+
+                        <select id="type">
+                            <option value="" disabled selected>انتخاب کنید...</option>
+                            <!-- <option value="1">مدیر</option>
+                            <option value="2">کاربر</option>
+                            <option value="0">ادمین</option> -->
+                        </select>
+                        <label for="type">این نظرسنجی مربوط به کدام کانال یا برنامه است؟</label>
+
+                    </div>
+                </div>
+
+            </form>
+            
+            <button class="btn waves-effect waves-light" type="submit" id="btnSave">ذخیره
+                <i class="material-icons right">save</i>
+            </button>
+        </div>
+
+    </div>
+
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> -->
+    <script src="../js/jquery.cookie.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/materialize.js"></script>
+    <script src="../js/init.js"></script>
+    <script src="../js/surveys.js"></script>
+    <script src="../js/isLoggedin.js"></script>    
+    <script src="../js/menus.js"></script>
+    <script src="../js/logout.js"></script>
+
+
+</body>
+
+</html>

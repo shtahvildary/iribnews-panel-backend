@@ -16,52 +16,11 @@ var users = require('./routes/users');
 var messages = require('./routes/messages');
 var voteItems = require('./routes/voteItems');
 var votes = require('./routes/votes');
+var surveys = require('./routes/surveys');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
 var app = express();
-
-
-// /////////////////////////////////////////////
-// //use auth0 for tracking logins
-
-// var jwt = require('express-jwt');
-// var jwks = require('jwks-rsa');
-// // Authentication middleware. When used, the
-// // access token must exist and be verified against
-// // the Auth0 JSON Web Key Set
-// var port = process.env.PORT || 8080;
-// // var port = process.env.PORT || 5010;
-
-// var jwtCheck = jwt({
-//   // Dynamically provide a signing key
-//   // based on the kid in the header and 
-//   // the signing keys provided by the JWKS endpoint.
-//     secret: jwks.expressJwtSecret({
-//         cache: true,
-//         rateLimit: true,
-//         jwksRequestsPerMinute: 5,
-//         jwksUri: "https://tstat.eu.auth0.com/.well-known/jwks.json"
-//     }),
-//   // Validate the audience and the issuer.    
-//     audience: 'https://telegram-stats',
-//     issuer: "https://tstat.eu.auth0.com/",
-//     algorithms: ['RS256']
-// });
-
-// app.use(jwtCheck);
-
-// app.get('/authorized', function (req, res) {
-//   res.send('Secured Resource');
-// });
-
-// app.listen(port);
-
-// ////////////////////////////////////////////////////
-
-
-
-
 
 
 //use sessions for tracking logins
@@ -112,6 +71,7 @@ app.use('/users', users);
 app.use('/messages', messages);
 app.use('/voteItems', voteItems);
 app.use('/votes', votes);
+app.use('/surveys',surveys)
 
 
 
