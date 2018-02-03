@@ -43,13 +43,56 @@ router.post('/register', auth, function (req, res) {
 });
 
 //return user type
-router.post('/type',auth,function(req,res){
+router.post('/type', auth, function (req, res) {
   var userType = req.session.type;
-  
+
   return res.status(200).json({
-    type:userType,
+    type: userType,
   })
 
+})
+
+//update user profile
+router.post('/update/profile', auth, function (req, res) {
+  console.log('U can update user...');
+  console.log('query:', req.body);
+  user_sc.findById(req.session.userId).exec(function (err, result) {
+    if (err) {
+      res.status(500).json({
+        error: err
+      });
+    }
+    //else
+    result.personelNumber = req.body.personelNumber || result._doc.personelNumber;
+    result.password = req.body.password || result._doc.password;
+    result.email = req.body.email || result._doc.email;
+    result.mobileNumber = req.body.mobileNumber || result._doc.mobileNumber;
+    result.phoneNumber = req.body.phoneNumber || result._doc.phoneNumber;
+
+    //save updated user
+    result.save(function (err, result) {
+      if (err) {
+        return res.status(500).json({
+          error: err
+        })
+      }
+      // else
+      return res.status(200).json({
+        user: result
+      })
+
+    })
+  })
+  // var result=updateUser(req.session.userId,req.body,req.session.type)
+  // if (result.error) {
+  //   return res.status(500).json({
+  //     error:error
+  //   })
+  // }
+  // // else
+  // return res.status(200).json({
+  //   user:result
+  // })
 })
 
 //update user
@@ -70,15 +113,14 @@ router.post('/update', auth, function (req, res) {
 
     result.password = req.body.password || result._doc.password;
     result.email = req.body.email || result._doc.email;
+    result.mobileNumber = req.body.mobileNumber || result._doc.mobileNumber;
     result.phoneNumber = req.body.phoneNumber || result._doc.phoneNumber;
     var userType = req.session.type;
     // console.log("userType: ", userType);
     if (userType == 2) { //user privilege
       console.log("U can't change some parameters!");
-      // res.json({
-      //   error: "U can't change some parameters!"
-      // })
-    } else {//admin privilege
+
+    } else { //admin privilege
       result.status = req.body.status || result._doc.status;
       result.permitedChannelsId = req.body.permitedChannelsId || result._doc.permitedChannelsId;
       result.type = req.body.type || result._doc.type;
@@ -87,17 +129,73 @@ router.post('/update', auth, function (req, res) {
     result.save(function (err, result) {
       if (err) {
         return res.status(500).json({
-          error:err
+          error: err
         })
       }
       // else
       return res.status(200).json({
-        user:result
+        user: result
       })
 
     })
   })
+  // var result=updateUser(req.body._id,req.body,req.session.type)
+  // if (result.error) {
+  //         return res.status(500).json({
+  //           error:error
+  //         })
+  //       }
+  //       // else
+  //       return res.status(200).json({
+  //         user:result
+  //       })
+
 })
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function updateUser(userId, userInfo, type) {
+  user_sc.findById(userId).exec(function (err, result) {
+    if (err) {
+      res.status(500).json({
+        error: err
+      });
+    }
+    //else
+    console.log("user: ", result);
+    result.firstName = userInfo.firstName || result._doc.firstName;
+    result.lastName = userInfo.lastName || result._doc.lastName;
+    result.personelNumber = userInfo.personelNumber || result._doc.personelNumber;
+
+    result.password = userInfo.password || result._doc.password;
+    result.email = userInfo.email || result._doc.email;
+    result.mobileNumber = userInfo.mobileNumber || result._doc.mobileNumber;
+    result.phoneNumber = userInfo.phoneNumber || result._doc.phoneNumber;
+    var userType = type;
+    // console.log("userType: ", userType);
+    if (userType == 2) { //user privilege
+      console.log("U can't change some parameters!");
+
+    } else { //admin privilege
+      result.status = userInfo.status || result._doc.status;
+      result.permitedChannelsId = userInfo.permitedChannelsId || result._doc.permitedChannelsId;
+      result.type = userInfo.type || result._doc.type;
+    }
+    //save updated user
+    result.save(function (err, result) {
+      if (err) {
+        return ({
+          error: err
+        })
+      }
+      // else
+      return ({
+        user: result
+      })
+
+    })
+  })
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Login
 router.post('/login', function (req, res) {
   // bcrypt.hash(req.body.password, 10, function (err, hash){
@@ -129,7 +227,7 @@ router.post('/login', function (req, res) {
           req.session.type = result._doc.type;
           console.log(req.session.cookie)
           console.plain(req.session.userId)
-          console.plain('type: ',req.session.type)
+          console.plain('type: ', req.session.type)
 
           res.json({
             user: result,
@@ -158,7 +256,7 @@ router.post('/login', function (req, res) {
 router.post('/all', auth, function (req, res) {
   user_sc.find({
     'type': {
-        $gte: req.session.type,    //gte: greater than or equal to (i.e. >= )
+      $gte: req.session.type, //gte: greater than or equal to (i.e. >= )
     }
   }).exec(function (err, result) {
     if (!err) {
@@ -200,20 +298,19 @@ router.post('/logout', function (req, res, next) {
 //URL: localhost:5010/users/status
 //INPUT:{"_id":"5a1e711ed411741d84d10a29"}
 
-router.post('/status',auth, function (req, res) {
+router.post('/status', auth, function (req, res) {
   console.log('query', req.body)
-    user_sc.findById(req.body._id).exec(function (err, result) {
+  user_sc.findById(req.body._id).exec(function (err, result) {
     if (!err) {
-      console.log("user:",result) 
-      result.status=req.body.status;  
-      result.save(function(err,result){
-        if(!err){
+      console.log("user:", result)
+      result.status = req.body.status;
+      result.save(function (err, result) {
+        if (!err) {
           res.status(200).send(result);
-        }
-        else{
+        } else {
           res.status(500).send(err)
         }
-      })   
+      })
       res.status(200);
       console.log('status of user changed...');
     } else {
@@ -224,7 +321,7 @@ router.post('/status',auth, function (req, res) {
   })
 })
 
-router.post('/findeUser',auth,function(req,res){
+router.post('/findeUser', auth, function (req, res) {
   user_sc.findById(req.session.userId).exec(function (err, result) {
     if (err) {
       res.status(500).send(err)

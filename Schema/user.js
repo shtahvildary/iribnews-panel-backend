@@ -7,6 +7,7 @@ var sc_user = mongoose.Schema({
     firstName:{type:'string'},
     lastName:{type:'string'},
     email:{type:'string',unique : true, required : true,trim: true},
+    mobileNumber:{type:["number"]},
     phoneNumber:{type:["number"]},
     personelNumber:{type:"number"},
     status:{type:'number',default:0},//0:active - 1:deactive - -1:deleted - 3:banned

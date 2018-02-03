@@ -1,11 +1,13 @@
 (function ($) {
-    function showProfile(user) {
-        console.log('user: ', user)
-        $('#profile').append(`
-        <form class="col s12" >
+    // var pass;
 
-        <form class="col s12" id="UserProfileForm">
-        <div class="row">
+    function showProfile(user) {
+        // pass = user.password;
+        $('#profile').append(`
+        
+
+        <form class="col s12 rtl" id="UserProfileForm">
+        <div class="row rtl">
             <div class="input-field col s6">
                 <i class="material-icons prefix">account_circle</i>
                 <input id="firstName" disabled value="` + user.firstName + `" type="text" class="validate">
@@ -26,16 +28,21 @@
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">email</i>
-                <input id="email" disabled value="` + user.email + `" type="email" class="validate">
+                <input id="email" disabled value="` + user.email + `" type="email" class="validate" data-error="!خطا">
                 <label class="active" for="email">ایمیل: </label>
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s6">
+                <i class="material-icons prefix">phone</i>
+                <input id="mobile" disabled value="` + user.mobileNumber + `" type="tel" required class="validate">
+                <label class="active" for="mobile">شماره تلفن همراه: </label>
+            </div>
+                <div class="input-field col s6">
+            
                 <i class="material-icons prefix">phone</i>
                 <input id="phone" disabled value="` + user.phoneNumber + `" type="tel" class="validate">
-                <label class="active" for="phone">شماره تماس: </label>
-            </div>
+                <label class="active" for="phone">شماره تلفن ثابت: </label>    </div>
         </div>
         <div class="row">
                 </form>
@@ -50,9 +57,13 @@
             showProfile(user)
 
             $("#btnProfileEdit").click(function (e) {
-                $("input").prop('disabled', false);
+                $("#email").prop('disabled', false);
+                $("#mobile").prop('disabled', false);
+                $("#phone").prop('disabled', false);
+                
                 $('#profile').after(`
-                <div class="row password">
+                <div class="rtl">
+                <div class="row password ">
                 <p>
                 <input type="checkbox" id="cbxChangePassword"/>
                 <label for="cbxChangePassword">تغییر کلمه عبور</label>
@@ -76,21 +87,49 @@
                     </a>
                     <a class="waves-effect waves-light btn" id="btnProfileCancel" >انصراف
                         <i class="material-icons">cancel</i>
-                    </a>`);
+                    </a>
+                    </div>`
+                );
                 $("#btnProfileEdit").remove();
-                $("#btnProfileUpdate").click(function (e) {
 
+                $("#btnProfileUpdate").click(function (e) {
+                    if ($('#cbxChangePassword').is(":checked")) {
+                        
+                    // if ($("#password").val() != pass) {
+                    //     alert("کلمه عبور صحیح نیست...!")
+                    //     // $("#password").append(`data-error="!خطا"`)
+                    //     return false;
+
+                    // }
+
+                    if ($("#newPass1").val() !== $("#newPass2").val()) {
+                        alert("کلمه عبور و تکرار آن مشابه نیستند!")
+                        return false;
+                    }}
+                    var user = {
+                        password: $("#newPass1").val(),
+                        email: $("#email").val(),
+                        mobileNumber: $("#mobile").val(),
+                        phoneNumber: $("#phone").val(),
+                        personelNumber: $('#personelNumber').val(),
+                    }
+                    console.log('user:', user)
+
+                    edit_user(user, function (response) {
+                        console.log('response', response)
+
+                        if (response.user) {
+
+                            $('#editModal').modal('close');
+                            alert("به روز رسانی با موفقیت انجام شد.");
+                            location.reload();
+                        } else {
+                            alert("در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. کدخطا: ")
+                        }
+                    })
                 })
                 $("#btnProfileCancel").click(function (e, user) {
-                    console.log('hiiiii')
-                    $("#btnProfileUpdate").replaceWith(`
-                        <a class="waves-effect waves-light btn" id="btnProfileEdit" >اصلاح
-                            <i class="material-icons">edit</i>
-                        </a>
-                        `);
-                    $("#btnProfileCancel").remove();
-
-                    showProfile(user);
+                    location.reload();
 
                 })
                 $('#cbxChangePassword').change(function () {
@@ -99,16 +138,28 @@
 
                     } else {
                         $('.pass').toggle();
-
                     }
-
                 })
             })
         })
 
+        function edit_user(user, callback) {
+            // console.log('voteItemEdit: ', voteItemEdit);
+            post('/users/update/profile', {
+                password: user.password,
+                email: user.email,
+                mobileNumber: user.mobileNumber,
+                phoneNumber: user.phoneNumber,
+                personelNumber: user.personelNumber,
+            }, function (response) {
+                callback(response);
+                // console.log('edit vote item', response);
+                // return new Promise(function (resolve, reject) {
+                //     resolve(response)
+                // })
+                // if(response){return true}
+                // return false
+            })
+        }
     })
-
-
-
-
 })(jQuery)

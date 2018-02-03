@@ -1,28 +1,3 @@
-/* <input type="checkbox" id="cbxChangePassword" onchange='changePassword(this);' /> */
-function changePassword(checkbox) {
-    // $('#cbxChangePassword').change(function(){
-    // $(".password").find("input[type=checkbox]").on("change",function() {
-    var status = $(this).prop('checked');
-
-    //  $.ajax(
-
-
-
-    console.log('heeeeyyyyyyy')
-    if (checkbox.checked == true) {
-        document.getElementById("password1").removeAttribute("disabled");
-        document.getElementById("password1").removeAttribute("hidden");
-        document.getElementById("password2").removeAttribute("disabled");
-        document.getElementById("password2").removeAttribute("hidden");
-    } else {
-        document.getElementById("password1").setAttribute("disabled", "disabled");
-        document.getElementById("password").setAttribute("hidden", "hidden");
-        document.getElementById("password2").setAttribute("disabled", "disabled");
-        document.getElementById("password2").setAttribute("hidden", "hidden");
-    }
-    // )
-    // })
-}
 (function ($) {
 
 
@@ -42,9 +17,10 @@ function changePassword(checkbox) {
             var personelNumber = $("#personelNumber").val();
             var username = $("#username").val().toLowerCase();
             var email = $("#email").val().toLowerCase();
+            var mobileNumber = $("#mobile").val();
             var phoneNumber = $("#phone").val();
-            var permitedChannels = $("#permitedChannels").val();
-            var type = $('input[name=type]:selected').val();
+            // var permitedChannels = $("#permitedChannels").val();
+            var type = $("#type").val();
 
             // var type = $('input[name=voteItemType]:checked').val();
 
@@ -55,8 +31,9 @@ function changePassword(checkbox) {
                 username: username,
                 password: password,
                 email: email,
+                mobileNumber: mobileNumber,
                 phoneNumber: phoneNumber,
-                permitedChannels: permitedChannels,
+                // permitedChannels: permitedChannels,
                 type: type
             };
             console.log(user);
@@ -85,6 +62,7 @@ function changePassword(checkbox) {
         var firstName = $("#first_name").val();
         var lastName = $("#last_name").val();
         var email = $("#email").val();
+        var mobileNumber = $("#mobile").val();
         var phoneNumber = $("#phone").val();
 
         // var password;
@@ -96,6 +74,7 @@ function changePassword(checkbox) {
             firstName: firstName,
             lastName: lastName,
             email: email,
+            mobileNumber: mobileNumber,
             phoneNumber: phoneNumber,
             // status:status,
             // permitedChannelsId:permitedChannelsId,
@@ -113,9 +92,11 @@ function changePassword(checkbox) {
             var lastName = $("#lastName").val();
             var personelNumber = $("#personelNumber").val();
             var email = $("#email").val().toLowerCase();
+            var mobileNumber = $("#mobile").val();
             var phoneNumber = $("#phone").val();
-            var permitedChannels = $("#permitedChannels").val();
-            var type = $('input[name=type]:selected').val();
+            // var permitedChannels = $("#permitedChannels").val();
+            var type = $("#type").val();
+            
 
             // var type = $('input[name=voteItemType]:checked').val();
 
@@ -125,8 +106,9 @@ function changePassword(checkbox) {
                 personelNumber: personelNumber,
                 password: password,
                 email: email,
+                mobileNumber: mobileNumber,
                 phoneNumber: phoneNumber,
-                permitedChannels: permitedChannels,
+                // permitedChannels: permitedChannels,
                 type: type
             };
         }
@@ -147,6 +129,8 @@ function changePassword(checkbox) {
 
 
     $(function () {
+
+        // $('select').material_select();
 
 
         //search in users list   
@@ -195,9 +179,10 @@ function changePassword(checkbox) {
                 <div class="card" unqueId=` + item._id + `>
                     <div class="card-content">
                         <p>` + item.firstName + ` ` + item.lastName + `</p>
+                        <p>` + item.mobileNumber + `</p>
                         <p>` + item.phoneNumber + `</p>
                         <p>` + item.email + `</p>
-                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `">ویرایش
+                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `">ویرایش
                         <i class="material-icons">edit</i></a>
                         <a class="waves-effect waves-light btn delete" id="btnDelete" username="` + item.username + `" uniqueId="` + item._id + `" >حذف
                         <i class="material-icons">delete</i></a>
@@ -217,6 +202,7 @@ function changePassword(checkbox) {
                 var id = $(this).attr('editItem_id');
                 var firstName = $(this).attr('editItem_firstName');
                 var lastName = $(this).attr('editItem_lastName');
+                var mobileNumber = $(this).attr('editItem_mobileNumber');
                 var phoneNumber = $(this).attr('editItem_phoneNumber');
                 var personelNumber = $(this).attr('editItem_personelNumber');
                 var email = $(this).attr('editItem_email');
@@ -225,108 +211,103 @@ function changePassword(checkbox) {
                     id: id,
                     firstName: firstName,
                     lastName: lastName,
+                    mobileNumber: mobileNumber,
                     phoneNumber: phoneNumber,
                     personelNumber: personelNumber,
                     email: email,
                 }
 
-
                 $('#users-list').after(`
-            
-            <!-- Modal Trigger -->
-            <div id="editModal" class="modal modal-fixed-footer edit">
-                <div class="modal-content">
-                    <h5>ویرایش</h5>
-                    <p>
-                    <form class="col s12" id="newUserForm">
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <i class="material-icons prefix">account_circle</i>
-                            <input id="firstName" value="` + firstName + `" type="text" class="validate">
-                            <label class="active" for="firstName">نام: </label>
-                        </div>
-                        <div class="input-field col s6">
-                            <input id="lastName" value="` + lastName + `" type="text" class="validate">
-                            <label class="active" for="lastName">نام خانوادگی:</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input id="personelNumber"  value="` + personelNumber + `" class="validate">
-                            <label class="active" for="personelNumber">شماره کارمندی :</label>
-                        </div>
-                    </div>
-                    <div class="row password">
-                    <p>
-                    <input type="checkbox" id="cbxChangePassword"  onchange='changePassword(this);'/>
-                    <label for="cbxChangePassword">تغییر کلمه عبور</label>
-                    </p>
-                        <div class="input-field col s6">
-        
-                            <input disabled hidden id="password1" type="password" >
-                            <!-- <input disabled id="password1" type="password" class="validate"> -->
-                            <label for="password1" disabled hidden>کلمه عبور: </label>
-                        </div>
-                        <div class="input-field col s6">
-                        
-                            <input disabled hidden id="password2" type="password" >
-                            <label for="password2" disabled hidden>تکرار کلمه عبور: </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                    </div>
-    
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <i class="material-icons prefix">email</i>
-                            <input id="email" value="` + email + `" type="email" class="validate">
-                            <label class="active" for="email">ایمیل: </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <i class="material-icons prefix">phone</i>
-                            <input id="phone" value="` + phoneNumber + `" type="tel" class="validate">
-                            <label class="active" for="phone">شماره تماس: </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <p>
-                            <input type="checkbox" id="permitedChannels" />
-                            <label for="permitedChannels">permitedChannels</label>
-                        </p>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s12 ">
-                            
-                                <select id="type" >
-                                    <option value="" disabled selected>انتخاب کنید...</option>
-                                    <option value="1">مدیر</option>
-                                    <option value="2">کاربر</option>
-                                    <option value="0">ادمین</option>
-                                </select>
-                                <label for="type">گروه کاربری</label>
-                            
-                        </div>
-                    </div>
-                </form>
-            
-                </div>
-                <div class="modal-footer">
-                    <button class="btn waves-effect waves-light" id="btnUpdateUser">ثبت
-                       <i class="material-icons right">send</i>
-                    </button>
-                    <button class="btn waves-effect waves-light modal-close">انصراف
-                       <i class="material-icons right">cancel</i>
-                    </button>
-                        </div>
+                    <!-- Modal Trigger -->
+                    <div class="container">
+                        <div id="editModal" class="modal modal-fixed-footer edit rtl">
+                            <div class="modal-content">
+                                <h5>ویرایش</h5>
+                                    <form class="col s12" id="newUserForm">
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <i class="material-icons prefix">account_circle</i>
+                                                <input id="firstName" value="` + firstName + `" type="text" class="validate">
+                                                <label class="active" for="firstName">نام: </label>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <input id="lastName" value="` + lastName + `" type="text" class="validate">
+                                                <label class="active" for="lastName">نام خانوادگی:</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <input id="personelNumber"  value="` + personelNumber + `" class="validate">
+                                                <label class="active" for="personelNumber">شماره کارمندی :</label>
+                                            </div>
+                                        </div>
+                                        <div class="row password">
+                                            <p>
+                                                <input type="checkbox" id="cbxChangePassword"/>
+                                                <label for="cbxChangePassword">تغییر کلمه عبور</label>
+                                            </p>
+                                            <div class="input-field col s6">
+                                                <input hidden id="password1" type="password" class="pass">
+                                                <!-- <input disabled id="password1" type="password" class="validate"> -->
+                                                <label for="password1"  hidden class="pass">کلمه عبور: </label>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <input  hidden id="password2" type="password" class="pass">
+                                                <label for="password2"  hidden class="pass">تکرار کلمه عبور: </label>
+                                            </div>
+                                        </div>  
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <i class="material-icons prefix">email</i>
+                                                <input id="email" value="` + email + `" type="email" class="validate">
+                                                <label class="active" for="email">ایمیل: </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <i class="material-icons prefix">phone</i>
+                                                <input id="mobile" value="` + mobileNumber + `" type="tel" required class="validate">
+                                                <label class="active" for="mobile">شماره تلفن همراه: </label>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <i class="material-icons prefix">phone</i>
+                                                <input id="phone" value="` + phoneNumber + `" type="tel" class="validate">
+                                                <label class="active" for="phone">شماره تلفن ثابت: </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <select id="type">
+                                                    <option value="" disabled selected>انتخاب کنید...</option>
+                                                    <option value="1">مدیر</option>
+                                                    <option value="2">کاربر</option>
+                                                    <option value="0">ادمین</option>
+                                                </select>
+                                                <label>گروه کاربری</label>
+                                            </div>
+                                        </div>
+                                    </form>
                     
-            </div>
-            `);
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn waves-effect waves-light" id="btnUpdateUser">ثبت
+                                        <i class="material-icons right">send</i>
+                                    </button>
+                                    <button class="btn waves-effect waves-light modal-close">انصراف
+                                        <i class="material-icons right">cancel</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>       
+                `);
+
+                $('#cbxChangePassword').change(function () {
+                    if ($('#cbxChangePassword').is(":checked")) $('.pass').show();
+                    else $('.pass').toggle();
+                })
 
                 $('.edit').modal();
-
-
 
                 $('#btnUpdateUser').click(function (e) {
 
@@ -345,28 +326,27 @@ function changePassword(checkbox) {
                     }
                     userEdit.password = $("#password1").val();
                     userEdit.email = $("#email").val();
+                    userEdit.mobileNumber = $("#mobile").val();
                     userEdit.phoneNumber = $("#phone").val();
-                    userEdit.permitedChannels = $("#permitedChannels").val();
-                    userEdit.type = $('input[name=type]:selected').val();
+                    // userEdit.permitedChannels = $("#permitedChannels").val();
+                    userEdit.type = $("#type").val();
 
 
                     console.log('userEdit:', userEdit)
                     // var status=edit_voteItems(voteItemEdit);
                     // console.log('status:',status)
                     edit_users(userEdit, function (response) {
-                        console.log('response',response)
+                        console.log('response', response)
 
                         if (response.user) {
                             // if (status==true) {
                             $('#editModal').modal('close');
                             alert("به روز رسانی با موفقیت انجام شد.");
                         } else {
-                            alert("در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. کدخطا: " )
+                            alert("در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. کدخطا: ")
                         }
                     })
                 })
-
-
             })
 
             $('.delete').click(function (e) {
@@ -382,6 +362,7 @@ function changePassword(checkbox) {
                     delete_users(userId);
                     alert("«" + $(this).attr('username') + "» با موفقیت پاک شد.");
                 }
+
             })
         })
 
@@ -393,36 +374,24 @@ function changePassword(checkbox) {
                 lastName: userEdit.lastName,
                 password: userEdit.password,
                 email: userEdit.email,
+                mobileNumber: userEdit.mobileNumber,
                 phoneNumber: userEdit.phoneNumber,
-                personelNumber:userEdit.personelNumber,
-                permitedChannels: userEdit.permitedChannels,
+                personelNumber: userEdit.personelNumber,
+                // permitedChannels: userEdit.permitedChannels,
                 type: userEdit.type,
 
             }, function (response) {
                 callback(response);
-                // console.log('edit vote item', response);
-                // return new Promise(function (resolve, reject) {
-                //     resolve(response)
-                // })
-                // if(response){return true}
-                // return false
-
-
-
             })
         }
 
         function delete_users(userId) {
-            // console.log('voteItemId: ', voteItemId);
-
             post('/users/status', {
                 _id: userId,
                 status: -1
             }, function (response) {
                 // console.log('delete vote item', response);
-
             })
         }
-
     });
 })(jQuery);
