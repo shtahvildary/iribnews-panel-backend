@@ -93,25 +93,53 @@ router.post('/all',auth,function(req,res){
 
 //////////////////////////////////PROBLEM???????????????????????
 //Get all surveys results
+// output:[{text:'fine',percent:10} ,{text:'not bad',percent:90}]
 router.post('/all/result', auth, function (req, res) {
   
-  survey_sc.find({}).sort('-date').exec(function (error, surveys) {
+  surveyResults_sc.find({}).populate({path:'surveyId',select:{text:'text',keyboard:'keyboard'}}).sort('-date').exec(function (error, result) {
     if (!error) {
-      surveyResults_sc.find({}).exec(function(err,result){
-        var surveyRes=[]
-        if(!err){
-          for(var i=0;i<surveys.length;i++){
-            for(var j=0;j<result.length;j++){
-              console.log(surveys[i]._doc._id)
-              console.log(result[j]._doc.surveyId)
-              if(surveys[i]._doc._id==result[j]._doc.surveyId){
-                surveyRes.push(result[j]._doc.text)
-              }
-            }
-          }
-          console.log(surveyRes)
+      var surveys=[]
+      // console.log(result);
+      result.map(item=>{
+        var {surveyId}=item;
+        
+        if(!surveys[surveyId]) surveys[surveyId]={count:0,surveyText:item.surveyId._doc.text,keyboard:item.surveyId._doc.keyboard,surveyResult:[item.text],resultCount:[{text:item.text,count:1}]}
+        else{surveys[surveyId].count++;
+        //var keys=surveys[surveyId].surveyResultkeys()
+        // console.log(keys)
+        if(surveys[surveyId].surveyResult.includes(item.text)) surveys[surveyId].resultCount[item.text].count++;
+         
+        else {surveys[surveyId].surveyResult.push(item.text);
+          
+        surveys[surveyId].resultCount.push({text:item.text,count:1});}
+          
         }
       })
+      console.plain(surveys);
+      var survey={}
+      surveys.map(item=>{
+        var{_id}=item;
+        if(!survey[_id]) survey[_id]=item;
+        console.plain('survey.....:',survey)
+
+      })
+
+      
+      // surveyResults_sc.find({}).exec(function(err,result){
+      //   var surveyRes=[]
+      //   if(!err){
+      //     for(var i=0;i<surveys.length;i++){
+      //       for(var j=0;j<result.length;j++){
+      //         console.log(surveys[i]._doc._id)
+      //         console.log(result[j]._doc.surveyId)
+      //         if(surveys[i]._doc._id==result[j]._doc.surveyId){
+      //           surveyRes.push(result[j]._doc.text)
+      //         }
+      //       }
+      //     }
+      //     console.log(surveyRes)
+      //   }
+      // })
     }
     else{}
   })

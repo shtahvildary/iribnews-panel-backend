@@ -63,7 +63,7 @@ router.post('/all/scores', auth, function (req, res) {
           votes[vote.destinationId._id].count++;
 
         })
-        console.plain(votes);
+        // console.plain(votes);
         var scores=[];
          _.mapKeys(votes, function (value, key) {
           console.log(key,value)
