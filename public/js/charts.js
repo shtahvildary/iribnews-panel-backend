@@ -116,6 +116,42 @@ function drawLineChart(element, data) {
         // }
 
 
+
+        var months = {
+            '1' : 'فروردین',
+            '2' : 'اردیبهشت',
+            '3' : 'خرداد',
+            '4' : 'تیر',
+            '5' : 'مرداد',
+            '6' : 'شهریور',
+            '7' : 'مهر',
+            '8' : 'آبان',
+            '9' : 'آذر',
+            '10' : 'دی',
+            '11' : 'بهمن',
+            '12' : 'اسفند',
+        };
+        var selectedOption = '1';
+        
+        var select = $('#fMonth');
+        if(select.prop) {
+          var options = select.prop('options');
+        }
+        else {
+          var options = select.attr('options');
+        }
+        $('option', select).remove();
+        
+        $.each(months, function(val, text) {
+            options[options.length] = new Option(text, val);
+        });
+        select.val(selectedOption);
+
+
+
+
+
+
         var now = new Date();
         post('/messages/chart/daily', {
             date: now

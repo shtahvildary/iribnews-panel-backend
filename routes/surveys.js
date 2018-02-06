@@ -98,7 +98,8 @@ router.post("/all", auth, function(req, res) {
       }
     });
 });
-function test(req, res) {
+
+router.post("/all/result", auth,function (req, res) {
   surveyResults_sc
     .find({})
     .populate({
@@ -121,7 +122,7 @@ function test(req, res) {
       _.mapKeys(x, (value, key) => {
         var answers=[];
         _.mapKeys(value.votes,(v,k)=>{
-            answers.push({text:k,count:v,percent:v*100/value.total});  
+            answers.push({text:k,count:v,percent:Math.round(v*100/value.total)});  
         })
         final.push({
           surveyId: key,
@@ -130,16 +131,16 @@ function test(req, res) {
         });
       });
 
-      return console.ok(final)
+      // return console.ok(final)
 
       return res.status(200).json({surveys:final})
     });
-}
+})
 
-test({}, {});
+// test({}, {});
 //////////////////////////////////PROBLEM???????????????????????
 //Get all surveys results
 // output:[{text:'fine',percent:10} ,{text:'not bad',percent:90}]
-router.post("/all/result", auth);
+// router.post("/all/result", auth);
 //////////////////////////////////PROBLEM???????????????????????
 module.exports = router;

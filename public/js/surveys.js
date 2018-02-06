@@ -1,4 +1,5 @@
 (function ($) {
+    //new survey
     $("#btnSave").click(function () {
         console.log('btnSave is clicked...')
         var newSurvey = {
