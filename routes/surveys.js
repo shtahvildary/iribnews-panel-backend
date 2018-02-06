@@ -137,10 +137,21 @@ router.post("/all/result", auth,function (req, res) {
     });
 })
 
-// test({}, {});
-//////////////////////////////////PROBLEM???????????????????????
-//Get all surveys results
-// output:[{text:'fine',percent:10} ,{text:'not bad',percent:90}]
-// router.post("/all/result", auth);
-//////////////////////////////////PROBLEM???????????????????????
+//Select last 3 surveys sort by date
+router.post('/select/last/date', auth, function (req, res) {
+  survey_sc.find({}).sort('-date').limit(3).exec(function (err, result) {
+      //pagination should be handled
+      if (!err) {
+          res.status(200).json({
+              surveys: result,
+              // userId: req.body.token
+              userId: req.session.userId
+          });
+      } else {
+          res.status(500).json({
+              error: err
+          });
+      }
+  })
+})
 module.exports = router;

@@ -52,67 +52,38 @@
                         </div>
                         <div id="tab-chart-msg-selectedDate">
                             <div class="row">
-                                <div class="input-field col s2 ">
-                                    <label for="firstday">از:</label>
-                                    <div id="firstday">
-                                        <select id="fDay" class="day">
-                                            <!-- <option value="" disabled selected>روز</option> -->
-                                            <!-- <option value="1">مدیر</option>
-                            <option value="2">کاربر</option>
-                            <option value="0">ادمین</option> -->
-                                        </select>
-                                        <select id="fMonth" class="month">
-                                            <!-- <option value="" disabled selected>ماه</option> -->
-                                            <!-- <option value="1">مدیر</option>
-                            <option value="2">کاربر</option>
-                            <option value="0">ادمین</option> -->
-                                        </select>
-                                        <select id="fYear" class="year">
-                                            <!-- <option value="" disabled selected>سال</option> -->
-                                            <!-- <option value="1">مدیر</option>
-                            <option value="2">کاربر</option>
-                            <option value="0">ادمین</option> -->
-                                        </select>
-                                    </div>
+                                <div class="input-field col s2">
+                                    <input id="fDay" type="number" class="validate day">
+                                    <label for="fDay">روز</label>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s2 ">
-                                    <label for="lastday">تا:</label>
-                                    <div id="lDay" class="day">
-                                        <select id="lDay">
-                                            <!-- <option value="" disabled selected>روز</option> -->
-                                            <!-- <option value="1">مدیر</option>
-                            <option value="2">کاربر</option>
-                            <option value="0">ادمین</option> -->
-                                        </select>
-                                        <select id="lMonth" class="month">
-                                            <!-- <option value="" disabled selected>ماه</option> -->
-                                            <!-- <option value="1">مدیر</option>
-                            <option value="2">کاربر</option>
-                            <option value="0">ادمین</option> -->
-                                        </select>
-                                        <select id="lYear" class="year">
-                                            <!-- <option value="" disabled selected>سال</option> -->
-                                            <!-- <option value="1">مدیر</option>
-                            <option value="2">کاربر</option>
-                            <option value="0">ادمین</option> -->
-                                        </select>
-                                    </div>
+                                <div class="input-field col s2">
+                                    <input id="fMonth" type="number" class="validate month">
+                                    <label for="fMonth">ماه</label>
                                 </div>
+                                <div class="input-field col s2">
+                                    <input id="fYear" type="number" class="validate year">
+                                    <label for="fYear">سال</label>
+                                </div>
+                                <div class="vl"></div>
+                                <div class="input-field col s2">
+                                    <input id="lDay" type="number" class="validate day">
+                                    <label for="lDay">روز</label>
+                                </div>
+                                <div class="input-field col s2">
+                                    <input id="lMonth" type="number" class="validate month">
+                                    <label for="lMonth">ماه</label>
+                                </div>
+                                <div class="input-field col s2">
+                                    <input id="lYear" type="number" class="validate year">
+                                    <label for="lYear">سال</label>
+                                </div>   
+                                <canvas id="chart-msg-selectedDate" width="400" height="400">
                             </div>
-                            <!-- <input id="firstday" type="text" class="datepicker"> -->
-
-                            <!-- <label for="lastday">تا:</label>
-                            <input id="lastday" type="text" class="datepicker"> -->
-                            <canvas id="chart-msg-selectedDate" width="400" height="400">
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!--  Scripts-->

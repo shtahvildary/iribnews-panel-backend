@@ -157,8 +157,6 @@ router.post('/select/last/date', auth, function (req, res) {
                 messages: result,
                 // userId: req.body.token
                 userId: req.session.userId
-
-
             });
         } else {
             res.status(500).json({
@@ -217,7 +215,7 @@ router.post('/chart/weekly', auth, function (req, res) {
     var sat = new Date(req.body.date);
     var fri = new Date(req.body.date);
     var curr = new Date; // get current date
-    var first = today.getDate() - today.c() - 1; // First day is the day of the month - the day of the week
+    var first = today.getDate() - today.getDay()- 1; // First day is the day of the month - the day of the week
     var last = first + 5; // last day is the first day + 6
 
 

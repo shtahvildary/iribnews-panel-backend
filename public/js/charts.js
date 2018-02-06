@@ -111,41 +111,46 @@ function drawLineChart(element, data) {
 }
 (function ($) {
     $(function () {
+        // var months = {
+        //     '1' : 'فروردین',
+        //     '2' : 'اردیبهشت',
+        //     '3' : 'خرداد',
+        //     '4' : 'تیر',
+        //     '5' : 'مرداد',
+        //     '6' : 'شهریور',
+        //     '7' : 'مهر',
+        //     '8' : 'آبان',
+        //     '9' : 'آذر',
+        //     '10' : 'دی',
+        //     '11' : 'بهمن',
+        //     '12' : 'اسفند',
+        // };
+        // jQuery(months).each(function(i,month){
+        //     jQuery('.month').append(`<option>`+month[i]+`</option>`)
+        // })
+        // var selectedOption = '12';
+
+        // var select = $('#fMonth');
+        // if(select.prop) {
+        //   var options = select.prop('options');
+        // }
+        // else {
+        //   var options = select.attr('options');
+        // }
+        // $('option', select).remove();
+
+        // $.each(months, function(val, text) {
+        //     options[options.length] = new Option(text, val);
+        // });
+        // select.val(selectedOption);
+
+
         // if ($.cookie("token")&&!$.cookie("id")) {
         //     window.location.replace("../login.html");
         // }
 
 
 
-        var months = {
-            '1' : 'فروردین',
-            '2' : 'اردیبهشت',
-            '3' : 'خرداد',
-            '4' : 'تیر',
-            '5' : 'مرداد',
-            '6' : 'شهریور',
-            '7' : 'مهر',
-            '8' : 'آبان',
-            '9' : 'آذر',
-            '10' : 'دی',
-            '11' : 'بهمن',
-            '12' : 'اسفند',
-        };
-        var selectedOption = '1';
-        
-        var select = $('#fMonth');
-        if(select.prop) {
-          var options = select.prop('options');
-        }
-        else {
-          var options = select.attr('options');
-        }
-        $('option', select).remove();
-        
-        $.each(months, function(val, text) {
-            options[options.length] = new Option(text, val);
-        });
-        select.val(selectedOption);
 
 
 
@@ -233,6 +238,40 @@ function drawLineChart(element, data) {
         }, function (response) {
             drawLineChart('chart-msg-thismonth', {
                 labels: [
+                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
+                    '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'
+                ],
+                datasets: [{
+                    label: 'متن',
+                    data: response.text
+                }, {
+                    label: 'عکس',
+                    data: response.image
+                }, {
+                    label: 'ویدیو',
+                    data: response.video
+                }, {
+                    label: 'صوت',
+                    data: response.voice
+                }]
+            })
+        });
+        
+        var fDay=$("#fDay").val();
+        var fMonth=$("#fMonth").val();
+        var fYear=$("#fYear").val();
+        var lDay=$("#lDay").val();
+        var lMonth=$("#lMonth").val();
+        var lYear=$("#lYear").val();
+        
+        post('/messages/chart/selectedDate', {
+            firstday: $("#fDay").val(),
+            lastday:document.getElementById('lastday')
+        }, function (response) {
+            console.log("firstday: "+document.getElementById('firstday'))
+            console.log("lastday: "+document.getElementById('lastday'))
+            drawLineChart('chart-msg-selectedDate', {
+                labels: [
                     '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
                     '16','17','18','19','20','21','22','23','24','25','26','27','28','29', '30', '31'
                 ],
@@ -251,33 +290,6 @@ function drawLineChart(element, data) {
                 }]
             })
         });
-
-        // post('/messages/chart/selectedDate', {
-        //     firstday: document.getElementById('firstday'),
-        //     lastday:document.getElementById('lastday')
-        // }, function (response) {
-        //     console.log("firstday: "+document.getElementById('firstday'))
-        //     console.log("lastday: "+document.getElementById('lastday'))
-        //     drawLineChart('chart-msg-selectedDate', {
-        //         labels: [
-        //             '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
-        //             '16','17','18','19','20','21','22','23','24','25','26','27','28','29', '30', '31'
-        //         ],
-        //         datasets: [{
-        //             label: 'متن',
-        //             data: response.text
-        //         }, {
-        //             label: 'عکس',
-        //             data: response.image
-        //         }, {
-        //             label: 'ویدیو',
-        //             data: response.video
-        //         }, {
-        //             label: 'صوت',
-        //             data: response.voice
-        //         }]
-        //     })
-        // });
 
     }); // end of document ready
 })(jQuery); // end of jQuery name space
