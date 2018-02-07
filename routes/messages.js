@@ -300,8 +300,17 @@ router.post('/chart/monthly', auth, function (req, res) {
 
 router.post('/chart/selectedDate', auth, function (req, res) {
     console.log('selectedDate', req.body);
-    var firstday = new Date(req.body.firstday);
-    var lastday = new Date(req.body.lastday);
+    // var firstday = new Date(req.body.firstday);
+    // var lastday = new Date(req.body.lastday);
+    var firstday = new Date();
+    var lastday = new Date();
+     firstday.setYear(req.body.firstday.y);
+     firstday.setMonth(req.body.firstday.m);
+     firstday.setDate(req.body.firstday.d);
+     
+     lastday.setYear(req.body.lastday.y);
+     lastday.setMonth(req.body.lastday.m);
+     lastday.setDate(req.body.lastday.d);
 
 
 
@@ -342,6 +351,7 @@ router.post('/chart/selectedDate', auth, function (req, res) {
             res.status(500).json({
                 error: err
             });
+            console.log(res)
         }
     })
 })

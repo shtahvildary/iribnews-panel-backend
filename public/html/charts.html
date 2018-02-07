@@ -53,30 +53,33 @@
                         <div id="tab-chart-msg-selectedDate">
                             <div class="row">
                                 <div class="input-field col s2">
-                                    <input id="fDay" type="number" class="validate day">
+                                    <input id="fDay" type="number" min=1 max=31 class="validate day">
                                     <label for="fDay">روز</label>
                                 </div>
                                 <div class="input-field col s2">
-                                    <input id="fMonth" type="number" class="validate month">
+                                    <input id="fMonth" type="number" min=1 max=12 class="validate month">
                                     <label for="fMonth">ماه</label>
                                 </div>
                                 <div class="input-field col s2">
-                                    <input id="fYear" type="number" class="validate year">
+                                    <input id="fYear" type="number" min=1396 class="validate year">
                                     <label for="fYear">سال</label>
                                 </div>
                                 <div class="vl"></div>
                                 <div class="input-field col s2">
-                                    <input id="lDay" type="number" class="validate day">
+                                    <input id="lDay" type="number" min=1 max=31 class="validate day">
                                     <label for="lDay">روز</label>
                                 </div>
                                 <div class="input-field col s2">
-                                    <input id="lMonth" type="number" class="validate month">
+                                    <input id="lMonth" type="number" min=1 max=12 class="validate month">
                                     <label for="lMonth">ماه</label>
                                 </div>
                                 <div class="input-field col s2">
-                                    <input id="lYear" type="number" class="validate year">
+                                    <input id="lYear" type="number" min=1396 class="validate year">
                                     <label for="lYear">سال</label>
                                 </div>   
+                                <button class="btn waves-effect waves-light" type="submit" id="btnShow">نمایش
+                                    <i class="material-icons right">save</i>
+                                </button>
                                 <canvas id="chart-msg-selectedDate" width="400" height="400">
                             </div>
                         </div>
@@ -88,6 +91,7 @@
 
     <!--  Scripts-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="../js/persian-date-convert.js"></script>
     <script src="../js/jquery.cookie.js"></script>
     <script src="../js/logout.js"></script>
     <script src="../js/api.js"></script>

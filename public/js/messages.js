@@ -349,6 +349,7 @@ function searchFilter(checkbox) {
 
         });
         jQuery(item.replys).each(function (i, reply) {
+            // jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
             jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
              <button class="btn waves-effect waves-light" id="replyEdit-`+item._id+`">
             <i class="material-icons right">edit</i>

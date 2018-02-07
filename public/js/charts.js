@@ -110,6 +110,44 @@ function drawLineChart(element, data) {
     });
 }
 (function ($) {
+    $("#btnShow").click(function () {
+        console.log('btnSave click...')
+    
+    var firstday=jing($("#fYear").val(),$("#fMonth").val(),$("#fDay").val(),false)
+    var fDay=$("#fDay").val();
+    var fMonth=$("#fMonth").val();
+    var fYear=$("#fYear").val();
+    var lastday=jing($("#lYear").val(),$("#lMonth").val(),$("#lDay").val(),false)
+    var lDay=$("#lDay").val();
+    var lMonth=$("#lMonth").val();
+    var lYear=$("#lYear").val();
+    
+    post('/messages/chart/selectedDate', {
+        firstday,
+        lastday
+    }, function (response) {
+        console.log('response: ',response)
+        drawLineChart('chart-msg-selectedDate', {
+            labels: [
+                '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
+                '16','17','18','19','20','21','22','23','24','25','26','27','28','29', '30', '31'
+            ],
+            datasets: [{
+                label: 'متن',
+                data: response.text
+            }, {
+                label: 'عکس',
+                data: response.image
+            }, {
+                label: 'ویدیو',
+                data: response.video
+            }, {
+                label: 'صوت',
+                data: response.voice
+            }]
+        })
+    });
+})
     $(function () {
         // var months = {
         //     '1' : 'فروردین',
@@ -257,39 +295,7 @@ function drawLineChart(element, data) {
             })
         });
         
-        var fDay=$("#fDay").val();
-        var fMonth=$("#fMonth").val();
-        var fYear=$("#fYear").val();
-        var lDay=$("#lDay").val();
-        var lMonth=$("#lMonth").val();
-        var lYear=$("#lYear").val();
         
-        post('/messages/chart/selectedDate', {
-            firstday: $("#fDay").val(),
-            lastday:document.getElementById('lastday')
-        }, function (response) {
-            console.log("firstday: "+document.getElementById('firstday'))
-            console.log("lastday: "+document.getElementById('lastday'))
-            drawLineChart('chart-msg-selectedDate', {
-                labels: [
-                    '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
-                    '16','17','18','19','20','21','22','23','24','25','26','27','28','29', '30', '31'
-                ],
-                datasets: [{
-                    label: 'متن',
-                    data: response.text
-                }, {
-                    label: 'عکس',
-                    data: response.image
-                }, {
-                    label: 'ویدیو',
-                    data: response.video
-                }, {
-                    label: 'صوت',
-                    data: response.voice
-                }]
-            })
-        });
-
+   
     }); // end of document ready
 })(jQuery); // end of jQuery name space
