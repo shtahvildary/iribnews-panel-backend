@@ -31,7 +31,7 @@
                         <p>سوال: ` + item.text + `</p> 
                         <p>پاسخها: ` + item.keyboard + `</p> 
                     </div> 
-                    <div class="card-reveal" id="reveal-result-`+item._id+`">
+                    <div  id="reveal-result-`+item._id+`">
                     </div>
                 </div>
                 `);
