@@ -35,8 +35,14 @@
                             </li>
                             <li class="tab">
                                 <a href="#tab-chart-msg-selectedDate"> تاریخ دلخواه</a>
-
                             </li>
+                            <li class="tab">
+                                    <a href="#tab-chart-vote"> کانالها و برنامه ها</a>
+                                </li>
+                            <li class="tab">
+                                <a href="#tab-chart-survey"> نظرسنجی های دلخواه</a>
+                            </li>
+                            
 
                         </ul>
                     </div>
@@ -76,12 +82,25 @@
                                 <div class="input-field col s2">
                                     <input id="lYear" type="number" min=1396 class="validate year">
                                     <label for="lYear">سال</label>
-                                </div>   
+                                </div>
                                 <button class="btn waves-effect waves-light" type="submit" id="btnShow">نمایش
                                     <i class="material-icons right">save</i>
                                 </button>
                                 <canvas id="chart-msg-selectedDate" width="400" height="400">
                             </div>
+                        </div>
+                        <div id="tab-chart-vote">
+                                <canvas id="chart-vote" width="400" height="400">
+                            </div>
+                        <div id="tab-chart-survey">
+                            <!-- <div class="input-field col s2">
+                               
+                                <div class="input-field col s2">
+                                    <input id="tbxTest" class="validate test">
+                                    <label for="tbxTest">تست....</label>
+                                </div> -->
+                            <!-- </div> -->
+                            <canvas id="chart-survey" width="400" height="400">
                         </div>
                     </div>
                 </div>
@@ -99,6 +118,7 @@
     <script src="../js/init.js"></script>
     <script src="../js/voteItems.js"></script>
     <script src="../js/menus.js"></script>
+    <!-- <script src="../node_modules/chart.js/dist/Chart.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
     <script src="../js/charts.js"></script>
     <script src="../js/datepicker.js"></script>

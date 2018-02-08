@@ -57,30 +57,44 @@ router.post('/all/scores', auth, function (req, res) {
         // });
         var votes = {};
         result.map(vote => {
-          var vote=vote.vote;
-          if(!votes[vote.destinationId._id]) votes[vote.destinationId._id]={score:0,title:vote.destinationId.title,count:0};
+          var vote = vote.vote;
+          if (!votes[vote.destinationId._id]) votes[vote.destinationId._id] = {
+            score: 0,
+            title: vote.destinationId.title,
+            count: 0
+          };
           votes[vote.destinationId._id].score += vote.score;
           votes[vote.destinationId._id].count++;
 
         })
-        // console.plain(votes);
-        var scores=[];
-         _.mapKeys(votes, function (value, key) {
-          console.log(key,value)
-          var {score,title,count}=value;
-          scores.push( {
+        // console.log(votes.length)
+        // for(var i=0;i<votes.length;i++){
+        //   votes[i].percent=Math.round((votes[i].score*100)/(votes[i].count*5))
+        // }
+        console.plain(votes);
+        var scores = [];
+        _.mapKeys(votes, function (value, key) {
+          console.log(key, value)
+          var {
+            score,
+            title,
+            count,
+            // percent
+          } = value;
+          scores.push({
             destinationId: key,
             score,
             title,
-            count
+            count,
+            // percent
 
           })
         })
-        console.plain('scores: ',scores)
+        console.plain('scores: ', scores)
         res.status(200).json({
-          votesArray:scores
+          votesArray: scores
         })
-        
+
 
 
 

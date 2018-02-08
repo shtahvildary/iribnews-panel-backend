@@ -1,4 +1,4 @@
-// var jalaali = require('jalaali-js')
+
 const chartColors = [{
     red: 35,
     green: 198,
@@ -91,8 +91,7 @@ function drawLineChart(element, data) {
         i++;
 
     })
-    var totalMessagesChart = new Chart(ctx, {
-
+    var lineChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: data.labels,
@@ -109,7 +108,95 @@ function drawLineChart(element, data) {
         }
     });
 }
+
+// function drawBarChart(element, data,options,type) {
+
+//     var ctx = document.getElementById(element);
+//     var datasets = data.datasets;
+//     var i = 0;
+//     datasets.map(function (item) {
+//         var color,
+//             border;
+//         if (chartColors.length > i) {
+//             color = chartColors[i];
+//         } else {
+//             color = hue();
+//         }
+//         border = {
+//             red: color.red - 23,
+//             green: color.green - 58,
+//             blue: color.blue - 60
+//         };
+//         item.backgroundColor = ['rgba(' + color.red + ',' + color.green + ',' + color.blue + ',0.7)']
+//         item.borderColor = ['rgba(' + border.red + ',' + border.green + ',' + border.blue + ',0.7)']
+//         item.borderWidth = 1;
+//         i++;
+
+//     })
+
+//     var barChart = new Chart(ctx, {
+//         type: type,
+//         data: {
+//             labels: data.labels,
+//             datasets: datasets
+//         },
+//         options: {
+//             scales: {
+//                 yAxes: [{
+//                     ticks: {
+//                         beginAtZero: true
+//                     }
+//                 }]
+//             }
+//         }
+//     });
+// }
+function drawChart(element, data,options,type) {
+
+    var ctx = document.getElementById(element);
+    var datasets = data.datasets;
+    var i = 0;
+    datasets.map(function (item) {
+        var color,
+            border;
+        if (chartColors.length > i) {
+            color = chartColors[i];
+        } else {
+            color = hue();
+        }
+        border = {
+            red: color.red - 23,
+            green: color.green - 58,
+            blue: color.blue - 60
+        };
+        item.backgroundColor = ['rgba(' + color.red + ',' + color.green + ',' + color.blue + ',0.7)']
+        item.borderColor = ['rgba(' + border.red + ',' + border.green + ',' + border.blue + ',0.7)']
+        item.borderWidth = 1;
+        i++;
+
+    })
+
+    var newChart = new Chart(ctx, {
+        type: type,
+        data: {
+            labels: data.labels,
+            datasets: datasets
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
 (function ($) {
+
+    
     $("#btnShow").click(function () {
         console.log('btnSave click...')
     
@@ -127,6 +214,8 @@ function drawLineChart(element, data) {
         lastday
     }, function (response) {
         console.log('response: ',response)
+        var data;
+        var options;
         drawLineChart('chart-msg-selectedDate', {
             labels: [
                 '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
@@ -145,7 +234,7 @@ function drawLineChart(element, data) {
                 label: 'صوت',
                 data: response.voice
             }]
-        })
+        },'line')
     });
 })
     $(function () {
@@ -199,7 +288,7 @@ function drawLineChart(element, data) {
         post('/messages/chart/daily', {
             date: now
         }, function (response) {
-            // console.log(response)
+            console.log(response)
             // response=JSON.parse(response);
             drawLineChart('chart-msg-today', {
                 labels: [
@@ -241,7 +330,7 @@ function drawLineChart(element, data) {
                     label: 'صوت',
                     data: response.voice
                 }]
-            })
+            },'line')
         });
         post('/messages/chart/weekly', {
             date: now
@@ -269,7 +358,7 @@ function drawLineChart(element, data) {
                     label: 'صوت',
                     data: response.voice
                 }]
-            })
+            },'line')
         });
         post('/messages/chart/monthly', {
             date: now
@@ -292,9 +381,135 @@ function drawLineChart(element, data) {
                     label: 'صوت',
                     data: response.voice
                 }]
-            })
+            },'line')
         });
+        /////////////////////////////////////vote chart////////////////////////////
+        post('/votes/all/scores', {}, function (response) {
+            var lables=[]
+            var percent=[];
+            response.votesArray.map(item=> {
+                console.log('vote-item',item)
+                lables.push(item.title)
+                percent.push(Math.round(item.score*100)/(item.count*5))
+
+            })
+            console.log('lables: ',lables)
+            console.log('score: ',percent)
+            var data= {
+                labels: lables,
+                datasets: [{
+                    label: '%',
+                    data: percent,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+            var  options= {
+                scales: {
+                    // xAxes:[],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }],
+                    
+                }
+            }  
+            //chart types: polarArea, bar, line, radar, pie, doughnut, polarArea, bubble, scatter
+            drawChart('chart-vote',data,options,'bar')
+
+        })
+
+
+
+        /////////////////////////////////////survey chart////////////////////////////
         
+        post('/surveys/all',{},function(surveys){
+            // console.log('surveys::::',surveys)
+///////////////////////////////////////////////////////////////////////////
+            surveyId="5a745a221fa263114624ab9c"
+            // surveyId=surveys.surveysArray[39]._id;
+///////////////////////////////////////////////////////////////////////////
+       
+        post('/surveys/select/one/result', {surveyId:surveyId}, function (response) {
+            // console.log('response::::',response)
+            var lables=[]
+            var percents=[];
+            response.answers.map(item=>{
+        
+                lables.push(item.title)
+                percents.push(item.percent)
+            })
+
+            var data= {
+                labels: lables,
+                datasets: [{
+                    label: '%',
+                    data: percents,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+            var  options= {
+                scales: {
+                    // xAxes:[],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }],
+                    
+                }
+            }  
+                  
+            drawChart('chart-survey',data,options,'bar')   
+              
+        })
+    })
+        // var result = []
+
+        // post('/surveys/all/result', {}, function (response) {
+        //     var {
+        //         surveys
+        //     } = response
+        //     surveys.map(item => {
+        //         result.push(item)
+        //     })
+        //     console.log(result)
+        // })
+    
+       
+
         
    
     }); // end of document ready

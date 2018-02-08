@@ -188,7 +188,8 @@ router.post('/chart/daily', auth, function (req, res) {
         console.log(result)
         if (!err) {
 
-            var msgCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var msgCounts = Array(24);
+            msgCounts.fill(0);
             // console.log(msgCounts.length)
 
 
@@ -236,7 +237,8 @@ router.post('/chart/weekly', auth, function (req, res) {
         //pagination should be handled
         if (!err) {
 
-            var msgCounts = [0, 0, 0, 0, 0, 0, 0];
+            var msgCounts = Array(7);
+            msgCounts.fill(0)
             // console.log(msgCounts.length)
 
 
@@ -280,7 +282,8 @@ router.post('/chart/monthly', auth, function (req, res) {
         //pagination should be handled
         if (!err) {
 
-            var msgCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var msgCounts = Array(30);
+            msgCounts.fill(0);
             // console.log(msgCounts.length)
 
 
@@ -333,16 +336,16 @@ router.post('/chart/selectedDate', auth, function (req, res) {
 
 
             var diffDays = Math.round(Math.abs((firstday.getTime() - lastday.getTime()) / (oneDay)));
-            console.log('diffDays: ' + diffDays)
+            // console.log('diffDays: ' + diffDays)
 
 
             var msgCounts = Array(diffDays);
-            // var msgCounts = [0, 0, 0, 0, 0, 0, 0];
-            // console.log(msgCounts.length)
+             msgCounts .fill(0);
+            // console.log(msgCounts)
 
 
             result.forEach(function (message) {
-                msgCounts[message.date.getHours()] += 1;
+                msgCounts[message._doc.date.getHours()] += 1;
             });
             res.status(200).json({
                 text: msgCounts
