@@ -190,18 +190,41 @@ router.post('/chart/daily', auth, function (req, res) {
 
             var msgCounts = Array(24);
             msgCounts.fill(0);
+            // var msgType={text,image,video,voice}
             // console.log(msgCounts.length)
+            var textCount = Array(24); 
+            var audioCount=Array(24);
+            var videoCount=Array(24);
+            var photoCount=Array(24);
+            var documentCount=Array(24);
+            
+            textCount.fill(0);
+            audioCount.fill(0);
+            videoCount.fill(0);
+            photoCount.fill(0);
+            documentCount.fill(0);
 
 
             result.forEach(function (message) {
+                switch(message._doc.type){
+                    case 'text': {textCount[message._doc.date.getDate()] += 1; break;}
+                    case ('audio'||'voice'):{audioCount[message._doc.date.getDate()] += 1; break;}
+                    case 'video':{videoCount[message._doc.date.getDate()] += 1; break;}
+                    case 'photo':{photoCount[message._doc.date.getDate()] += 1; break;}
+                    case 'document':{documentCount[message._doc.date.getDate()] += 1; break;}
+                    
+                }
                 msgCounts[message.date.getHours()] += 1;
             });
             res.status(200).json({
-                text: msgCounts,
+                
+                    text: msgCounts,
+                    voice:audioCount,
+                    video:videoCount,
+                    image:photoCount,
+                    document:documentCount,
                 // userId: req.body.token
                 userId: req.session.userId
-
-
             })
         } else {
             res.status(500).json({
@@ -213,11 +236,11 @@ router.post('/chart/daily', auth, function (req, res) {
 router.post('/chart/weekly', auth, function (req, res) {
     console.log('weekly', req.body);
     var today = new Date(req.body.date);
-    var sat = new Date(req.body.date);
-    var fri = new Date(req.body.date);
+    // var sat = new Date(req.body.date);
+    // var fri = new Date(req.body.date);
     var curr = new Date; // get current date
     var first = today.getDate() - today.getDay()- 1; // First day is the day of the month - the day of the week
-    var last = first + 5; // last day is the first day + 6
+    var last = first + 6; // last day is the first day + 6
 
 
     var firstday = new Date(today.setDate(first));
@@ -239,14 +262,41 @@ router.post('/chart/weekly', auth, function (req, res) {
 
             var msgCounts = Array(7);
             msgCounts.fill(0)
+            // var msgType={text,image,video,voice}
             // console.log(msgCounts.length)
+            var textCount = Array(7); 
+            var audioCount=Array(7);
+            var videoCount=Array(7);
+            var photoCount=Array(7);
+            var documentCount=Array(7);
+            
+            textCount.fill(0);
+            audioCount.fill(0);
+            videoCount.fill(0);
+            photoCount.fill(0);
+            documentCount.fill(0);
 
+            var persianDay;
 
             result.forEach(function (message) {
-                msgCounts[message._doc.date.getDay()] += 1;
+                console.log('message._doc.date.getDay(): ',message._doc.date.getDay())
+                persianDay=message._doc.date.getDay()+1;
+                if(persianDay==7) persianDay=0;
+                switch(message._doc.type){
+                    case 'text': {textCount[persianDay] += 1; break;}
+                    case ('audio'||'voice'):{audioCount[persianDay] += 1; break;}
+                    case 'video':{videoCount[persianDay] += 1; break;}
+                    case 'photo':{photoCount[persianDay] += 1; break;}
+                    case 'document':{documentCount[persianDay] += 1; break;}
+                }
+                msgCounts[persianDay] += 1;
             });
             res.status(200).json({
-                text: msgCounts
+                text: msgCounts,
+                voice:audioCount,
+                video:videoCount,
+                image:photoCount,
+                document:documentCount,
             })
         } else {
             res.status(500).json({
@@ -258,8 +308,8 @@ router.post('/chart/weekly', auth, function (req, res) {
 router.post('/chart/monthly', auth, function (req, res) {
     console.log('monthly', req.body);
     var today = new Date(req.body.date);
-    var sat = new Date(req.body.date);
-    var fri = new Date(req.body.date);
+    // var sat = new Date(req.body.date);
+    // var fri = new Date(req.body.date);
     var curr = new Date; // get current date
 
     // var first = curr.getDate() - curr.getDay() - 1; // First day is the day of the month - the day of the week
@@ -284,14 +334,43 @@ router.post('/chart/monthly', auth, function (req, res) {
 
             var msgCounts = Array(30);
             msgCounts.fill(0);
+            // var msgType={text,image,video,voice}
             // console.log(msgCounts.length)
-
+            var textCount = Array(30); 
+            var audioCount=Array(30);
+            var videoCount=Array(30);
+            var photoCount=Array(30);
+            var documentCount=Array(30);
+            
+            textCount.fill(0);
+            audioCount.fill(0);
+            videoCount.fill(0);
+            photoCount.fill(0);
+            documentCount.fill(0);
 
             result.forEach(function (message) {
+                //text,audio,voice,video,photo,document
+                switch(message._doc.type){
+                    case 'text': {textCount[message._doc.date.getDate()] += 1; break;}
+                    case ('audio'||'voice'):{audioCount[message._doc.date.getDate()] += 1; break;}
+                    case 'video':{videoCount[message._doc.date.getDate()] += 1; break;}
+                    case 'photo':{photoCount[message._doc.date.getDate()] += 1; break;}
+                    case 'document':{documentCount[message._doc.date.getDate()] += 1; break;}
+                }
                 msgCounts[message._doc.date.getDate()] += 1;
+                
             });
+            console.log('textCount :',textCount)
+            console.log('audioCount :',audioCount)
+            console.log('videoCount :',videoCount)
+            console.log('photoCount :',photoCount)
+            console.log('documentCount :',documentCount)
             res.status(200).json({
-                text: msgCounts
+                text: msgCounts,
+                voice:audioCount,
+                video:videoCount,
+                image:photoCount,
+                document:documentCount,
             })
         } else {
             res.status(500).json({
@@ -342,13 +421,39 @@ router.post('/chart/selectedDate', auth, function (req, res) {
             var msgCounts = Array(diffDays);
              msgCounts .fill(0);
             // console.log(msgCounts)
+            
+            // var msgType={text,image,video,voice}
+            // console.log(msgCounts.length)
+            var textCount = Array(diffDays); 
+            var audioCount=Array(diffDays);
+            var videoCount=Array(diffDays);
+            var photoCount=Array(diffDays);
+            var documentCount=Array(diffDays);
+            
+            textCount.fill(0);
+            audioCount.fill(0);
+            videoCount.fill(0);
+            photoCount.fill(0);
+            documentCount.fill(0);
 
 
             result.forEach(function (message) {
+                switch(message._doc.type){
+                    case 'text': {textCount[message._doc.date.getDate()] += 1; break;}
+                    case ('audio'||'voice'):{audioCount[message._doc.date.getDate()] += 1; break;}
+                    case 'video':{videoCount[message._doc.date.getDate()] += 1; break;}
+                    case 'photo':{photoCount[message._doc.date.getDate()] += 1; break;}
+                    case 'document':{documentCount[message._doc.date.getDate()] += 1; break;}
+                }
                 msgCounts[message._doc.date.getHours()] += 1;
             });
             res.status(200).json({
-                text: msgCounts
+                diffDays:diffDays,
+                text: msgCounts,
+                voice:audioCount,
+                video:videoCount,
+                image:photoCount,
+                document:documentCount,
             })
         } else {
             res.status(500).json({

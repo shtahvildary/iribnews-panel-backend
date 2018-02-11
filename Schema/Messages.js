@@ -4,7 +4,7 @@ var messageSchema = mongoose.Schema({
     chatId: String,
     chatTiltle: String,
     voteItemId: String, //channel or program ID
-    type: String,
+    type: String,   //text,audio,voice,video,photo,document
     chatType: String,
     message: String,
     date: {

@@ -1,11 +1,10 @@
-
 const chartColors = [{
     red: 35,
     green: 198,
     blue: 136
 }, {
     red: 35,
-    green: 198,
+    green: 18,
     blue: 170
 }, {
     red: 35,
@@ -68,7 +67,10 @@ var hue = function () {
     };
 }
 
-function drawLineChart(element, data) {
+
+function
+drawChart(element, data, options, type) {
+
     var ctx = document.getElementById(element);
     var datasets = data.datasets;
     var i = 0;
@@ -85,19 +87,14 @@ function drawLineChart(element, data) {
             green: color.green - 58,
             blue: color.blue - 60
         };
-        item.backgroundColor = ['rgba(' + color.red + ',' + color.green + ',' + color.blue + ',0.7)']
+        // item.backgroundColor = ['rgba(' + color.red + ',' + color.green + ',' + color.blue + ',0.7)']
         item.borderColor = ['rgba(' + border.red + ',' + border.green + ',' + border.blue + ',0.7)']
-        item.borderWidth = 1;
+        item.borderWidth = 3;
         i++;
 
     })
-    var lineChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: data.labels,
-            datasets: datasets
-        },
-        options: {
+    if (!options) {
+        var options = {
             scales: {
                 yAxes: [{
                     ticks: {
@@ -106,122 +103,40 @@ function drawLineChart(element, data) {
                 }]
             }
         }
-    });
-}
+    }
 
-// function drawBarChart(element, data,options,type) {
-
-//     var ctx = document.getElementById(element);
-//     var datasets = data.datasets;
-//     var i = 0;
-//     datasets.map(function (item) {
-//         var color,
-//             border;
-//         if (chartColors.length > i) {
-//             color = chartColors[i];
-//         } else {
-//             color = hue();
-//         }
-//         border = {
-//             red: color.red - 23,
-//             green: color.green - 58,
-//             blue: color.blue - 60
-//         };
-//         item.backgroundColor = ['rgba(' + color.red + ',' + color.green + ',' + color.blue + ',0.7)']
-//         item.borderColor = ['rgba(' + border.red + ',' + border.green + ',' + border.blue + ',0.7)']
-//         item.borderWidth = 1;
-//         i++;
-
-//     })
-
-//     var barChart = new Chart(ctx, {
-//         type: type,
-//         data: {
-//             labels: data.labels,
-//             datasets: datasets
-//         },
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     ticks: {
-//                         beginAtZero: true
-//                     }
-//                 }]
-//             }
-//         }
-//     });
-// }
-function drawChart(element, data,options,type) {
-
-    var ctx = document.getElementById(element);
-    var datasets = data.datasets;
-    var i = 0;
-    datasets.map(function (item) {
-        var color,
-            border;
-        if (chartColors.length > i) {
-            color = chartColors[i];
-        } else {
-            color = hue();
-        }
-        border = {
-            red: color.red - 23,
-            green: color.green - 58,
-            blue: color.blue - 60
-        };
-        item.backgroundColor = ['rgba(' + color.red + ',' + color.green + ',' + color.blue + ',0.7)']
-        item.borderColor = ['rgba(' + border.red + ',' + border.green + ',' + border.blue + ',0.7)']
-        item.borderWidth = 1;
-        i++;
-
-    })
-
+    // console.log('options: ',options)
     var newChart = new Chart(ctx, {
         type: type,
         data: {
             labels: data.labels,
             datasets: datasets
         },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
+        options: options
     });
 }
 
 (function ($) {
 
-    
+
     $("#btnShow").click(function () {
-        console.log('btnSave click...')
-    
-    var firstday=jing($("#fYear").val(),$("#fMonth").val(),$("#fDay").val(),false)
-    var fDay=$("#fDay").val();
-    var fMonth=$("#fMonth").val();
-    var fYear=$("#fYear").val();
-    var lastday=jing($("#lYear").val(),$("#lMonth").val(),$("#lDay").val(),false)
-    var lDay=$("#lDay").val();
-    var lMonth=$("#lMonth").val();
-    var lYear=$("#lYear").val();
-    
-    post('/messages/chart/selectedDate', {
-        firstday,
-        lastday
-    }, function (response) {
-        console.log('response: ',response)
-        var data;
-        var options;
-        drawLineChart('chart-msg-selectedDate', {
-            labels: [
-                '1','2','3','4','5','6','7','8','9','10','11','12','13','14','15',
-                '16','17','18','19','20','21','22','23','24','25','26','27','28','29', '30', '31'
-            ],
-            datasets: [{
+
+        var firstday = jing($("#fYear").val(), $("#fMonth").val(), $("#fDay").val(), false)
+        var fDay = $("#fDay").val();
+        var fMonth = $("#fMonth").val();
+        var fYear = $("#fYear").val();
+        var lastday = jing($("#lYear").val(), $("#lMonth").val(), $("#lDay").val(), false)
+        var lDay = $("#lDay").val();
+        var lMonth = $("#lMonth").val();
+        var lYear = $("#lYear").val();
+
+        post('/messages/chart/selectedDate', {
+            firstday,
+            lastday
+        }, function (response) {
+
+            var labels = Array(response.diffDays)
+            var datasets = [{
                 label: 'متن',
                 data: response.text
             }, {
@@ -233,10 +148,18 @@ function drawChart(element, data,options,type) {
             }, {
                 label: 'صوت',
                 data: response.voice
-            }]
-        },'line')
-    });
-})
+            }, {
+                label: 'مستندات',
+                data: response.document
+            }, ]
+            var data = {
+                labels,
+                datasets
+            };
+            var options;
+            drawChart('chart-msg-selectedDate', data, options, 'line')
+        });
+    })
     $(function () {
         // var months = {
         //     '1' : 'فروردین',
@@ -283,120 +206,157 @@ function drawChart(element, data,options,type) {
 
 
 
+        /////////////////////////////////////daily chart////////////////////////////
 
         var now = new Date();
         post('/messages/chart/daily', {
             date: now
         }, function (response) {
             console.log(response)
-            // response=JSON.parse(response);
-            drawLineChart('chart-msg-today', {
-                labels: [
-                    '0',
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10',
-                    '11',
-                    '12',
-                    '13',
-                    '14',
-                    '15',
-                    '16',
-                    '17',
-                    '18',
-                    '19',
-                    '20',
-                    '21',
-                    '22',
-                    '23'
-                ],
-                datasets: [{
-                    label: 'متن',
-                    data: response.text
-                }, {
-                    label: 'عکس',
-                    data: response.image
-                }, {
-                    label: 'ویدیو',
-                    data: response.video
-                }, {
-                    label: 'صوت',
-                    data: response.voice
-                }]
-            },'line')
+            var labels = [
+                '0',
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+                '6',
+                '7',
+                '8',
+                '9',
+                '10',
+                '11',
+                '12',
+                '13',
+                '14',
+                '15',
+                '16',
+                '17',
+                '18',
+                '19',
+                '20',
+                '21',
+                '22',
+                '23'
+            ]
+            var datasets = [{
+                label: 'متن',
+                data: response.text
+            }, {
+                label: 'عکس',
+                data: response.image
+            }, {
+                label: 'ویدیو',
+                data: response.video
+            }, {
+                label: 'صوت',
+                data: response.voice
+            }, {
+                label: 'مستندات',
+                data: response.document
+            }, ]
+            var data = {
+                labels,
+                datasets
+            };
+            var options;
+
+            drawChart('chart-msg-today', data, options, 'line')
         });
+        /////////////////////////////////////weekly chart////////////////////////////
+
         post('/messages/chart/weekly', {
             date: now
         }, function (response) {
-            drawLineChart('chart-msg-thisweek', {
-                labels: [
-                    'شنبه',
-                    'یکشنبه',
-                    'دوشنبه',
-                    'سه شنبه',
-                    'چهارشنبه',
-                    'پنجشنبه',
-                    'جمعه'
-                ],
-                datasets: [{
-                    label: 'متن',
-                    data: response.text
-                }, {
-                    label: 'عکس',
-                    data: response.image
-                }, {
-                    label: 'ویدیو',
-                    data: response.video
-                }, {
-                    label: 'صوت',
-                    data: response.voice
-                }]
-            },'line')
+            
+            console.log('weekly response: ',response)
+                var labels = [
+                'شنبه',
+                'یکشنبه',
+                'دوشنبه',
+                'سه شنبه',
+                'چهارشنبه',
+                'پنجشنبه',
+                'جمعه'
+            ]
+            var datasets = [{
+                label: 'متن',
+                data: response.text
+            }, {
+                label: 'عکس',
+                data: response.image
+            }, {
+                label: 'ویدیو',
+                data: response.video
+            }, {
+                label: 'صوت',
+                data: response.voice
+            }, {
+                label: 'مستندات',
+                data: response.document
+            }, ]
+            var data = {
+                labels,
+                datasets
+            };
+            var options;
+            drawChart('chart-msg-thisweek', data, options, 'line')
         });
+        /////////////////////////////////////monthly chart////////////////////////////
+
         post('/messages/chart/monthly', {
             date: now
         }, function (response) {
-            drawLineChart('chart-msg-thismonth', {
-                labels: [
-                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
-                    '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'
-                ],
-                datasets: [{
-                    label: 'متن',
-                    data: response.text
-                }, {
-                    label: 'عکس',
-                    data: response.image
-                }, {
-                    label: 'ویدیو',
-                    data: response.video
-                }, {
-                    label: 'صوت',
-                    data: response.voice
-                }]
-            },'line')
+            // console.log('chart/monthly: ', response)
+            var labels = [
+                '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
+                '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'
+            ]
+            var jalaliDate=gregorian_to_jalali(now)
+            
+            if(jalaliDate[1]<7) labels.push(31)
+            /*   text: msgCounts,
+            voice:audioCount,
+            video:videoCount,
+            image:photoCount,
+            document:documentCount, */
+            var datasets = [{
+                label: 'متن',
+                data: response.text
+            }, {
+                label: 'عکس',
+                data: response.image
+            }, {
+                label: 'ویدیو',
+                data: response.video
+            }, {
+                label: 'صوت',
+                data: response.voice
+            }, {
+                label: 'مستندات',
+                data: response.document
+            }, ]
+            var data = {
+                labels,
+                datasets
+            };
+            var options;
+            drawChart('chart-msg-thismonth', data, options, 'line')
         });
         /////////////////////////////////////vote chart////////////////////////////
         post('/votes/all/scores', {}, function (response) {
-            var lables=[]
-            var percent=[];
-            response.votesArray.map(item=> {
-                console.log('vote-item',item)
-                lables.push(item.title)
-                percent.push(Math.round(item.score*100)/(item.count*5))
+            var labels = []
+            var percent = [];
+            response.votesArray.map(item => {
+                // console.log('vote-item', item)
+                labels.push(item.title)
+                percent.push(Math.round(item.score * 100) / (item.count * 5))
 
             })
-            console.log('lables: ',lables)
-            console.log('score: ',percent)
-            var data= {
-                labels: lables,
+            // console.log('labels: ', labels)
+            // console.log('score: ', percent)
+            var data = {
+                labels: labels,
                 datasets: [{
                     label: '%',
                     data: percent,
@@ -419,98 +379,124 @@ function drawChart(element, data,options,type) {
                     borderWidth: 1
                 }]
             }
-            var  options= {
+            var options = {
+
                 scales: {
                     // xAxes:[],
                     yAxes: [{
                         ticks: {
-                            beginAtZero:true
+                            beginAtZero: true
                         }
                     }],
-                    
                 }
-            }  
+            }
             //chart types: polarArea, bar, line, radar, pie, doughnut, polarArea, bubble, scatter
-            drawChart('chart-vote',data,options,'bar')
+            drawChart('chart-vote', data, options, 'bar')
 
         })
 
 
 
         /////////////////////////////////////survey chart////////////////////////////
-        
-        post('/surveys/all',{},function(surveys){
-            // console.log('surveys::::',surveys)
-///////////////////////////////////////////////////////////////////////////
-            surveyId="5a745a221fa263114624ab9c"
-            // surveyId=surveys.surveysArray[39]._id;
-///////////////////////////////////////////////////////////////////////////
-       
-        post('/surveys/select/one/result', {surveyId:surveyId}, function (response) {
-            // console.log('response::::',response)
-            var lables=[]
-            var percents=[];
-            response.answers.map(item=>{
-        
-                lables.push(item.title)
-                percents.push(item.percent)
-            })
 
-            var data= {
-                labels: lables,
-                datasets: [{
-                    label: '%',
-                    data: percents,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            }
-            var  options= {
-                scales: {
-                    // xAxes:[],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
+        post('/surveys/all', {}, function (surveys) {
+           
+            surveys.surveysArray.map(function (item) {
+                // console.log('item: ', item)
+
+                $('#tab-chart-survey').append(`
+                <div id="goTop" class="fixed-action-btn">
+                    <a class="btn-floating btn-large " color="BDBDBD" href="#top">
+                        <i class="large material-icons">vertical_align_top</i>
+                    </a>
+                </div>
+                <div class="col s12 m6">
+                    <div class="card modal-trigger" href="#chartModal">
+                        <div class="card-content">
+                            <canvas id="chart-survey-` + item._id + `" width="400" height="400">
+                        </div>
+                    </div>
+                </div>
+
+                
+
+              `);
+
+                post('/surveys/select/one/result', {
+                    surveyId: item._id
+                }, function (response) {
+                    var labels = []
+                    if (response.totalCount > 0) {
+                        var percents = [];
+                        response.answers.map(answer => {
+                            labels.push(answer.title)
+                            percents.push(answer.percent)
+                        })
+                    } else {
+                        labels = item.keyboard
+                        var percents = Array(labels.length)
+                        percents.fill(0)
+                    }
+
+                    var data = {
+                        labels: labels,
+                        datasets: [{
+                            label: '%',
+                            data: percents,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    }
+                    var options = {
+                        title: {
+                            display: true,
+                            text: item.title,
+                        },
+                        scales: {
+                            // xAxes:[],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }],
+
                         }
-                    }],
-                    
-                }
-            }  
-                  
-            drawChart('chart-survey',data,options,'bar')   
-              
+                    }
+                    $("#chart-survey-" + item._id).append(
+                        drawChart("chart-survey-" + item._id, data, options, 'bar')
+                    )
+
+                    $('#chart-survey-' + item._id).click(function (e) {
+                        $("#chartModal").modal();
+                    })
+
+                    // $('#tab-chart-survey').after(`
+                    // <div id="chartModal" class="modal chartModal modal-fixed-footer">
+                    //     <div class="modal-content">
+                    //         <canvas id="chart-survey-modal-` + item._id + `" width="400" height="400">            
+                    //     </div>
+                    // </div>
+                    // `);
+                    $("#chart-survey-modal-" + item._id).append(
+                        drawChart("chart-survey-modal-" + item._id, data, options, 'bar')
+                    )
+                })
+            })
         })
-    })
-        // var result = []
-
-        // post('/surveys/all/result', {}, function (response) {
-        //     var {
-        //         surveys
-        //     } = response
-        //     surveys.map(item => {
-        //         result.push(item)
-        //     })
-        //     console.log(result)
-        // })
-    
-       
-
-        
-   
     }); // end of document ready
 })(jQuery); // end of jQuery name space
