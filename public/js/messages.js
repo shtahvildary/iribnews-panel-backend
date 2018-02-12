@@ -179,7 +179,40 @@ function searchFilter(checkbox) {
             // console.log(replys)
 
         })
+        function pinModal(item){
+            $('#messages-list').after(`
+                <div id="pinModal" class="modal pin modal-fixed-footer">
+                <div class="modal-content">
+                    <h5>انتخاب کاربران:</h5>
+                    <p>
+                            <form>
+                            <p>
+                        <input type="checkbox" id="cbx0-` + item._id + `" value="0" onchange='selectedUsers(this);'/>
+                        <label for="cbx0-` + item._id + `">همه گروهها</label>
+                        </p>
+                        <p>
+                        <input type="checkbox" id="cbx1-` + item._id + `" value="1" onchange='selectedUsers(this);'/>
+                        <label for="cbx1-` + item._id + `">گروه مدیران</label>
+                        </p>    <p>
+                        <input type="checkbox" id="cbx2-` + item._id + `" value="2" onchange='selectedUsers(this);'/>
+                        <label for="cbx2-` + item._id + `">گروه کاربران</label>
+    
+                        </p>
+                            </form>
+            
+                            <div class="modal-footer">
+                            
+                                <button class="btn waves-effect waves-light modal-close">
+                                   <i class="material-icons right">cancel</i>
+                                </button>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+            </div>`)
+            }
         $('#icnPin-' + item._id).click(function (e) {
+            pinModal(item);
             $('#pinModal').modal();
 
         });
@@ -309,35 +342,7 @@ function searchFilter(checkbox) {
         
         
 
-        <div id="pinModal" class="modal pin modal-fixed-footer">
-            <div class="modal-content">
-                <h5>انتخاب کاربران:</h5>
-                <p>
-                        <form>
-                        <p>
-                    <input type="checkbox" id="cbx0-` + item._id + `" value="0" onchange='selectedUsers(this);'/>
-                    <label for="cbx0-` + item._id + `">همه گروهها</label>
-                    </p>
-                    <p>
-                    <input type="checkbox" id="cbx1-` + item._id + `" value="1" onchange='selectedUsers(this);'/>
-                    <label for="cbx1-` + item._id + `">گروه مدیران</label>
-                    </p>    <p>
-                    <input type="checkbox" id="cbx2-` + item._id + `" value="2" onchange='selectedUsers(this);'/>
-                    <label for="cbx2-` + item._id + `">گروه کاربران</label>
-
-                    </p>
-                        </form>
         
-                        <div class="modal-footer">
-                        
-                            <button class="btn waves-effect waves-light modal-close">
-                               <i class="material-icons right">cancel</i>
-                            </button>
-                        </div>
-                    </div>
-                </p>
-            </div>
-        </div>
 
 
 
@@ -349,17 +354,20 @@ function searchFilter(checkbox) {
 
         });
         jQuery(item.replys).each(function (i, reply) {
+            console.log('reply: ',reply)
             // jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
             jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
-             <button class="btn waves-effect waves-light" id="replyEdit-`+item._id+`">
+             <button class="btn waves-effect waves-light" id="replyEdit-`+reply._id+`">
             <i class="material-icons right">edit</i>
          </button></p>`);
+         $('#replyEdit-' + reply._id).click(function (e) {
+             console.log(reply.text)
+             $('#replyTxt').val(reply.text);
+             $('#replyTxt').trigger('autoresize');
+ 
+         })
         });
-        $('#replyEdit-' + item._id).click(function (e) {
-            $('#replyTxt').val(reply.text);
-            
-
-        })
+       
         
 
         function selectedUsers(checkbox) {

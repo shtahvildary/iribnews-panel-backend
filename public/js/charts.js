@@ -482,19 +482,21 @@ drawChart(element, data, options, type) {
                     )
 
                     $('#chart-survey-' + item._id).click(function (e) {
+                        chartAfter(item);
                         $("#chartModal").modal();
                     })
-
-                    // $('#tab-chart-survey').after(`
-                    // <div id="chartModal" class="modal chartModal modal-fixed-footer">
-                    //     <div class="modal-content">
-                    //         <canvas id="chart-survey-modal-` + item._id + `" width="400" height="400">            
-                    //     </div>
-                    // </div>
-                    // `);
+                function chartAfter(item){
+                    $('#tab-chart-survey').after(`
+                    <div id="chartModal" class="modal chartModal modal-fixed-footer">
+                        <div class="modal-content">
+                            <canvas id="chart-survey-modal-` + item._id + `" width="400" height="400">            
+                        </div>
+                    </div>
+                    `);
                     $("#chart-survey-modal-" + item._id).append(
                         drawChart("chart-survey-modal-" + item._id, data, options, 'bar')
                     )
+                }
                 })
             })
         })
