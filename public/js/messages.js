@@ -194,7 +194,7 @@ example home:
                     
                       <a class="waves-effect waves-light btn modal-trigger view " id="btnView-` + item._id + `" item="` + item + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#viewModal">مشاهده
                       <i class="material-icons">reply</i></a>
-                      ` + (item.isSeen.length > 0 ? (`<img class="msg-icons"  id="icnIsSeen-"` + item._id + `" src="../icons/icons8-double-tick-50.png" href="#isSeenModal">`) : ``) + `
+                      ` + (item.isSeen.length > 0 ? (`<a id="icnIsSeen-` + item._id + `" class="modal-trigger" href="#isSeenModal"><img class="msg-icons isSeen"  src="../icons/icons8-double-tick-50.png" ></a>`) : ``) + `
                       <a id="icnPin-` + item._id + `" class="modal-trigger" href="#pinModal"><img class="msg-icons pin"   ` + (item.pin.length > 0 ? (` src="../icons/pin-blue.png" >`) : `src="../icons/pin-gray.png" >`) + `</a>
                       
                     </div>
