@@ -6,6 +6,8 @@ var auth = require('../tools/authentication');
 //var auth = require('../tools/auth');
 var request = require('request');
 var _ = require('lodash');
+const botServer = "http://localhost:9002";
+
 
 
 //select all sort by date
@@ -464,70 +466,92 @@ router.post('/chart/selectedDate', auth, function (req, res) {
     })
 })
 
-//shmt_bot
-// var botToken = "449968526:AAGY4Tz48MiN8uxUD_0nWHFZSQscD9OQ_Vk";
-//iribnews
-var botToken = "545443179:AAGEKFAT_mg5H2aTZbCKEPXr2Pkee11b8l4";
+
 
 
 //save reply for a message
-router.post('/reply', auth, function (req, res) {
+router.post('/reply/new', auth, function (req, res) {
     console.log('query:', req.body)
 
-
-
-    message_sc.findById(req.body._id).exec(function (err, result) {
-        if (!err) {
-            console.log("message:", result)
+    // message_sc.findById(req.body._id).exec(function (err, result) {
+    //     if (!err) {
+            // console.log("message:", result)
             console.log("req.body.reply:", req.body)
             var reply = {
-                text: req.body.text,
-                //date:req.body.date,
-                // userId: req.body.userId
-                // userId: req.body.token
-                userId: req.session.userId
+                _id:req.body._id,
+                    text:req.body.text,
+                    userId:req.session.userId
 
             }
 
-            request({
-                uri: "https://api.telegram.org/bot" + botToken + "/sendMessage",
-                method: 'POST',
-                json: {
-                    chat_id: result.chatId,
-                    text: req.body.text
-                }
+            request.post({
+                url: botServer + "/sendMessage/reply/new",
+                json:reply
+              },
+              function (err, res) {
+                if (err) console.log("err: ", err);
+               
+              }
+            );
+           
+    //     } else {
+    //         res.status(500).json({
+    //             error: err
+    //         });
+    //     }
+    // })
+}); 
 
-            }, function (err, d) {
-                console.log(err, d)
-                if (err) {
-                    res.status(500).json({
-                        error: err
-                    })
-                } else {
+//edit reply for a message
+router.post('/reply/edit', auth, function (req, res) {
+    console.log('query:', req.body)
 
-                    if (result._doc.replys) {
-                        result._doc.replys.push(reply || result._doc.replys);
-                    } else {
-                        result._doc.replys = reply || result._doc.replys;
+    // message_sc.findById(req.body._id).exec(function (err, result) {
+    //     if (!err) {
+            // console.log("message:", result)
+            console.log("req.body.reply:", req.body)
+            /*exmaple:
+{
+	"_id":"5a62fea1ba1ee7221416779f",
+	"message_id":224,
+	"chatId":98445056,
+	"text":"just 4 test!!",
+	"userId":"5a509716513a501c9cce24c6"
+}
+example home:
+{"_id":"5a61ab39b6def3171ee9992d",
+	"text":"dear7",
+	"message_id":"227"
+	
+}
+*/
+            var reply = {
+                _id:req.body._id,
+                message_id:req.body.message_id, //message_id of reply
+                    text:req.body.text,
+                    userId:req.session.userId
 
-                    }
-                    // Save the updated document back to the database
-                    result.save(function (err, result) {
-                        if (!err) {
-                            res.status(200).send(result);
-                        } else {
-                            res.status(500).send(err)
-                        }
-                    })
-                }
-            })
-        } else {
-            res.status(500).json({
-                error: err
-            });
-        }
-    })
-}); router.post('/view', auth, function (req, res) {
+            }
+
+            request.post({
+                url: botServer + "/sendMessage/reply/edit",
+                json:reply
+              },
+              function (err, res) {
+                if (err) console.log("err: ", err);
+               
+              }
+            );
+           
+    //     } else {
+    //         res.status(500).json({
+    //             error: err
+    //         });
+    //     }
+    // })
+}); 
+
+router.post('/view', auth, function (req, res) {
     message_sc.findById(req.body._id).exec(function (err, result) {
         if (!err) {
             console.log("message:", result)

@@ -123,10 +123,40 @@ function searchFilter(checkbox) {
     function replyToMsg(reply) {
         // console.log('replyToMsg: ', reply);
 
-        post('/messages/reply', {
+        post('/messages/reply/new', {
             _id: reply.msgId,
             // chatId: reply.chatId,
 
+            text: reply.text,
+            userId: reply.userId
+
+        }, function (response) {
+            // console.log('message which U replied:', response);
+
+        })
+    }
+    function editReply(reply){
+        console.log('replyToMsg: ', reply);
+
+        post('/messages/reply/edit', {
+            /*exmaple:
+{
+	"_id":"5a62fea1ba1ee7221416779f",
+	"message_id":224,
+	"chatId":98445056,
+	"text":"just 4 test!!",
+	"userId":"5a509716513a501c9cce24c6"
+}
+example home:
+{"_id":"5a61ab39b6def3171ee9992d",
+	"text":"dear7",
+	"message_id":"227"
+	
+}
+*/
+            _id: reply.msgId,
+            // chatId: reply.chatId,
+            message_id:reply.message_id,
             text: reply.text,
             userId: reply.userId
 
@@ -252,13 +282,12 @@ function searchFilter(checkbox) {
             $('#btnSendReply').click(function (e) {
 
                 reply.text = $('#replyTxt').val();
-
                 if (replyToMsg(reply)) {
                     // if (status==true) {
                     $('#viewModal').modal('close');
                     alert("ارسال پیام با موفقیت انجام شد.");
                 } else {
-                    alert("پیام شما ارسال نشدء لطفا دوباره اقدام نمایید. کدخطا: " + status)
+                    alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. کدخطا: " + status)
                 }
             })
         })
@@ -308,7 +337,7 @@ function searchFilter(checkbox) {
                     </div>
                     </p>
                     </div>
-                    <div class="modal-footer">
+                    <div id="messageModalFooter" class="modal-footer">
                     <button class="btn waves-effect waves-light" id="btnSendReply">ارسال
                        <i class="material-icons right">send</i>
                     </button>
@@ -339,14 +368,6 @@ function searchFilter(checkbox) {
                 </p>
             </div>
         </div>
-        
-        
-
-        
-
-
-
-
         </div>
         `);
         jQuery(item.isSeen).each(function (i, item) {
@@ -364,7 +385,27 @@ function searchFilter(checkbox) {
              console.log(reply.text)
              $('#replyTxt').val(reply.text);
              $('#replyTxt').trigger('autoresize');
+
+             $("#messageModalFooter").append(`
+                <button class="btn waves-effect waves-light" id="btnUpdateReply">ارسال
+                    <i class="material-icons right">send</i>
+                </button>
+            `)
+                         
+             $('#btnSendReply').remove()
  
+             $("#btnUpdateReply").click(function(e){
+                 console.log('btnUpdateReply is clicked...')
+                reply.text = $('#replyTxt').val();
+                reply.msgId=item._id
+                if (editReply(reply)) {
+                    // if (status==true) {
+                    $('#viewModal').modal('close');
+                    alert("ارسال پیام با موفقیت انجام شد.");
+                } else {
+                    alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. کدخطا: " + status)
+                }
+             })
          })
         });
        
