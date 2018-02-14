@@ -1,5 +1,15 @@
 (function ($) {
 
+    post('/groups/all',{} ,function (response) {
+        //https://www.electrictoolbox.com/jquery-add-option-select-jquery/
+        //https://paulund.co.uk/add-an-remove-options-in-select-using-jquery
+        
+    console.log('response: ',response)
+    $("#userGroup").append(`
+    <option value="1">مدیر</option>
+    `)
+    })
+
 
 
 
