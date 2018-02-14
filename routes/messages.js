@@ -15,6 +15,9 @@ router.post('/select/all/date', auth, function (req, res, next) {
     message_sc.find({}).populate({
         path: 'replys.userId',
         select: 'username'
+    }).populate({
+        path: 'isSeen.userId',
+        select: 'username'
     }).sort('-date').exec(function (err, result) {
         //pagination should be handled
         if (!err) {

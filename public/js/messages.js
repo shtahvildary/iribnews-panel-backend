@@ -209,10 +209,34 @@ example home:
             // console.log(replys)
 
         })
+        function isSeenModal(item){
+            console.log('item.isSeen:',item.isSeen)
+            $('#messages-list').after(`
+            <div id="isSeenModal" class="modal isSeen modal-fixed-footer ">
+                <div class="modal-content rtl">
+                    <h5>کاربرانی که این پیام را مشاهده کرده اند:</h5>
+                    <form id="isSeenForm">
+                    </form>
+                    
+                    <div class="modal-footer">
+                        <button class="btn waves-effect waves-light modal-close">انصراف
+                            <i class="material-icons right">cancel</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+            `)
+            jQuery(item.isSeen).each(function (i, item) {
+                jQuery('#isSeenForm').append(`<p> کاربر` + item.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + `این پیام را خوانده است.   </p>`);
+    
+            });
+            
+        }
         function pinModal(item){
             $('#messages-list').after(`
                 <div id="pinModal" class="modal pin modal-fixed-footer">
-                <div class="modal-content">
+                    <div class="modal-content">
                     <h5>انتخاب کاربران:</h5>
                     <p>
                             <form>
@@ -232,7 +256,7 @@ example home:
             
                             <div class="modal-footer">
                             
-                                <button class="btn waves-effect waves-light modal-close">
+                                <button class="btn waves-effect waves-light modal-close">انصراف
                                    <i class="material-icons right">cancel</i>
                                 </button>
                             </div>
@@ -241,6 +265,11 @@ example home:
                 </div>
             </div>`)
             }
+            $('#icnIsSeen-' + item._id).click(function (e) {
+                isSeenModal(item);
+                $('#isSeenModal').modal();
+
+            })
         $('#icnPin-' + item._id).click(function (e) {
             pinModal(item);
             $('#pinModal').modal();
@@ -266,12 +295,7 @@ example home:
                 userId: userId,
             }
 
-            $('#icnIsSeen-' + item._id).click(function (e) {
-                console.log("isSeen click....")
-                alert('it works');
-                $('#isSeenModal').modal();
 
-            })
 
             cardsAfter(item);
             // $('#btnView-' + item._id).modal();
@@ -338,42 +362,17 @@ example home:
                     </p>
                     </div>
                     <div id="messageModalFooter" class="modal-footer">
-                    <button class="btn waves-effect waves-light" id="btnSendReply">ارسال
-                       <i class="material-icons right">send</i>
-                    </button>
-                    <button class="btn waves-effect waves-light modal-close">انصراف
-                       <i class="material-icons right">cancel</i>
-                    </button>
+                        <button class="btn waves-effect waves-light" id="btnSendReply">ارسال
+                            <i class="material-icons right">send</i>
+                        </button>
+                        <button class="btn waves-effect waves-light modal-close">انصراف
+                            <i class="material-icons right">cancel</i>
+                        </button>
+                    </div>
                 </div>
-                    </div>
-        
-        
-        
-        <div id="isSeenModal" class="modal isSeen modal-fixed-footer">
-            <div class="modal-content">
-                <h5>کاربرانی که این پیام را مشاهده کرده اند:</h5>
-                <p>
-                        <form>
-                        <div class="col m6">
-                        <p>` + item.isSeen + `</p>
-                        </form>
-        
-                        <div class="modal-footer">
-                        
-                            <button class="btn waves-effect waves-light modal-close">
-                               <i class="material-icons right">cancel</i>
-                            </button>
-                        </div>
-                    </div>
-                </p>
             </div>
-        </div>
-        </div>
         `);
-        jQuery(item.isSeen).each(function (i, item) {
-            jQuery('#isSeenModal').append(`<p> کاربر` + item.userId + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + `این پیام را خوانده است.   </p>`);
-
-        });
+        
         jQuery(item.replys).each(function (i, reply) {
             console.log('reply: ',reply)
             // jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
@@ -408,9 +407,7 @@ example home:
              })
          })
         });
-       
-        
-
+ 
         function selectedUsers(checkbox) {
 
         }

@@ -13,6 +13,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var groups = require('./routes/groups');
 var messages = require('./routes/messages');
 var voteItems = require('./routes/voteItems');
 var votes = require('./routes/votes');
@@ -68,6 +69,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/groups', groups);
 app.use('/messages', messages);
 app.use('/voteItems', voteItems);
 app.use('/votes', votes);
