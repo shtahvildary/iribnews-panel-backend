@@ -15,7 +15,7 @@ var sc_user = mongoose.Schema({
     type:{type:'number',default:1},//0:MainAdmin - 1:admin - 2:user
     group:{
       type: mongoose.SchemaTypes.ObjectId,
-      ref: 'groups'},
+      ref: 'groups',required : true},
 });
 //user collection
 

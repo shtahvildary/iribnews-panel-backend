@@ -18,6 +18,7 @@ var messages = require('./routes/messages');
 var voteItems = require('./routes/voteItems');
 var votes = require('./routes/votes');
 var surveys = require('./routes/surveys');
+var permissions = require('./routes/permissions');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
@@ -74,6 +75,7 @@ app.use('/messages', messages);
 app.use('/voteItems', voteItems);
 app.use('/votes', votes);
 app.use('/surveys',surveys)
+app.use('/permissions',permissions)
 
 
 
