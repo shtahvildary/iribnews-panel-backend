@@ -1,14 +1,23 @@
 (function ($) {
 
-    post('/groups/all',{} ,function (response) {
-        //https://www.electrictoolbox.com/jquery-add-option-select-jquery/
-        //https://paulund.co.uk/add-an-remove-options-in-select-using-jquery
-        
-    console.log('response: ',response)
-    $("#userGroup").append(`
-    <option value="1">مدیر</option>
-    `)
-    })
+
+    function fillSelectGroup() {
+        post('/groups/all', {}, function (response) {
+    
+            console.log('response: ', response)
+            $("#userGroup").append(`
+            <option value="" disabled selected>انتخاب کنید...</option>
+            `)
+            jQuery(response.groupsArray).each(function(i,group){
+                jQuery("#userGroup").append(`
+            <option value="`+group._id+`">`+group.title+`</option>
+            `)
+                
+            })
+        $('select').material_select();
+            
+        })
+    }
 
 
 
@@ -30,9 +39,8 @@
             var mobileNumber = $("#mobile").val();
             var phoneNumber = $("#phone").val();
             // var permitedChannels = $("#permitedChannels").val();
-            var type = $("#type").val();
-
-            // var type = $('input[name=voteItemType]:checked').val();
+            // var type = $("#type").val();
+            var group=$("#userGroup").val()
 
             var user = {
                 firstName: firstName,
@@ -44,7 +52,8 @@
                 mobileNumber: mobileNumber,
                 phoneNumber: phoneNumber,
                 // permitedChannels: permitedChannels,
-                type: type
+                // type: type
+                group:group
             };
             console.log(user);
             //  var newUser=function (user) {
@@ -55,10 +64,7 @@
                     alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
                 } else {
                     alert("ثبت اطلاعات با موفقیت انجام شد")
-                    // $("#newVoteItemForm").reset();
                     document.getElementById("newUserForm").reset()
-                    // document.getElementById("voteItemTitle").reset()
-                    // document.getElementById("description").reset()
                 }
             });
         }
@@ -75,20 +81,14 @@
         var mobileNumber = $("#mobile").val();
         var phoneNumber = $("#phone").val();
 
-        // var password;
-        // var status;
-        // var permitedChannelsId;
         updateUser({
-            // username:username,
-            // password:password,
+            
             firstName: firstName,
             lastName: lastName,
             email: email,
             mobileNumber: mobileNumber,
             phoneNumber: phoneNumber,
-            // status:status,
-            // permitedChannelsId:permitedChannelsId,
-            // type:type
+            group:group
         });
 
         if ($("#password1").val() !== $("#password2").val()) {
@@ -105,11 +105,9 @@
             var mobileNumber = $("#mobile").val();
             var phoneNumber = $("#phone").val();
             // var permitedChannels = $("#permitedChannels").val();
-            var type = $("#type").val();
-            
-
-            // var type = $('input[name=voteItemType]:checked').val();
-
+            // var type = $("#type").val();
+            var group=$("#userGroup").val();
+        
             var user = {
                 firstName: firstName,
                 lastName: lastName,
@@ -119,7 +117,8 @@
                 mobileNumber: mobileNumber,
                 phoneNumber: phoneNumber,
                 // permitedChannels: permitedChannels,
-                type: type
+                // type: type
+            group:group                
             };
         }
     });
@@ -133,16 +132,14 @@
                 window.location.replace("../index.html")
             }
         })
-
-
     };
 
 
     $(function () {
 
-        // $('select').material_select();
+        $('select').material_select();
 
-
+        fillSelectGroup()
         //search in users list   
         var search_users = function (query) {
 
@@ -200,15 +197,8 @@
                 </div>`);
             });
 
-            // <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem="` + JSON.stringify(item)+ `">ویرایش
-
-
-
             $('.edit').click(function (e) {
 
-                //console.log($(this).attr('editItem'));
-
-                // var voteItemEdit=JSON.parse($(this).attr('editItem'));
                 var id = $(this).attr('editItem_id');
                 var firstName = $(this).attr('editItem_firstName');
                 var lastName = $(this).attr('editItem_lastName');
@@ -287,11 +277,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="input-field col s12">
-                                                <select id="type">
-                                                    <option value="" disabled selected>انتخاب کنید...</option>
-                                                    <option value="1">مدیر</option>
-                                                    <option value="2">کاربر</option>
-                                                    <option value="0">ادمین</option>
+                                                <select id="userGroup">
+                                                    
                                                 </select>
                                                 <label>گروه کاربری</label>
                                             </div>
@@ -311,6 +298,7 @@
                         </div>
                     </div>       
                 `);
+                fillSelectGroup();
 
                 $('#cbxChangePassword').change(function () {
                     if ($('#cbxChangePassword').is(":checked")) $('.pass').show();
@@ -321,9 +309,7 @@
 
                 $('#btnUpdateUser').click(function (e) {
 
-                    // console.log(voteItemEdit);
                     userEdit.firstName = $('#firstName').val();
-                    //id: $(this).attr('editItem_id'),
 
                     //personnels: $(this).attr('editItem_personnels'),
                     userEdit.lastName = $('#lastName').val();
@@ -339,17 +325,15 @@
                     userEdit.mobileNumber = $("#mobile").val();
                     userEdit.phoneNumber = $("#phone").val();
                     // userEdit.permitedChannels = $("#permitedChannels").val();
-                    userEdit.type = $("#type").val();
+                    userEdit.group = $("#userGroup").val();
 
 
                     console.log('userEdit:', userEdit)
-                    // var status=edit_voteItems(voteItemEdit);
-                    // console.log('status:',status)
+                    
                     edit_users(userEdit, function (response) {
                         console.log('response', response)
 
                         if (response.user) {
-                            // if (status==true) {
                             $('#editModal').modal('close');
                             alert("به روز رسانی با موفقیت انجام شد.");
                         } else {
@@ -360,14 +344,9 @@
             })
 
             $('.delete').click(function (e) {
-
                 var del = confirm("آیا قصد پاک کردن « " + $(this).attr('username') + " » را دارید؟");
                 if (del == true) {
                     var userId = $(this).attr('uniqueId');
-
-                    // console.log('query', {
-                    //     text: voteItemId
-                    // })
                     $('.card[uniqueId=' + userId + ']').fadeOut();
                     delete_users(userId);
                     alert("«" + $(this).attr('username') + "» با موفقیت پاک شد.");
@@ -388,7 +367,8 @@
                 phoneNumber: userEdit.phoneNumber,
                 personelNumber: userEdit.personelNumber,
                 // permitedChannels: userEdit.permitedChannels,
-                type: userEdit.type,
+                group: userEdit.group,
+                // type: userEdit.type,
 
             }, function (response) {
                 callback(response);

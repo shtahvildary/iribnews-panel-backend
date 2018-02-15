@@ -62,6 +62,7 @@
             ` + (userType != 2 ? (`
             <li>
                 <a href="usersList.html">مدیریت کاربران</a>
+                <a href="groupsList.html">مدیریت گروه ها</a>
             </li>`) : '') + `
             ` + (userType != 0 ? (
             `

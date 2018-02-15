@@ -139,7 +139,7 @@ router.post('/search', auth, function (req, res) {
         // console.log(err)
         //pagination should be handled
         if (!err) {
-            
+
             res.status(200).json({
                 messages: result,
                 // userId: req.body.token
@@ -197,12 +197,12 @@ router.post('/chart/daily', auth, function (req, res) {
             msgCounts.fill(0);
             // var msgType={text,image,video,voice}
             // console.log(msgCounts.length)
-            var textCount = Array(24); 
-            var audioCount=Array(24);
-            var videoCount=Array(24);
-            var photoCount=Array(24);
-            var documentCount=Array(24);
-            
+            var textCount = Array(24);
+            var audioCount = Array(24);
+            var videoCount = Array(24);
+            var photoCount = Array(24);
+            var documentCount = Array(24);
+
             textCount.fill(0);
             audioCount.fill(0);
             videoCount.fill(0);
@@ -211,23 +211,43 @@ router.post('/chart/daily', auth, function (req, res) {
 
 
             result.forEach(function (message) {
-                switch(message._doc.type){
-                    case 'text': {textCount[message._doc.date.getDate()] += 1; break;}
-                    case ('audio'||'voice'):{audioCount[message._doc.date.getDate()] += 1; break;}
-                    case 'video':{videoCount[message._doc.date.getDate()] += 1; break;}
-                    case 'photo':{photoCount[message._doc.date.getDate()] += 1; break;}
-                    case 'document':{documentCount[message._doc.date.getDate()] += 1; break;}
-                    
+                switch (message._doc.type) {
+                    case 'text':
+                        {
+                            textCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case ('audio' || 'voice'):
+                        {
+                            audioCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'video':
+                        {
+                            videoCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'photo':
+                        {
+                            photoCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'document':
+                        {
+                            documentCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+
                 }
                 msgCounts[message.date.getHours()] += 1;
             });
             res.status(200).json({
-                
-                    text: msgCounts,
-                    voice:audioCount,
-                    video:videoCount,
-                    image:photoCount,
-                    document:documentCount,
+
+                text: msgCounts,
+                voice: audioCount,
+                video: videoCount,
+                image: photoCount,
+                document: documentCount,
                 // userId: req.body.token
                 userId: req.session.userId
             })
@@ -244,7 +264,7 @@ router.post('/chart/weekly', auth, function (req, res) {
     // var sat = new Date(req.body.date);
     // var fri = new Date(req.body.date);
     var curr = new Date; // get current date
-    var first = today.getDate() - today.getDay()- 1; // First day is the day of the month - the day of the week
+    var first = today.getDate() - today.getDay() - 1; // First day is the day of the month - the day of the week
     var last = first + 6; // last day is the first day + 6
 
 
@@ -269,12 +289,12 @@ router.post('/chart/weekly', auth, function (req, res) {
             msgCounts.fill(0)
             // var msgType={text,image,video,voice}
             // console.log(msgCounts.length)
-            var textCount = Array(7); 
-            var audioCount=Array(7);
-            var videoCount=Array(7);
-            var photoCount=Array(7);
-            var documentCount=Array(7);
-            
+            var textCount = Array(7);
+            var audioCount = Array(7);
+            var videoCount = Array(7);
+            var photoCount = Array(7);
+            var documentCount = Array(7);
+
             textCount.fill(0);
             audioCount.fill(0);
             videoCount.fill(0);
@@ -284,24 +304,44 @@ router.post('/chart/weekly', auth, function (req, res) {
             var persianDay;
 
             result.forEach(function (message) {
-                console.log('message._doc.date.getDay(): ',message._doc.date.getDay())
-                persianDay=message._doc.date.getDay()+1;
-                if(persianDay==7) persianDay=0;
-                switch(message._doc.type){
-                    case 'text': {textCount[persianDay] += 1; break;}
-                    case ('audio'||'voice'):{audioCount[persianDay] += 1; break;}
-                    case 'video':{videoCount[persianDay] += 1; break;}
-                    case 'photo':{photoCount[persianDay] += 1; break;}
-                    case 'document':{documentCount[persianDay] += 1; break;}
+                console.log('message._doc.date.getDay(): ', message._doc.date.getDay())
+                persianDay = message._doc.date.getDay() + 1;
+                if (persianDay == 7) persianDay = 0;
+                switch (message._doc.type) {
+                    case 'text':
+                        {
+                            textCount[persianDay] += 1;
+                            break;
+                        }
+                    case ('audio' || 'voice'):
+                        {
+                            audioCount[persianDay] += 1;
+                            break;
+                        }
+                    case 'video':
+                        {
+                            videoCount[persianDay] += 1;
+                            break;
+                        }
+                    case 'photo':
+                        {
+                            photoCount[persianDay] += 1;
+                            break;
+                        }
+                    case 'document':
+                        {
+                            documentCount[persianDay] += 1;
+                            break;
+                        }
                 }
                 msgCounts[persianDay] += 1;
             });
             res.status(200).json({
                 text: msgCounts,
-                voice:audioCount,
-                video:videoCount,
-                image:photoCount,
-                document:documentCount,
+                voice: audioCount,
+                video: videoCount,
+                image: photoCount,
+                document: documentCount,
             })
         } else {
             res.status(500).json({
@@ -341,12 +381,12 @@ router.post('/chart/monthly', auth, function (req, res) {
             msgCounts.fill(0);
             // var msgType={text,image,video,voice}
             // console.log(msgCounts.length)
-            var textCount = Array(30); 
-            var audioCount=Array(30);
-            var videoCount=Array(30);
-            var photoCount=Array(30);
-            var documentCount=Array(30);
-            
+            var textCount = Array(30);
+            var audioCount = Array(30);
+            var videoCount = Array(30);
+            var photoCount = Array(30);
+            var documentCount = Array(30);
+
             textCount.fill(0);
             audioCount.fill(0);
             videoCount.fill(0);
@@ -355,27 +395,47 @@ router.post('/chart/monthly', auth, function (req, res) {
 
             result.forEach(function (message) {
                 //text,audio,voice,video,photo,document
-                switch(message._doc.type){
-                    case 'text': {textCount[message._doc.date.getDate()] += 1; break;}
-                    case ('audio'||'voice'):{audioCount[message._doc.date.getDate()] += 1; break;}
-                    case 'video':{videoCount[message._doc.date.getDate()] += 1; break;}
-                    case 'photo':{photoCount[message._doc.date.getDate()] += 1; break;}
-                    case 'document':{documentCount[message._doc.date.getDate()] += 1; break;}
+                switch (message._doc.type) {
+                    case 'text':
+                        {
+                            textCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case ('audio' || 'voice'):
+                        {
+                            audioCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'video':
+                        {
+                            videoCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'photo':
+                        {
+                            photoCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'document':
+                        {
+                            documentCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
                 }
                 msgCounts[message._doc.date.getDate()] += 1;
-                
+
             });
-            console.log('textCount :',textCount)
-            console.log('audioCount :',audioCount)
-            console.log('videoCount :',videoCount)
-            console.log('photoCount :',photoCount)
-            console.log('documentCount :',documentCount)
+            console.log('textCount :', textCount)
+            console.log('audioCount :', audioCount)
+            console.log('videoCount :', videoCount)
+            console.log('photoCount :', photoCount)
+            console.log('documentCount :', documentCount)
             res.status(200).json({
                 text: msgCounts,
-                voice:audioCount,
-                video:videoCount,
-                image:photoCount,
-                document:documentCount,
+                voice: audioCount,
+                video: videoCount,
+                image: photoCount,
+                document: documentCount,
             })
         } else {
             res.status(500).json({
@@ -391,13 +451,13 @@ router.post('/chart/selectedDate', auth, function (req, res) {
     // var lastday = new Date(req.body.lastday);
     var firstday = new Date();
     var lastday = new Date();
-     firstday.setYear(req.body.firstday.y);
-     firstday.setMonth(req.body.firstday.m);
-     firstday.setDate(req.body.firstday.d);
-     
-     lastday.setYear(req.body.lastday.y);
-     lastday.setMonth(req.body.lastday.m);
-     lastday.setDate(req.body.lastday.d);
+    firstday.setYear(req.body.firstday.y);
+    firstday.setMonth(req.body.firstday.m);
+    firstday.setDate(req.body.firstday.d);
+
+    lastday.setYear(req.body.lastday.y);
+    lastday.setMonth(req.body.lastday.m);
+    lastday.setDate(req.body.lastday.d);
 
 
 
@@ -424,17 +484,17 @@ router.post('/chart/selectedDate', auth, function (req, res) {
 
 
             var msgCounts = Array(diffDays);
-             msgCounts .fill(0);
+            msgCounts.fill(0);
             // console.log(msgCounts)
-            
+
             // var msgType={text,image,video,voice}
             // console.log(msgCounts.length)
-            var textCount = Array(diffDays); 
-            var audioCount=Array(diffDays);
-            var videoCount=Array(diffDays);
-            var photoCount=Array(diffDays);
-            var documentCount=Array(diffDays);
-            
+            var textCount = Array(diffDays);
+            var audioCount = Array(diffDays);
+            var videoCount = Array(diffDays);
+            var photoCount = Array(diffDays);
+            var documentCount = Array(diffDays);
+
             textCount.fill(0);
             audioCount.fill(0);
             videoCount.fill(0);
@@ -443,22 +503,42 @@ router.post('/chart/selectedDate', auth, function (req, res) {
 
 
             result.forEach(function (message) {
-                switch(message._doc.type){
-                    case 'text': {textCount[message._doc.date.getDate()] += 1; break;}
-                    case ('audio'||'voice'):{audioCount[message._doc.date.getDate()] += 1; break;}
-                    case 'video':{videoCount[message._doc.date.getDate()] += 1; break;}
-                    case 'photo':{photoCount[message._doc.date.getDate()] += 1; break;}
-                    case 'document':{documentCount[message._doc.date.getDate()] += 1; break;}
+                switch (message._doc.type) {
+                    case 'text':
+                        {
+                            textCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case ('audio' || 'voice'):
+                        {
+                            audioCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'video':
+                        {
+                            videoCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'photo':
+                        {
+                            photoCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
+                    case 'document':
+                        {
+                            documentCount[message._doc.date.getDate()] += 1;
+                            break;
+                        }
                 }
                 msgCounts[message._doc.date.getHours()] += 1;
             });
             res.status(200).json({
-                diffDays:diffDays,
+                diffDays: diffDays,
                 text: msgCounts,
-                voice:audioCount,
-                video:videoCount,
-                image:photoCount,
-                document:documentCount,
+                voice: audioCount,
+                video: videoCount,
+                image: photoCount,
+                document: documentCount,
             })
         } else {
             res.status(500).json({
@@ -478,81 +558,59 @@ router.post('/reply/new', auth, function (req, res) {
 
     // message_sc.findById(req.body._id).exec(function (err, result) {
     //     if (!err) {
-            // console.log("message:", result)
-            console.log("req.body.reply:", req.body)
-            var reply = {
-                _id:req.body._id,
-                    text:req.body.text,
-                    userId:req.session.userId
+    // console.log("message:", result)
+    console.log("req.body.reply:", req.body)
+    var reply = {
+        _id: req.body._id,
+        text: req.body.text,
+        userId: req.session.userId
 
-            }
+    }
 
-            request.post({
-                url: botServer + "/sendMessage/reply/new",
-                json:reply
-              },
-              function (err, res) {
-                if (err) console.log("err: ", err);
-               
-              }
-            );
-           
+    request.post({
+            url: botServer + "/sendMessage/reply/new",
+            json: reply
+        },
+        function (err, res) {
+            if (err) console.log("err: ", err);
+
+        }
+    );
+
     //     } else {
     //         res.status(500).json({
     //             error: err
     //         });
     //     }
     // })
-}); 
+});
 
 //edit reply for a message
 router.post('/reply/edit', auth, function (req, res) {
     console.log('query:', req.body)
+    console.log("req.body.reply:", req.body)
 
-    // message_sc.findById(req.body._id).exec(function (err, result) {
-    //     if (!err) {
-            // console.log("message:", result)
-            console.log("req.body.reply:", req.body)
-            /*exmaple:
-{
-	"_id":"5a62fea1ba1ee7221416779f",
-	"message_id":224,
-	"chatId":98445056,
-	"text":"just 4 test!!",
-	"userId":"5a509716513a501c9cce24c6"
-}
-example home:
-{"_id":"5a61ab39b6def3171ee9992d",
-	"text":"dear7",
-	"message_id":"227"
-	
-}
-*/
-            var reply = {
-                _id:req.body._id,
-                message_id:req.body.message_id, //message_id of reply
-                    text:req.body.text,
-                    userId:req.session.userId
+    var reply = {
+        _id: req.body._id,
+        message_id: req.body.message_id, //message_id of reply
+        text: req.body.text,
 
-            }
+    }
 
-            request.post({
-                url: botServer + "/sendMessage/reply/edit",
-                json:reply
-              },
-              function (err, res) {
-                if (err) console.log("err: ", err);
-               
-              }
-            );
-           
-    //     } else {
-    //         res.status(500).json({
-    //             error: err
-    //         });
-    //     }
-    // })
-}); 
+    request.post({
+            url: botServer + "/sendMessage/reply/edit",
+            json: reply
+        },
+        function (err, response) {
+            console.plain("RESPONSE ihihihihih >>>>",response)
+            if (err) return res.status(500).json({error:err});
+            return res.status(200).json({updatedMessage:response})
+
+
+        }
+    );
+
+});
 
 router.post('/view', auth, function (req, res) {
     message_sc.findById(req.body._id).exec(function (err, result) {

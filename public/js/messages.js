@@ -135,33 +135,18 @@ function searchFilter(checkbox) {
 
         })
     }
-    function editReply(reply){
+    function editReply(reply,callback){
         console.log('replyToMsg: ', reply);
 
         post('/messages/reply/edit', {
-            /*exmaple:
-{
-	"_id":"5a62fea1ba1ee7221416779f",
-	"message_id":224,
-	"chatId":98445056,
-	"text":"just 4 test!!",
-	"userId":"5a509716513a501c9cce24c6"
-}
-example home:
-{"_id":"5a61ab39b6def3171ee9992d",
-	"text":"dear7",
-	"message_id":"227"
-	
-}
-*/
             _id: reply.msgId,
-            // chatId: reply.chatId,
             message_id:reply.message_id,
             text: reply.text,
-            userId: reply.userId
 
         }, function (response) {
-            // console.log('message which U replied:', response);
+            console.log("our response is ihihihih",response)
+            if(response.updatedMessage) callback(true)
+            else callback(false)
 
         })
     }
@@ -310,9 +295,9 @@ example home:
                     // if (status==true) {
                     $('#viewModal').modal('close');
                     alert("ارسال پیام با موفقیت انجام شد.");
-                } else {
+                } else 
                     alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. کدخطا: " + status)
-                }
+                
             })
         })
     }
@@ -374,12 +359,12 @@ example home:
         `);
         
         jQuery(item.replys).each(function (i, reply) {
-            console.log('reply: ',reply)
+            
             // jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
             jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
-             <button class="btn waves-effect waves-light" id="replyEdit-`+reply._id+`">
+             <a class="btn waves-effect waves-light" id="replyEdit-`+reply._id+`">
             <i class="material-icons right">edit</i>
-         </button></p>`);
+         </a></p>`);
          $('#replyEdit-' + reply._id).click(function (e) {
              console.log(reply.text)
              $('#replyTxt').val(reply.text);
@@ -396,14 +381,19 @@ example home:
              $("#btnUpdateReply").click(function(e){
                  console.log('btnUpdateReply is clicked...')
                 reply.text = $('#replyTxt').val();
-                reply.msgId=item._id
-                if (editReply(reply)) {
-                    // if (status==true) {
-                    $('#viewModal').modal('close');
-                    alert("ارسال پیام با موفقیت انجام شد.");
-                } else {
-                    alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. کدخطا: " + status)
-                }
+                reply.msgId=item._id;
+                editReply(reply,function(updatedMessage){
+                    console.log("anjam shod")
+                    if(updatedMessage==true){
+
+                        $('#viewModal').modal('close');
+                        return alert("ارسال پیام با موفقیت انجام شد.");
+                    }
+                    return alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. کدخطا: " + status)
+
+                    
+                })
+                
              })
          })
         });

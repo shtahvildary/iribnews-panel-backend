@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="../css/materialize-rtl.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link rel="shortcut icon" href="../icons/favicon.ico">
-    <title>واحد مرکزی خبر - حساب کاربری</title>
+    <title>واحد مرکزی خبر - مدیریت گروه های کاربری</title>
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -17,12 +17,18 @@
 <body>
     <div id="navbar"></div>
     <div class="container">
-        <div class="row" id="profile">
-                
-           
+        <div class="row">
+            <a class="waves-effect waves-light btn" href="newGroup.html">افزودن گروه جدید
+                <i class="material-icons">group_add</i>
+            </a>
+
+
+            <input placeholder="جستجو" id="search" type="text">
+
+            <div id="groups-list">
+            </div>
         </div>
     </div>
-
 
 
 
@@ -32,12 +38,9 @@
     <script src="../js/api.js"></script>
     <script src="../js/materialize.js"></script>
     <script src="../js/init.js"></script>
-    <script src="../js/userProfile.js"></script>
-    <!-- <script src="../js/userFormValidation.js"></script> -->
-    <script src="../js/isLoggedin.js"></script>    
+    <script src="../js/groups.js"></script>
     <script src="../js/menus.js"></script>
     <script src="../js/logout.js"></script>
-    
 
 
 </body>

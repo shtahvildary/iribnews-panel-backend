@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="../icons/favicon.ico">
-    <title>واحد مرکزی خبر - افزودن نظرسنجی جدید</title>
+    <title>واحد مرکزی خبر - افزودن گروه کاربری جدید</title>
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -22,63 +22,50 @@
         <!-- <div class="container" dir="rtl"> -->
         <div class="row">
 
-            <form class="col s12 rtl" style="direction:rtl !important" id="newSurveyForm">
+            <form class="col s12 rtl" style="direction:rtl !important" id="newUserForm">
                 <div class="row">
                     <div class="input-field col s6">
-                        <!-- <i class="material-icons prefix">account_circle</i> -->
-                        <input id="tbxTitle" type="text" class="validate">
-                        <label for="tbxTitle">عنوان: </label>
+                        <i class="material-icons prefix">group</i>
+                        <input id="title" type="text" class="validate">
+                        <label for="title">نام گروه: </label>
                     </div>
-
-                </div>
-  
-                <div class="row">
-                    <div class="input-field col s4">
-                        <input id="tbxText" type="text" class="validate">
-                        <label for="tbxText"> پرسش نظرسنجی: </label>
+                    <div class="input-field col s6">
+                        <input id="type" type="text" class="validate">
+                        <label for="type">نوع گروه:</label>
                     </div>
                 </div>
-                <label for="replys" style="direction:rtl"> پاسخ ها: </label>
 
                 <div class="row">
-                    
-                    <div class="input-field col s4" id="replys">
-                            <input id="tbxKeyboard1" type="text" class="validate">
-                            <input id="tbxKeyboard2" type="text" class="validate">
+                    <div class="input-field col s6 cbxPermissions-list">
+
                     </div>
-                    
                 </div>
 
                 <div class="row">
-                    <div class="input-field col s12 ">
-
-                        <select id="selectVoteItems">
-                        </select>
-                        <label for="selectVoteItems">این نظرسنجی مربوط به کدام کانال یا برنامه است؟</label>
-
+                    <div class="input-field col s4">
+                        <i class="material-icons prefix">description</i>
+                        <input id="description" type="text" class="validate">
+                        <label for="description"> توضیحات: </label>
                     </div>
                 </div>
-
             </form>
-            
-            <button class="btn waves-effect waves-light" type="submit" id="btnSave">ذخیره
+
+            <button class="btn waves-effect waves-light" type="submit" id="btnAddGroup">ذخیره
                 <i class="material-icons right">save</i>
             </button>
         </div>
-
     </div>
 
 
     <!--  Scripts-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="../js/jquery.cookie.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/materialize.js"></script>
     <script src="../js/init.js"></script>
-    <script src="../js/surveys.js"></script>
-    <script src="../js/isLoggedin.js"></script>    
     <script src="../js/menus.js"></script>
+    <script src="../js/groups.js"></script>
     <script src="../js/logout.js"></script>
 
 

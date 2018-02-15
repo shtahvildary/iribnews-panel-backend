@@ -3,6 +3,8 @@ require('shery-logger');
 
 require('dotenv').config();
 var db = require('./config/DBConfig');
+const fs = require("fs");
+
 
 var express = require('express');
 var path = require('path');

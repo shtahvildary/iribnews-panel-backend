@@ -404,12 +404,8 @@ drawChart(element, data, options, type) {
             surveys.surveysArray.map(function (item) {
                 // console.log('item: ', item)
 
-                $('#tab-chart-survey').append(`
-                <div id="goTop" class="fixed-action-btn">
-                    <a class="btn-floating btn-large " color="BDBDBD" href="#top">
-                        <i class="large material-icons">vertical_align_top</i>
-                    </a>
-                </div>
+                $('#survey-charts').append(`
+                    
                 <div class="col s12 m6">
                     <div class="card modal-trigger" href="#chartModal">
                         <div class="card-content">

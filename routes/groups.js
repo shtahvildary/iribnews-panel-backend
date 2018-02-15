@@ -1,9 +1,11 @@
-
 var express = require('express');
 var router = express.Router();
 var groups_sc = require("../Schema/groups");
 // var user_sc = require("../Schema/user");
 var auth = require('../tools/authentication');
+
+
+
 
 ////////////////add new group/////////////////
 /*example:
@@ -107,6 +109,32 @@ router.post('/delete',auth, function (req, res) {
       if (!err) {
         res.status(200);
         console.log('selected group is deleted!!!!');
+      } else {
+        res.status(500).json({
+          error: err
+        });
+      }
+    })
+  })
+  
+////////////////change status of a group (by id): 0:active - -1:deleted/////////////////
+//URL: localhost:5010/groups/status
+
+  router.post('/status', auth, function (req, res) {
+    console.log('query', req.body)
+    group_sc.findById(req.body._id).exec(function (err, result) {
+      if (!err) {
+        console.log("group:", result)
+        result.status = req.body.status;
+        result.save(function (err, result) {
+          if (!err) {
+            res.status(200).send(result);
+          } else {
+            res.status(500).send(err)
+          }
+        })
+        res.status(200);
+        console.log('status of group changed...');
       } else {
         res.status(500).json({
           error: err

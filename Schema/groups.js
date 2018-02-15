@@ -7,6 +7,8 @@ var sc_groups = mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'permissions'}],
     description:String,
+    status:{type:'number',default:0},//0:active -  -1:deleted 
+    
 });
 module.exports=mongoose.model('groups',sc_groups);
 

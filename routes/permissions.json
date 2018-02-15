@@ -1,0 +1,66 @@
+[{
+        "code": 101,
+        "title": "Add new user to administrators-group",
+        "description": "افزودن کاربر جدید به گروه مدیران"
+    },
+    {
+        "code": 102,
+        "title": "udate a user in administrators-group",
+        "description": "تغییر مشخصات کاربر در گروه مدیران"
+    },
+    {
+        "code": 104,
+        "title": "Add new user to users-group",
+        "description": "افزودن کاربر جدید به گروه کاربران"
+    },
+    {
+        "code": 105,
+        "title": "udate a user in users-group",
+        "description": "تغییر مشخصات کاربر در گروه کاربران"
+    },
+    {
+        "code": 106,
+        "title": "Add new users-group",
+        "description": "افزودن گروه کاربری جدید"
+    },
+    {
+        "code": 106,
+        "title": "update a users-group",
+        "description": "تغییر مشخصات گروه کاربری "
+    },
+    {
+        "code": 111,
+        "title": "view messages",
+        "description": "مشاهده پیامها "
+    },
+    {
+        "code": 112,
+        "title": "send reply to messages",
+        "description": "ارسال پاسخ به پیامها "
+    },
+    {
+        "code": 113,
+        "title": "edit replys",
+        "description": "ویرایش پاسخهای ارسال شده "
+    },
+    {
+        "code": 121,
+        "title": "add new survey",
+        "description": "افزودن نظرسنجی جدید"
+    },
+    {
+        "code": 122,
+        "title": "add new voteItem",
+        "description": "افزودن کانال یا برنامه جدید"
+    },
+    {
+        "code": 123,
+        "title": "view surveys and voteItem results ",
+        "description": "مشاهده نتایج نظرسنجی ها"
+    },
+    {
+        "code": 131,
+        "title": "view charts",
+        "description": "افزودن نظرسنجی جدید"
+    }
+]
