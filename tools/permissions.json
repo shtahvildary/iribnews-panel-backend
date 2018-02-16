@@ -9,17 +9,17 @@
         "description": "تغییر مشخصات کاربر در گروه مدیران"
     },
     {
-        "code": 104,
+        "code": 103,
         "title": "Add new user to users-group",
         "description": "افزودن کاربر جدید به گروه کاربران"
     },
     {
-        "code": 105,
+        "code": 104,
         "title": "udate a user in users-group",
         "description": "تغییر مشخصات کاربر در گروه کاربران"
     },
     {
-        "code": 106,
+        "code": 105,
         "title": "Add new users-group",
         "description": "افزودن گروه کاربری جدید"
     },
@@ -46,12 +46,12 @@
     {
         "code": 121,
         "title": "add new survey",
-        "description": "افزودن نظرسنجی جدید"
+        "description": "افزودن نظرسنجی جدید و مشاهده نظرسنجی ها"
     },
     {
         "code": 122,
         "title": "add new voteItem",
-        "description": "افزودن کانال یا برنامه جدید"
+        "description": "افزودن کانال یا برنامه جدید و تغییر و مشاهده آنها"
     },
     {
         "code": 123,
@@ -61,6 +61,6 @@
     {
         "code": 131,
         "title": "view charts",
-        "description": "افزودن نظرسنجی جدید"
+        "description": "مشاهده نمودارها"
     }
 ]

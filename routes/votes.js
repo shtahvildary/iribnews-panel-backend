@@ -9,6 +9,8 @@ var auth = require('../tools/authentication');
 
 //Get all programs and channels (voteItems) which are enable (not deleted)
 router.post('/all', auth, function (req, res) {
+  var allowedPermissions=[123]
+  
   votes_sc.find({}, function (err, result) {
     if (!err) {
       if (result) {
@@ -30,17 +32,8 @@ router.post('/all', auth, function (req, res) {
 
 
 router.post('/all/scores', auth, function (req, res) {
-  //  vote_sc.find({},{vote:1,_id:0}).exec(function(err,result){
-  //    if(!err){
-  //      if(result){
-  //        //_.sumBy(array, [iteratee=_.identity])
-  //        var votes=_.sumBy(result,voteItemId)
-  //        console.log('votes: ',votes)
-  //      }
-  //    }
-
-
-  //  })
+  var allowedPermissions=[123]
+  
 
   votes_sc.find({}, {
     vote: 1,
@@ -94,14 +87,6 @@ router.post('/all/scores', auth, function (req, res) {
         res.status(200).json({
           votesArray: scores
         })
-
-
-
-
-        //   votesArray.forEach(function (message) {
-        //     msgCounts[message.date.getHours()] += 1;
-        // });
-        // voteItem_sc.find({'_id':})
 
       } else {
         res.json({

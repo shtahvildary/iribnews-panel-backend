@@ -12,6 +12,10 @@ router.get("/", function(req, res, next) {
 
 //Add new user
 router.post("/register", auth, function(req, res) {
+  var allowedPermissions=[101]
+  var allowedPermissions=[103]
+  
+  
   var userType = req.session.type;
   if (userType > 1)
     res.status(403).json({
@@ -27,7 +31,7 @@ router.post("/register", auth, function(req, res) {
     user.save(function(err, result) {
       if (!err) {
         //var token=auth.tokenize(result._id);
-        req.session.userId = result._id;
+        // req.session.userId = result._id;
         res.json({
           user: result
           //token: token
@@ -83,6 +87,9 @@ router.post("/update/profile", auth, function(req, res) {
 
 //update user
 router.post("/update", auth, function(req, res) {
+  var allowedPermissions=[102]
+  var allowedPermissions=[104]
+  
   console.log("U can update user...");
   console.log("query:", req.body);
   var userType = req.session.type;
@@ -91,32 +98,12 @@ router.post("/update", auth, function(req, res) {
     res.status(403).json({
       error: "Forbidden: permission error"
     });
-  else if (userType == 1)
-    res.status(403).json({
-      error: "Forbidden: permission error"
-    });
+  // else 
+  // if (userType == 1)
+  //   res.status(403).json({
+  //     error: "Forbidden: permission error"
+  //   });
   else {
-    var user = {};
-    //else
-
-    user.firstName = req.body.firstName;
-    user.lastName = req.body.lastName;
-    user.personelNumber = req.body.personelNumber;
-    user.group = req.body.group;
-
-    user.password = req.body.password;
-    user.email = req.body.email;
-    user.mobileNumber = req.body.mobileNumber;
-    user.phoneNumber = req.body.phoneNumber;
-    var userType = req.session.type;
-    // // console.log("userType: ", userType);
-    // if (userType == 2) { //user privilege
-    //   console.log("U can't change some parameters!");
-
-    // } else { //admin privilege
-    user.status = req.body.status;
-    user.permitedChannelsId = req.body.permitedChannelsId;
-    
     var user={firstName,lastName,personelNumber,group,password,email,mobileNumber,phoneNumber,status,permitedChannelsId}=req.body;
     // }
     //save updated user
@@ -202,7 +189,7 @@ router.post("/login", function(req, res) {
     })
     .populate({
       path: "group",
-      select: "type"
+      
     })
     .exec(function(err, result) {
       console.plain(err, result);
@@ -222,6 +209,7 @@ router.post("/login", function(req, res) {
             //var token=auth.tokenize(result._id);
             req.session.userId = result._doc._id;
             req.session.type = result._doc.group._doc.type;
+            req.session.permissions = result._doc.group._doc.permissions;
 
             console.log(req.session.cookie);
             console.plain(req.session.userId);

@@ -21,5 +21,15 @@ a.checkToken=function(req,res,next){
         });
     });
 }
+a.checkPermissions=(neededPermissions,userPermissions)=>{
+    var granted=[];
+    neededPermissions.map(n=>{
+        userPermissions.map(u=>{
+            if(u==n)granted.push(u);
+        })
+    })
+    if(granted.length==neededPermissions.length)return true;
+    return false;
+}
 
 module.exports=a;

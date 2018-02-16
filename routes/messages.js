@@ -3,15 +3,20 @@ var router = express.Router();
 var message_sc = require("../Schema/messages");
 var moment = require('moment');
 var auth = require('../tools/authentication');
-//var auth = require('../tools/auth');
 var request = require('request');
 var _ = require('lodash');
+// const botServer = "http://172.16.17.149:9002";
 const botServer = "http://localhost:9002";
+var {checkPermissions}=require("../tools/auth");
+
 
 
 
 //select all sort by date
 router.post('/select/all/date', auth, function (req, res, next) {
+  var allowedPermissions=[111]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     message_sc.find({}).populate({
         path: 'replys.userId',
         select: 'username'
@@ -42,6 +47,9 @@ router.post('/select/all/date', auth, function (req, res, next) {
 
 //search
 router.post('/search', auth, function (req, res) {
+  var allowedPermissions=[111]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     var {
         filters,
         query
@@ -92,54 +100,26 @@ router.post('/search', auth, function (req, res) {
     if (filters) {
         if (filters.messages == 1) {
             filterTypes.push("text");
-            // dbQuery.$or[0].message.$regex=query;
-
         }
         if (filters.photos == 1) {
             filterTypes.push("photo");
-            // dbQuery.$or[1].caption.$regex=query;
-            // dbQuery.$or[1].filePath.$regex=query;
         }
         if (filters.movies == 1) {
             filterTypes.push("video");
-            // dbQuery.$or[1].caption.$regex=query;
-            // dbQuery.$or[4].filePath.$regex=query;
-
         }
         if (filters.voices == 1) {
             filterTypes.push("voice", "audio");
-            // dbQuery.$or[1].caption.$regex=query;
-            // dbQuery.$or[2].audioTitle.$regex=query;
-            // dbQuery.$or[4].filePath.$regex=query;
         }
         if (filters.files == 1) {
             filterTypes.push("document");
-            // dbQuery.$or[1].caption.$regex=query;
-            // dbQuery.$or[3].fileName.$regex=query;
         }
         if (filterTypes.length > 0) dbQuery.type = {
             $in: filterTypes
         }
-        // if (filters.replys == 1) {
-        //     dbQuery.$or["replys.text"] = {
-        //         $regex: query,
-        //         $options: "i"
-        //     }
-        //     filterTypes.push("text", "photo", "video", "voice", "audio", "document");
-
-        //     // if(filters.replys==1) dbQuery["replys.text"]={$regex:query,$options:"i"}
-        // }
     }
 
-
-    console.log('query', dbQuery)
-    console.log('req.body', req.body)
-    console.log('filterTypes', filterTypes)
     message_sc.find(dbQuery).sort('-date').exec(function (err, result) {
-        // console.log(err)
-        //pagination should be handled
         if (!err) {
-
             res.status(200).json({
                 messages: result,
                 // userId: req.body.token
@@ -155,6 +135,9 @@ router.post('/search', auth, function (req, res) {
 
 //Select last 5 messages sort by date
 router.post('/select/last/date', auth, function (req, res) {
+  var allowedPermissions=[111]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     message_sc.find({}).sort('-date').limit(5).exec(function (err, result) {
         //pagination should be handled
         if (!err) {
@@ -173,6 +156,9 @@ router.post('/select/last/date', auth, function (req, res) {
 
 //date.gethours
 router.post('/chart/daily', auth, function (req, res) {
+  var allowedPermissions=[131]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     // console.log(req.body);
     var h0 = new Date(req.body.date);
     var h24 = new Date(req.body.date);
@@ -259,6 +245,9 @@ router.post('/chart/daily', auth, function (req, res) {
     })
 });
 router.post('/chart/weekly', auth, function (req, res) {
+  var allowedPermissions=[131]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     console.log('weekly', req.body);
     var today = new Date(req.body.date);
     // var sat = new Date(req.body.date);
@@ -351,6 +340,9 @@ router.post('/chart/weekly', auth, function (req, res) {
     })
 });
 router.post('/chart/monthly', auth, function (req, res) {
+  var allowedPermissions=[131]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     console.log('monthly', req.body);
     var today = new Date(req.body.date);
     // var sat = new Date(req.body.date);
@@ -446,6 +438,9 @@ router.post('/chart/monthly', auth, function (req, res) {
 })
 
 router.post('/chart/selectedDate', auth, function (req, res) {
+  var allowedPermissions=[131]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     console.log('selectedDate', req.body);
     // var firstday = new Date(req.body.firstday);
     // var lastday = new Date(req.body.lastday);
@@ -554,6 +549,9 @@ router.post('/chart/selectedDate', auth, function (req, res) {
 
 //save reply for a message
 router.post('/reply/new', auth, function (req, res) {
+  var allowedPermissions=[112]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     console.log('query:', req.body)
 
     // message_sc.findById(req.body._id).exec(function (err, result) {
@@ -587,6 +585,9 @@ router.post('/reply/new', auth, function (req, res) {
 
 //edit reply for a message
 router.post('/reply/edit', auth, function (req, res) {
+  var allowedPermissions=[113]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     console.log('query:', req.body)
     console.log("req.body.reply:", req.body)
 
@@ -613,10 +614,11 @@ router.post('/reply/edit', auth, function (req, res) {
 });
 
 router.post('/view', auth, function (req, res) {
+  var allowedPermissions=[111]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    
     message_sc.findById(req.body._id).exec(function (err, result) {
         if (!err) {
-            console.log("message:", result)
-            // console.log("req.body.reply:", req.body)
             if (!err) {
                 res.status(200).json({
                     messages: result,
@@ -634,6 +636,9 @@ router.post('/view', auth, function (req, res) {
 })
 
 router.post('/isSeen', auth, function (req, res) {
+  var allowedPermissions=[111]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+  
     message_sc.findOne({
         _id: req.body._id
     }).exec(function (err, msg) {

@@ -3,6 +3,7 @@ var router = express.Router();
 var groups_sc = require("../Schema/groups");
 // var user_sc = require("../Schema/user");
 var auth = require("../tools/authentication");
+var {checkPermissions}=require("../tools/auth");
 
 ////////////////add new group/////////////////
 /*example:
@@ -10,9 +11,12 @@ var auth = require("../tools/authentication");
 	"type":0
 }
 */
-router.post("/new", auth, function(req, res) {
-  var userType = req.session.type;
 
+router.post("/new", auth, function(req, res) {
+  var allowedPermissions=[105]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+  
+  var userType = req.session.type;
   if (userType > 1)
     res.status(403).json({
       error: "Forbidden: permission error"
@@ -36,6 +40,7 @@ router.post("/new", auth, function(req, res) {
 
 ////////////////get all groups except builtins/////////////////
 router.post("/all", auth, function(req, res) {
+    
   var data;
   if (req.userType == 0) data = {};
   else if (req.userType > 1) data = { readOnly: 0 };
@@ -71,6 +76,8 @@ router.post("/all", auth, function(req, res) {
 }
  */
 router.post("/update", auth, function(req, res) {
+  var allowedPermissions=[106]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
   console.log("query:", req.body);
   groups_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {
@@ -92,6 +99,9 @@ router.post("/update", auth, function(req, res) {
 //URL: localhost:5010/groups/delete
 
 router.post("/delete", auth, function(req, res) {
+  // var allowedPermissions=[]
+  // if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+  
   console.log("query", req.body);
   groups_sc.findByIdAndRemove(req.body._id).exec(function(err, result) {
     if (!err) {
@@ -109,6 +119,9 @@ router.post("/delete", auth, function(req, res) {
 //URL: localhost:5010/groups/status
 
 router.post("/status", auth, function(req, res) {
+  var allowedPermissions=[106]
+  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+  
   console.log("query", req.body);
   group_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {

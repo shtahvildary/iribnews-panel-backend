@@ -20,6 +20,8 @@ var _ = require("lodash");
 // }
 ////////////////////////////////////////
 router.post("/new", auth, function(req, res) {
+  var allowedPermissions=[121]
+  
   console.log("Now U can save a new survey ...",req.body);
   var {title,voteItemId,text,keyboard}=req.body;
 
@@ -47,6 +49,8 @@ router.post("/new", auth, function(req, res) {
 
 //Get all surveys
 router.post("/all", auth, function(req, res) {
+  var allowedPermissions=[121]
+  
   survey_sc
     .find({})
     .sort("-date")
@@ -70,6 +74,8 @@ router.post("/all", auth, function(req, res) {
 });
 
 router.post("/all/result", auth, function(req, res) {
+  var allowedPermissions=[123]
+  
   surveyResults_sc
     .find({})
     .populate({
@@ -122,7 +128,7 @@ router.post("/all/result", auth, function(req, res) {
         surveys: final
       });
     });
-}) + //Select last 3 surveys sort by date
+}) //Select last 3 surveys sort by date
   router.post("/select/last/date", auth, function(req, res) {
     survey_sc
       .find({})
@@ -145,6 +151,8 @@ router.post("/all/result", auth, function(req, res) {
   });
 
 router.post("/select/one/result", auth, function(req, res) {
+  var allowedPermissions=[123]
+  
   console.log("req.body: ", req.body);
 
   surveyResults_sc

@@ -6,6 +6,8 @@ var auth = require('../tools/authentication');
 
 //Add new program or channel
 router.post('/new', auth,function (req, res) {
+  var allowedPermissions=[122]
+  
   // console.log('Now U can save a new program or channel (voteItems)...');
   var voteItem = new voteItem_sc(req.body);
   console.log(req.body);
@@ -27,6 +29,8 @@ router.post('/new', auth,function (req, res) {
 
 //Get all programs and channels (voteItems) which are enable (not deleted)
 router.post('/all', auth,function (req, res) {
+  var allowedPermissions=[122]
+  
   voteItem_sc.find({enable:1}, function (err, result) {
     if (!err) {
       if (result) {
@@ -48,6 +52,8 @@ router.post('/all', auth,function (req, res) {
 
 //Get all programs and channels (voteItems) ENABLE+DISABLE for recovery
 router.post('/all/recover', auth,function (req, res) {
+  var allowedPermissions=[122]
+  
   voteItem_sc.find({}, function (err, result) {
     if (!err) {
       if (result) {
@@ -92,6 +98,8 @@ router.post('/all/recover', auth,function (req, res) {
 
 //update voteItems (by id)
 router.post('/update',auth,function(req,res){
+  var allowedPermissions=[122]
+  
   console.log('query:',req.body)
   voteItem_sc.findById(req.body._id).exec(function(err,result){
     if(!err){
@@ -124,6 +132,8 @@ router.post('/update',auth,function(req,res){
 //INPUT:{"_id":"5a1e711ed411741d84d10a29"}
 
 router.post('/disable',auth, function (req, res) {
+  var allowedPermissions=[122]
+  
   console.log('query', req.body)
     voteItem_sc.findById(req.body._id).exec(function (err, result) {
     if (!err) {
