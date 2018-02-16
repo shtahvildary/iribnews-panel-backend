@@ -4,18 +4,17 @@
 
     //new survey
     $("#btnSave").click(function () {
-        
         var newSurvey = {
             title: $("#tbxTitle").val(),
-            voteItemId:$("#selectVoteItems").val(),
             text: $("#tbxText").val(),
             keyboard: [$("#tbxKeyboard1").val(), $("#tbxKeyboard2").val()],
         }
-        post('/surveys/new', newSurvey, function (response) {
+        if($("#selectVoteItems").val())newSurvey.voteItemId=$("#selectVoteItems").val();
+        post('/surveys/new', newSurvey, (response)=> {
             if (response.error) {
                 alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
             } else {
-                alert("ثبت اطلاعات با موفقیت انجام شد")
+                alert("ثبت اطلاعات با موفقیت انجام شد و درحال ارسال به مخاطبان است.")
                 document.getElementById("newSurveyForm").reset() 
             }
         })

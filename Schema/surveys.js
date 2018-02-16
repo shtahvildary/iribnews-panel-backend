@@ -1,7 +1,6 @@
 const mongoose=require("mongoose");
 
 var surveysSchema=mongoose.Schema({
-    chatIds:[String],
     title:String,    
     // botId:Number  
     voteItemId:{
