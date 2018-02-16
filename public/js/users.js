@@ -8,8 +8,8 @@
             $("#userGroup").append(`
             <option value="" disabled selected>انتخاب کنید...</option>
             `)
-            jQuery(response.groupsArray).each(function(i,group){
-                jQuery("#userGroup").append(`
+            $(response.groupsArray).each(function(i,group){
+                $("#userGroup").append(`
             <option value="`+group._id+`">`+group.title+`</option>
             `)
                 
@@ -33,7 +33,7 @@
             console.log('btnAddUser is clicked...');
             var firstName = $("#firstName").val();
             var lastName = $("#lastName").val();
-            var personelNumber = $("#personelNumber").val();
+            if($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
             var username = $("#username").val().toLowerCase();
             var email = $("#email").val().toLowerCase();
             var mobileNumber = $("#mobile").val();
@@ -100,6 +100,7 @@
             console.log('btnUpdateUser is clicked...');
             var firstName = $("#firstName").val();
             var lastName = $("#lastName").val();
+            if($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
             var personelNumber = $("#personelNumber").val();
             var email = $("#email").val().toLowerCase();
             var mobileNumber = $("#mobile").val();

@@ -39,7 +39,7 @@ app.use(session({
     httpOnly: true,
     secure: false,
     // secure: true,
-    // maxAge: 1800000 //30 mins
+    maxAge: 3600000 //60 mins
   },
   ttl: (1 * 60 * 60),
   store: new MongoStore({

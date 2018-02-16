@@ -1,159 +1,154 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 var user_sc = require("../Schema/user");
-var auth = require('../tools/authentication');
+var auth = require("../tools/authentication");
 //var auth=require('../tools/auth');
-var bcrypt = require('bcrypt');
-
-
-
+var bcrypt = require("bcrypt");
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
+router.get("/", function(req, res, next) {
+  res.send("respond with a resource");
 });
 
 //Add new user
-router.post('/register', auth, function (req, res) {
+router.post("/register", auth, function(req, res) {
   var userType = req.session.type;
-  // console.log("userType: ", userType);
-  if (userType != 0) {
-    res.json({
-      error: err
-    })
-  } else {
-    console.log('Now U can register a new user...');
+  if (userType > 1)
+    res.status(403).json({
+      error: "Forbidden: permission error"
+    });
+  else if (userType == 1 && req.body.type < 2)
+    res.status(403).json({
+      error: "Forbidden: permission error"
+    });
+  else {
+    console.log("Now U can register a new user...");
     var user = new user_sc(req.body);
-    user.save(function (err, result) {
+    user.save(function(err, result) {
       if (!err) {
-
         //var token=auth.tokenize(result._id);
         req.session.userId = result._id;
         res.json({
-          user: result,
+          user: result
           //token: token
         });
       } else {
         res.json({
           error: err
-        })
-      };
+        });
+      }
     });
   }
 });
 
 //return user type
-router.post('/type', auth, function (req, res) {
+router.post("/type", auth, function(req, res) {
   var userType = req.session.type;
 
   return res.status(200).json({
-    type: userType,
-  })
-
-})
+    type: userType
+  });
+});
 
 //update user profile
-router.post('/update/profile', auth, function (req, res) {
-  console.log('U can update user...');
-  console.log('query:', req.body);
-  user_sc.findById(req.session.userId).exec(function (err, result) {
+router.post("/update/profile", auth, function(req, res) {
+  user_sc.findById(req.session.userId).exec(function(err, result) {
     if (err) {
       res.status(500).json({
         error: err
       });
     }
     //else
-    result.personelNumber = req.body.personelNumber || result._doc.personelNumber;
+    result.personelNumber =
+      req.body.personelNumber || result._doc.personelNumber;
     result.password = req.body.password || result._doc.password;
     result.email = req.body.email || result._doc.email;
     result.mobileNumber = req.body.mobileNumber || result._doc.mobileNumber;
     result.phoneNumber = req.body.phoneNumber || result._doc.phoneNumber;
 
     //save updated user
-    result.save(function (err, result) {
+    result.save(function(err, result) {
       if (err) {
         return res.status(500).json({
           error: err
-        })
+        });
       }
       // else
       return res.status(200).json({
         user: result
-      })
-
-    })
-  })
-  // var result=updateUser(req.session.userId,req.body,req.session.type)
-  // if (result.error) {
-  //   return res.status(500).json({
-  //     error:error
-  //   })
-  // }
-  // // else
-  // return res.status(200).json({
-  //   user:result
-  // })
-})
+      });
+    });
+  });
+});
 
 //update user
-router.post('/update', auth, function (req, res) {
-  console.log('U can update user...');
-  console.log('query:', req.body);
-  user_sc.findById(req.body._id).exec(function (err, result) {
-    if (err) {
-      res.status(500).json({
-        error: err
-      });
-    }
+router.post("/update", auth, function(req, res) {
+  console.log("U can update user...");
+  console.log("query:", req.body);
+  var userType = req.session.type;
+
+  if (userType > 1)
+    res.status(403).json({
+      error: "Forbidden: permission error"
+    });
+  else if (userType == 1)
+    res.status(403).json({
+      error: "Forbidden: permission error"
+    });
+  else {
+    var user = {};
     //else
-    console.log("user: ", result);
-    result.firstName = req.body.firstName || result._doc.firstName;
-    result.lastName = req.body.lastName || result._doc.lastName;
-    result.personelNumber = req.body.personelNumber || result._doc.personelNumber;
 
-    result.password = req.body.password || result._doc.password;
-    result.email = req.body.email || result._doc.email;
-    result.mobileNumber = req.body.mobileNumber || result._doc.mobileNumber;
-    result.phoneNumber = req.body.phoneNumber || result._doc.phoneNumber;
+    user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
+    user.personelNumber = req.body.personelNumber;
+    user.group = req.body.group;
+
+    user.password = req.body.password;
+    user.email = req.body.email;
+    user.mobileNumber = req.body.mobileNumber;
+    user.phoneNumber = req.body.phoneNumber;
     var userType = req.session.type;
-    // console.log("userType: ", userType);
-    if (userType == 2) { //user privilege
-      console.log("U can't change some parameters!");
+    // // console.log("userType: ", userType);
+    // if (userType == 2) { //user privilege
+    //   console.log("U can't change some parameters!");
 
-    } else { //admin privilege
-      result.status = req.body.status || result._doc.status;
-      result.permitedChannelsId = req.body.permitedChannelsId || result._doc.permitedChannelsId;
-      result.type = req.body.type || result._doc.type;
-    }
+    // } else { //admin privilege
+    user.status = req.body.status;
+    user.permitedChannelsId = req.body.permitedChannelsId;
+    
+    var user={firstName,lastName,personelNumber,group,password,email,mobileNumber,phoneNumber,status,permitedChannelsId}=req.body;
+    // }
     //save updated user
-    result.save(function (err, result) {
+    user_sc.update({ _id: req.body._id }, user, function(err, result) {
+      console.log(err)
       if (err) {
         return res.status(500).json({
           error: err
-        })
+        });
       }
       // else
       return res.status(200).json({
         user: result
-      })
+      });
+    });
+  }
+});
 
-    })
-  })
-  // var result=updateUser(req.body._id,req.body,req.session.type)
-  // if (result.error) {
-  //         return res.status(500).json({
-  //           error:error
-  //         })
-  //       }
-  //       // else
-  //       return res.status(200).json({
-  //         user:result
-  //       })
+// var result=updateUser(req.body._id,req.body,req.session.type)
+// if (result.error) {
+//         return res.status(500).json({
+//           error:error
+//         })
+//       }
+//       // else
+//       return res.status(200).json({
+//         user:result
+//       })
 
-})
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateUser(userId, userInfo, type) {
-  user_sc.findById(userId).exec(function (err, result) {
+  user_sc.findById(userId).exec(function(err, result) {
     if (err) {
       res.status(500).json({
         error: err
@@ -163,7 +158,8 @@ function updateUser(userId, userInfo, type) {
     console.log("user: ", result);
     result.firstName = userInfo.firstName || result._doc.firstName;
     result.lastName = userInfo.lastName || result._doc.lastName;
-    result.personelNumber = userInfo.personelNumber || result._doc.personelNumber;
+    result.personelNumber =
+      userInfo.personelNumber || result._doc.personelNumber;
 
     result.password = userInfo.password || result._doc.password;
     result.email = userInfo.email || result._doc.email;
@@ -171,94 +167,92 @@ function updateUser(userId, userInfo, type) {
     result.phoneNumber = userInfo.phoneNumber || result._doc.phoneNumber;
     var userType = type;
     // console.log("userType: ", userType);
-    if (userType == 2) { //user privilege
+    if (userType == 2) {
+      //user privilege
       console.log("U can't change some parameters!");
-
-    } else { //admin privilege
+    } else {
+      //admin privilege
       result.status = userInfo.status || result._doc.status;
-      result.permitedChannelsId = userInfo.permitedChannelsId || result._doc.permitedChannelsId;
+      result.permitedChannelsId =
+        userInfo.permitedChannelsId || result._doc.permitedChannelsId;
       result.type = userInfo.type || result._doc.type;
     }
     //save updated user
-    result.save(function (err, result) {
+    result.save(function(err, result) {
       if (err) {
-        return ({
+        return {
           error: err
-        })
+        };
       }
       // else
-      return ({
+      return {
         user: result
-      })
-
-    })
-  })
+      };
+    });
+  });
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Login
-router.post('/login', function (req, res) {
-  // bcrypt.hash(req.body.password, 10, function (err, hash){
-  //   if (err) {
-  //     res.json({
-  //       error: err
-  //     });
-  //     //return next(err);
-  //   }
-  //   req.body.password = hash;
-  //   //next();
-  // })
-  user_sc.findOne({
-    'username': req.body.username,
-    //'password': req.body.password
-  }, function (err, result) {
-    if (!err) {
-      if (result) {
-        bcrypt.compare(req.body.password, result.password, function (err, same) {
-          if (!same) {
-            return res.status(401).json({
-              error: 'unauthorized user, pass is not correct',
-              auth: false
-            })
-          }
+router.post("/login", function(req, res) {
+  user_sc
+    .findOne({
+      username: req.body.username
+      //'password': req.body.password
+    })
+    .populate({
+      path: "group",
+      select: "type"
+    })
+    .exec(function(err, result) {
+      console.plain(err, result);
+      if (!err) {
+        if (result) {
+          bcrypt.compare(req.body.password, result.password, function(
+            err,
+            same
+          ) {
+            if (!same) {
+              return res.status(401).json({
+                error: "unauthorized user, pass is not correct",
+                auth: false
+              });
+            }
 
-          //var token=auth.tokenize(result._id);
-          req.session.userId = result._doc._id;
-          req.session.type = result._doc.type;
-          console.log(req.session.cookie)
-          console.plain(req.session.userId)
-          console.plain('type: ', req.session.type)
+            //var token=auth.tokenize(result._id);
+            req.session.userId = result._doc._id;
+            req.session.type = result._doc.group._doc.type;
 
-          res.json({
-            user: result,
-            cookie: req.session.cookie,
-            sName: req.session.name,
-            auth: true,
+            console.log(req.session.cookie);
+            console.plain(req.session.userId);
+            console.plain("type: ", req.session.type);
+
+            res.json({
+              user: result,
+              cookie: req.session.cookie,
+              sName: req.session.name,
+              auth: true
+            });
+            res.end("done");
           });
-          res.end('done');
-        })
+        } else {
+          res.status(401).json({
+            error: "unauthorized user",
+            auth: false
+          });
+        }
       } else {
-        res.status(401).json({
-          error: 'unauthorized user',
+        res.status(500).json({
+          error: err,
           auth: false
-        })
+        });
       }
-    } else {
-      res.status(500).json({
-        error: err,
-        auth: false
-      })
-    }
-  })
-})
+    });
+});
 
 //Get all users
-router.post('/all', auth, function (req, res) {
-  user_sc.find({
-    'type': {
-      $gte: req.session.type, //gte: greater than or equal to (i.e. >= )
-    }
-  }).exec(function (err, result) {
+router.post("/all", auth, function(req, res) {
+  user_sc.find({}).exec(function(err, result) {
     if (!err) {
       if (result) {
         res.json({
@@ -266,29 +260,28 @@ router.post('/all', auth, function (req, res) {
         });
       } else {
         res.json({
-          error: 'There is no user to select...'
+          error: "There is no user to select..."
         });
       }
     } else {
       res.status(500).json({
         error: err
-      })
+      });
     }
-  })
-})
-
+  });
+});
 
 // GET /logout
-router.post('/logout', function (req, res, next) {
+router.post("/logout", function(req, res, next) {
   if (req.session) {
     // delete session object
-    req.session.destroy(function (err) {
+    req.session.destroy(function(err) {
       if (err) {
         return next(err);
-        console.log("Problem in session distroy")
+        console.log("Problem in session distroy");
       } else {
-        console.log("session is distroied :D")
-        return res.redirect('/');
+        console.log("session is distroied :D");
+        return res.redirect("/");
       }
     });
   }
@@ -298,37 +291,36 @@ router.post('/logout', function (req, res, next) {
 //URL: localhost:5010/users/status
 //INPUT:{"_id":"5a1e711ed411741d84d10a29"}
 
-router.post('/status', auth, function (req, res) {
-  console.log('query', req.body)
-  user_sc.findById(req.body._id).exec(function (err, result) {
+router.post("/status", auth, function(req, res) {
+  console.log("query", req.body);
+  user_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {
-      console.log("user:", result)
+      console.log("user:", result);
       result.status = req.body.status;
-      result.save(function (err, result) {
+      result.save(function(err, result) {
         if (!err) {
           res.status(200).send(result);
         } else {
-          res.status(500).send(err)
+          res.status(500).send(err);
         }
-      })
+      });
       res.status(200);
-      console.log('status of user changed...');
+      console.log("status of user changed...");
     } else {
       res.status(500).json({
         error: err
       });
     }
-  })
-})
+  });
+});
 
-router.post('/findeUser', auth, function (req, res) {
-  user_sc.findById(req.session.userId).exec(function (err, result) {
+router.post("/findeUser", auth, function(req, res) {
+  user_sc.findById(req.session.userId).exec(function(err, result) {
     if (err) {
-      res.status(500).send(err)
+      res.status(500).send(err);
     }
-    res.status(200).send(result)
-  })
-})
-
+    res.status(200).send(result);
+  });
+});
 
 module.exports = router;

@@ -1,83 +1,21 @@
 (function ($) {
-    //read permissions
-    // const fs = require("fs");
-    // let rawdata = fs.readFileSync("/Volumes/MyDrive/MyProjects/iribnews/iribnews-panel-backend/routes/permissions.json");
-    // let permissionsList = JSON.parse(rawdata);
+    
 
-    var permissionsList = [{
-            "code": 101,
-            "title": "Add new user to administrators-group",
-            "description": "افزودن کاربر جدید به گروه مدیران"
-        },
-        {
-            "code": 102,
-            "title": "udate a user in administrators-group",
-            "description": "تغییر مشخصات کاربر در گروه مدیران"
-        },
-        {
-            "code": 104,
-            "title": "Add new user to users-group",
-            "description": "افزودن کاربر جدید به گروه کاربران"
-        },
-        {
-            "code": 105,
-            "title": "udate a user in users-group",
-            "description": "تغییر مشخصات کاربر در گروه کاربران"
-        },
-        {
-            "code": 106,
-            "title": "Add new users-group",
-            "description": "افزودن گروه کاربری جدید"
-        },
-        {
-            "code": 106,
-            "title": "update a users-group",
-            "description": "تغییر مشخصات گروه کاربری "
-        },
-        {
-            "code": 111,
-            "title": "view messages",
-            "description": "مشاهده پیامها "
-        },
-        {
-            "code": 112,
-            "title": "send reply to messages",
-            "description": "ارسال پاسخ به پیامها "
-        },
-        {
-            "code": 113,
-            "title": "edit replys",
-            "description": "ویرایش پاسخهای ارسال شده "
-        },
-        {
-            "code": 121,
-            "title": "add new survey",
-            "description": "افزودن نظرسنجی جدید"
-        },
-        {
-            "code": 122,
-            "title": "add new voteItem",
-            "description": "افزودن کانال یا برنامه جدید"
-        },
-        {
-            "code": 123,
-            "title": "view surveys and voteItem results ",
-            "description": "مشاهده نتایج نظرسنجی ها"
-        },
-        {
-            "code": 131,
-            "title": "view charts",
-            "description": "افزودن نظرسنجی جدید"
-        }
-    ]
-
-    function fillPermissions(cbxListId) {
-        jQuery(permissionsList).each(function (i, item) {
-            jQuery('.cbxPermissions-list').append(`
-        <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"/>   
-        <label class="active" for="permissions">` + item.description + `</label>
+    var permissionsList;
+    
+    
+    function fillPermissions() {
+        post('/permissions/read',{},(response)=>{
+            permissionsList=response.permissionsList;
+        })
+        $(permissionsList).each(function (i, item) {
+            $('.cbxPermissions-list').append(`<p>
+            <input type="checkbox" id="cbxPermissions-` + i + `" value="`+item.code+`" />
+            <label for="cbxPermissions-` + i + `">` + item.description + `</label>
+          </p>
         `)
         })
+        
     }
 
     fillPermissions();
@@ -91,6 +29,7 @@
         for (var i = 0; i < permissionsList.length; i++) {
             if ($('#cbxPermissions-' + i).is(":checked")) permissions.push($('#cbxPermissions-' + i).val())
         }
+        console.log(permissions)
         var description = $("#description").val();
         var group = {
             title: title,
@@ -144,11 +83,11 @@
 
 
     $(function () {
-
-        $('select').material_select();
+        
+    fillPermissions();
 
         //search in groups list   
-        var search_users = function (query) {
+        var search_groups = function (query) {
 
             post('/groups/all', {
                 query: query
@@ -242,7 +181,7 @@
                                         </div>
                                         <div class="row">
                                         دسترسی ها:
-                                            <div class="input-field col s6 cbxPermissions-list">
+                                            <div class="col s12 cbxPermissions-list">
                                                 
                                             </div>
                                         </div>
@@ -280,7 +219,7 @@
                     edit_groups(groupEdit, function (response) {
                         console.log('response', response)
 
-                        if (response.user) {
+                        if (response.ok) {
                             $('#editModal').modal('close');
                             alert("به روز رسانی با موفقیت انجام شد.");
                         } else {
@@ -309,7 +248,7 @@
 
         function edit_groups(groupEdit, callback) {
             // console.log('groupEdit: ', groupEdit);
-            post('/users/update', {
+            post('/groups/update', {
                 _id: groupEdit.id,
                 title: groupEdit.title,
                 type: groupEdit.type,
