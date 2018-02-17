@@ -14,7 +14,8 @@ function searchFilter(checkbox) {
 }
 (function ($) {
     // var jalaali = require('jalaali-js')
-    const fileserver = "http://localhost:9000";
+    // const fileserver = "http://localhost:9000";
+    const fileserver = "http://172.16.17.149:9000";
 
     var search_message = function (query,filters) {
 

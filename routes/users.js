@@ -63,9 +63,11 @@ router.post("/update/profile", auth, function(req, res) {
       });
     }
     //else
+    
+    
     result.personelNumber =
       req.body.personelNumber || result._doc.personelNumber;
-    result.password = req.body.password || result._doc.password;
+    result.password = bcrypt.hash(req.body.password,10 ) || result._doc.password;
     result.email = req.body.email || result._doc.email;
     result.mobileNumber = req.body.mobileNumber || result._doc.mobileNumber;
     result.phoneNumber = req.body.phoneNumber || result._doc.phoneNumber;
@@ -104,7 +106,19 @@ router.post("/update", auth, function(req, res) {
   //     error: "Forbidden: permission error"
   //   });
   else {
-    var user={firstName,lastName,personelNumber,group,password,email,mobileNumber,phoneNumber,status,permitedChannelsId}=req.body;
+    
+    var user={firstName,lastName,personelNumber,group,email,mobileNumber,phoneNumber,status,permitedChannelsId}=req.body;
+    if(req.body.password) {
+     bcrypt.hash(req.body.password,10 , function(err,hash) {
+        if (err) {
+          return (err);
+        }
+        user.password = hash;
+        
+      })
+    }
+   
+    
     // }
     //save updated user
     user_sc.update({ _id: req.body._id }, user, function(err, result) {

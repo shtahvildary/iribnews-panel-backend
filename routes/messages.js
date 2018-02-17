@@ -5,8 +5,8 @@ var moment = require('moment');
 var auth = require('../tools/authentication');
 var request = require('request');
 var _ = require('lodash');
-// const botServer = "http://172.16.17.149:9002";
-const botServer = "http://localhost:9002";
+const botServer = "http://172.16.17.149:9002";
+// const botServer = "http://localhost:9002";
 var {checkPermissions}=require("../tools/auth");
 
 
@@ -253,7 +253,12 @@ router.post('/chart/weekly', auth, function (req, res) {
     // var sat = new Date(req.body.date);
     // var fri = new Date(req.body.date);
     var curr = new Date; // get current date
-    var first = today.getDate() - today.getDay() - 1; // First day is the day of the month - the day of the week
+    var dayOfWeek=(today.getDay())
+    if(dayOfWeek>5) dayOfWeek-=5
+    else dayOfWeek+=2
+    console.log(today.getDate())
+    
+    var first = today.getDate() - dayOfWeek + 1; // First day is the day of the month - the day of the week
     var last = first + 6; // last day is the first day + 6
 
 

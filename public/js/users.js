@@ -75,36 +75,36 @@
     // }
     // isLoggedin();
     $("#btnUpdateUser").click(function () {
-        var firstName = $("#first_name").val();
-        var lastName = $("#last_name").val();
-        var email = $("#email").val();
-        var mobileNumber = $("#mobile").val();
-        var phoneNumber = $("#phone").val();
+        // if($("#first_name").val()) var firstName = $("#first_name").val();
+        // if( $("#last_name").val())var lastName = $("#last_name").val();
+        // if($("#email").val())var email = $("#email").val();
+        // if($("#mobile").val())var mobileNumber = $("#mobile").val();
+        // if($("#phone").val())var phoneNumber = $("#phone").val();
 
-        updateUser({
+        // updateUser({
             
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            mobileNumber: mobileNumber,
-            phoneNumber: phoneNumber,
-            group:group
-        });
+        //     firstName: firstName,
+        //     lastName: lastName,
+        //     email: email,
+        //     mobileNumber: mobileNumber,
+        //     phoneNumber: phoneNumber,
+        //     group:group
+        // });
 
         if ($("#password1").val() !== $("#password2").val()) {
 
             alert("کلمه عبور و تکرار آن مشابه نیستند!")
 
         } else {
-            var password = $("#password1").val();
-            console.log('btnUpdateUser is clicked...');
-            var firstName = $("#firstName").val();
-            var lastName = $("#lastName").val();
+            if($("#password1").val())var password = $("#password1").val();
+            
+            if($("#firstName").val())var firstName = $("#firstName").val();
+            if($("#lastName").val())var lastName = $("#lastName").val();
             if($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
-            var personelNumber = $("#personelNumber").val();
-            var email = $("#email").val().toLowerCase();
-            var mobileNumber = $("#mobile").val();
-            var phoneNumber = $("#phone").val();
+            if($("#personelNumber").val())var personelNumber = $("#personelNumber").val();
+            if($("#email").val())var email = $("#email").val().toLowerCase();
+            if( $("#mobile").val())var mobileNumber = $("#mobile").val();
+            if($("#phone").val())var phoneNumber = $("#phone").val();
             // var permitedChannels = $("#permitedChannels").val();
             // var type = $("#type").val();
             var group=$("#userGroup").val();
@@ -121,6 +121,7 @@
                 // type: type
             group:group                
             };
+            updateUser(user)
         }
     });
 

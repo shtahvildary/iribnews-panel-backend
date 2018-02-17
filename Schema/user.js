@@ -32,4 +32,5 @@ sc_user.pre('save', function (next) {
       next();
     })
   });
+
 module.exports=mongoose.model('User',sc_user);

@@ -6,7 +6,8 @@ var chat_sc = require("../Schema/chats");
 var auth = require("../tools/authentication");
 var request = require("request");
 
-const botServer = "http://localhost:9002";
+const botServer = "http://172.16.17.149:9002";
+// const botServer = "http://localhost:9002";
 var _ = require("lodash");
 
 // var request=require('request');

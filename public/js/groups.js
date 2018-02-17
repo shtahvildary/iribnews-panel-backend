@@ -4,21 +4,27 @@
     var permissionsList;
     
     
-    function fillPermissions() {
+    function fillPermissions(groupPermissions) {
         post('/permissions/read',{},(response)=>{
             permissionsList=response.permissionsList;
         })
         $(permissionsList).each(function (i, item) {
             $('.cbxPermissions-list').append(`<p>
-            <input type="checkbox" id="cbxPermissions-` + i + `" value="`+item.code+`" />
+            <input type="checkbox" id="cbxPermissions-` + i + `" value="`+item.code+`"/>
             <label for="cbxPermissions-` + i + `">` + item.description + `</label>
           </p>
         `)
+        // $(permissionsList).each(function (i, item) {
+        //     $('.cbxPermissions-list').append(`<p>
+        //     <input type="checkbox" id="cbxPermissions-` + i + `" value="`+item.code+`"`+(permissions.includes(item.code)?'checked="checked"':'')+`/>
+        //     <label for="cbxPermissions-` + i + `">` + item.description + `</label>
+        //   </p>
+        // `)
         })
         
     }
 
-    fillPermissions();
+   
     //add group 
     $("#btnAddGroup").click(function () {
 
@@ -67,7 +73,6 @@
             permissions: permissions,
             description: description,
         });
-
     });
 
     var updateGroup = function (group) {
@@ -132,9 +137,9 @@
                 <div class="card" unqueId=` + item._id + `>
                     <div class="card-content">
                         <p>` + item.title + `</p>
-                        <p>` + item.type + `</p>
+                        
                         <p>` + item.description + `</p>
-                        <p>` + item.permissions + `</p>
+                        
                         <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_title="` + item.title + `" editItem_type="` + item.type + `" editItem_permissions="` + item.permissions + `" editItem_description="` + item.description + `">ویرایش
                         <i class="material-icons">edit</i></a>
                         <a class="waves-effect waves-light btn delete" id="btnDelete" uniqueId="` + item._id + `" >حذف
