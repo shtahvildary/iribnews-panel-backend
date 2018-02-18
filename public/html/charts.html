@@ -58,11 +58,14 @@
                         </div>
                         <div id="tab-chart-msg-selectedDate">
                             <div class="row">
-                                <div class="input-field col s2">
+                                
+                                <div col s12>
+                                   <div col s1>از:</div>
+                                <div class="input-field col s1 offset-s1">
                                     <input id="fDay" type="number" min=1 max=31 class="validate day">
                                     <label for="fDay">روز</label>
                                 </div>
-                                <div class="input-field col s2">
+                                <div class="input-field col s1">
                                     <input id="fMonth" type="number" min=1 max=12 class="validate month">
                                     <label for="fMonth">ماه</label>
                                 </div>
@@ -70,12 +73,16 @@
                                     <input id="fYear" type="number" min=1396 class="validate year">
                                     <label for="fYear">سال</label>
                                 </div>
-                                <div class="vl"></div>
-                                <div class="input-field col s2">
+                            </div>
+                                <!-- <div class="vl"></div> -->
+                                <div col s12>
+                                        <div col s1>تا:</div>
+                                
+                                <div class="input-field col s1 offset-s1">
                                     <input id="lDay" type="number" min=1 max=31 class="validate day">
                                     <label for="lDay">روز</label>
                                 </div>
-                                <div class="input-field col s2">
+                                <div class="input-field col s1">
                                     <input id="lMonth" type="number" min=1 max=12 class="validate month">
                                     <label for="lMonth">ماه</label>
                                 </div>
@@ -83,6 +90,9 @@
                                     <input id="lYear" type="number" min=1396 class="validate year">
                                     <label for="lYear">سال</label>
                                 </div>
+                                <div col s6>
+                                
+                            
                                 <button class="btn waves-effect waves-light" type="submit" id="btnShow">نمایش
                                     <i class="material-icons right">save</i>
                                 </button>

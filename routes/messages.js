@@ -5,8 +5,8 @@ var moment = require('moment');
 var auth = require('../tools/authentication');
 var request = require('request');
 var _ = require('lodash');
-const botServer = "http://172.16.17.149:9002";
-// const botServer = "http://localhost:9002";
+// const botServer = "http://172.16.17.149:9002";
+const botServer = "http://localhost:9002";
 var {checkPermissions}=require("../tools/auth");
 
 
@@ -556,51 +556,33 @@ router.post('/chart/selectedDate', auth, function (req, res) {
 router.post('/reply/new', auth, function (req, res) {
   var allowedPermissions=[112]
   if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
-    console.log('query:', req.body)
 
-    // message_sc.findById(req.body._id).exec(function (err, result) {
-    //     if (!err) {
-    // console.log("message:", result)
-    console.log("req.body.reply:", req.body)
     var reply = {
         _id: req.body._id,
         text: req.body.text,
         userId: req.session.userId
-
     }
 
     request.post({
             url: botServer + "/sendMessage/reply/new",
             json: reply
         },
-        function (err, res) {
-            if (err) console.log("err: ", err);
-
+        function (err, response) {
+            if (err) return res.status(500).json({error:err});
+            return res.status(200).json({sentMessage:response.body.sentMessage})
         }
     );
-
-    //     } else {
-    //         res.status(500).json({
-    //             error: err
-    //         });
-    //     }
-    // })
 });
 
 //edit reply for a message
 router.post('/reply/edit', auth, function (req, res) {
   var allowedPermissions=[113]
   if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
-    console.log('query:', req.body)
-    console.log("req.body.reply:", req.body)
 
     var reply = {
         _id: req.body._id,
         message_id: req.body.message_id, //message_id of reply
         text: req.body.text,
-
     }
 
     request.post({
@@ -608,14 +590,10 @@ router.post('/reply/edit', auth, function (req, res) {
             json: reply
         },
         function (err, response) {
-            console.plain("RESPONSE ihihihihih >>>>",response)
             if (err) return res.status(500).json({error:err});
             return res.status(200).json({updatedMessage:response})
-
-
         }
     );
-
 });
 
 router.post('/view', auth, function (req, res) {
@@ -629,7 +607,6 @@ router.post('/view', auth, function (req, res) {
                     messages: result,
                     // userId: req.body.token
                     userId: req.session.userId
-
                 });
             } else {
                 res.status(500).json({

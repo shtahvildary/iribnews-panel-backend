@@ -414,8 +414,6 @@ drawChart(element, data, options, type) {
                     </div>
                 </div>
 
-                
-
               `);
 
                 post('/surveys/select/one/result', {

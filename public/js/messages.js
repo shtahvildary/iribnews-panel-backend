@@ -1,21 +1,11 @@
-//  <a class="waves-effect waves-light btn modal-trigger reply" id="btnView-` + item._id + `" chatId="` + item.chatId + `" msgId="` + item._id + `" href="#replyModal">پاسخ
-//  <i class="material-icons">reply</i></a>
-//class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="I am a tooltip"
 
-// ` + (item.replys.length > 0 ? (` <div class="card-reveal"><span class="card-title grey-text text-darken-4 >پاسخها<i class="material-icons right">close</i></span><p id="replys-` + item._id + `"></p></div>`) : '') + `
 function searchFilter(checkbox) {
-    // if (checkbox.checked == true) {
-
-
-    // } else {
-
-    // }
 
 }
 (function ($) {
-    // var jalaali = require('jalaali-js')
-    // const fileserver = "http://localhost:9000";
-    const fileserver = "http://172.16.17.149:9000";
+    
+    const fileserver = "http://localhost:9000";
+    // const fileserver = "http://172.16.17.149:9000";
 
     var search_message = function (query,filters) {
 
@@ -111,6 +101,21 @@ function searchFilter(checkbox) {
             }
         });
 
+        // $('.modal').modal({
+        //     dismissible: true, // Modal can be dismissed by clicking outside of the modal
+        //     opacity: .5, // Opacity of modal background
+        //     inDuration: 300, // Transition in duration
+        //     outDuration: 200, // Transition out duration
+        //     startingTop: '4%', // Starting top style attribute
+        //     endingTop: '10%', // Ending top style attribute
+        //     ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+        //       alert("Ready");
+        //       console.log(modal, trigger);
+        //     },
+        //     complete: function() { alert('Closed'); } // Callback for Modal close
+        //   }
+        // );
+
         post('/messages/select/all/date', {}, function (response) {
             // console.log('all messages', response)
             var reply;
@@ -121,38 +126,34 @@ function searchFilter(checkbox) {
         })
     });
 
-    function replyToMsg(reply) {
-        // console.log('replyToMsg: ', reply);
-
+    function replyToMsg(reply,callback) {
         post('/messages/reply/new', {
             _id: reply.msgId,
             // chatId: reply.chatId,
-
             text: reply.text,
             userId: reply.userId
 
         }, function (response) {
-            // console.log('message which U replied:', response);
+            console.log("our response is ihihihih",response.sentMessage)
+            if(response.sentMessage) callback(true)
+            else callback(false)
 
         })
     }
     function editReply(reply,callback){
-        console.log('replyToMsg: ', reply);
-
         post('/messages/reply/edit', {
             _id: reply.msgId,
             message_id:reply.message_id,
             text: reply.text,
 
         }, function (response) {
-            console.log("our response is ihihihih",response)
             if(response.updatedMessage) callback(true)
             else callback(false)
-
         })
     }
 
     function cardsAppend(item, userId) {
+      
         if (!item.pin) item.pin = [];
         $('#messages-list').append(`
                     <div class="card " style="` + (item.replys.length > 0 ? 'background-color:#d8d8d8' : '') + `">
@@ -173,6 +174,7 @@ function searchFilter(checkbox) {
                     (item.type == 'text' ? item.message :
                         (item.type == 'document' ? item.fileName + `<p><i class="material-icons">insert_drive_file</i></p>` : ''))))) + `</p>
                                 <p>تاریخ :` + gregorian_to_jalali(new Date(item.date)) + `</p>
+                                <p>ساعت :` + new Date(item.date).getHours() + `:`+new Date(item.date).getMinutes()+`:`+new Date(item.date).getSeconds()+`</p>
                                 
                             </div>
                         </div>
@@ -214,7 +216,8 @@ function searchFilter(checkbox) {
         
             `)
             jQuery(item.isSeen).each(function (i, item) {
-                jQuery('#isSeenForm').append(`<p> کاربر` + item.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + `این پیام را خوانده است.   </p>`);
+                jQuery('#isSeenForm').append(`<p> کاربر` + item.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) +` و در ساعت `+new Date(item.date).getHours() + `:`+new Date(item.date).getMinutes()+`:`+new Date(item.date).getSeconds()+ ` این پیام را خوانده است.   </p>`);
+                
     
             });
             
@@ -254,12 +257,10 @@ function searchFilter(checkbox) {
             $('#icnIsSeen-' + item._id).click(function (e) {
                 isSeenModal(item);
                 $('#isSeenModal').modal();
-
             })
         $('#icnPin-' + item._id).click(function (e) {
             pinModal(item);
             $('#pinModal').modal();
-
         });
 
         // btnView-` + item._id + `
@@ -288,17 +289,17 @@ function searchFilter(checkbox) {
             // $('.reply').modal();
             $('#viewModal').modal();
 
-
             $('#btnSendReply').click(function (e) {
-
                 reply.text = $('#replyTxt').val();
-                if (replyToMsg(reply)) {
-                    // if (status==true) {
-                    $('#viewModal').modal('close');
-                    alert("ارسال پیام با موفقیت انجام شد.");
-                } else 
-                    alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. کدخطا: " + status)
-                
+                replyToMsg(reply,function(sentMessage){
+                    console.log("anjam shod")
+                    if(sentMessage==true){
+                        $('#viewModal').modal('close');
+                        location.reload()
+                        return alert("ارسال پیام با موفقیت انجام شد.");
+                    }
+                    return alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. ")   
+                })  
             })
         })
     }
@@ -329,6 +330,8 @@ function searchFilter(checkbox) {
                     (item.type == 'text' ? item.message :
                         (item.type == 'document' ? item.fileName : ''))))) + `</p>
                         <p>تاریخ :` + gregorian_to_jalali(new Date(item.date)) + `</p>
+                        <p>ساعت :` + new Date(item.date).getHours() + `:`+new Date(item.date).getMinutes()+`:`+new Date(item.date).getSeconds()+`</p>
+                        
                     </div>
                     <div class="row">
                     <div class="rtl">پاسخها</div>
@@ -362,7 +365,7 @@ function searchFilter(checkbox) {
         jQuery(item.replys).each(function (i, reply) {
             
             // jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
-            jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) + '  : ' + reply.text + `
+            jQuery('#replys-' + item._id).append(`<p> کاربر` + reply.userId.username + ' در تاریخ ' + gregorian_to_jalali(new Date(item.date)) +` ساعت `+new Date(item.date).getHours() + `:`+new Date(item.date).getMinutes()+`:`+new Date(item.date).getSeconds()+ '  : ' + reply.text + `
              <a class="btn waves-effect waves-light" id="replyEdit-`+reply._id+`">
             <i class="material-icons right">edit</i>
          </a></p>`);
@@ -388,6 +391,7 @@ function searchFilter(checkbox) {
                     if(updatedMessage==true){
 
                         $('#viewModal').modal('close');
+                        location.reload()
                         return alert("ارسال پیام با موفقیت انجام شد.");
                     }
                     return alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. کدخطا: " + status)
@@ -396,12 +400,18 @@ function searchFilter(checkbox) {
                 })
                 
              })
-         })
+
+            })
+            
+            
         });
+                
  
         function selectedUsers(checkbox) {
 
         }
+      
+
 
 
     }
