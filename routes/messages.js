@@ -7,16 +7,17 @@ var request = require('request');
 var _ = require('lodash');
 // const botServer = "http://172.16.17.149:9002";
 const botServer = "http://localhost:9002";
-var {checkPermissions}=require("../tools/auth");
+var { checkPermissions } = require("../tools/auth");
+var { gregorian_to_jalali } = require("../tools/persian-date-convert.js")
 
 
 
 
 //select all sort by date
 router.post('/select/all/date', auth, function (req, res, next) {
-  var allowedPermissions=[111]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
+    var allowedPermissions = [111]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     message_sc.find({}).populate({
         path: 'replys.userId',
         select: 'username'
@@ -47,9 +48,9 @@ router.post('/select/all/date', auth, function (req, res, next) {
 
 //search
 router.post('/search', auth, function (req, res) {
-  var allowedPermissions=[111]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
+    var allowedPermissions = [111]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     var {
         filters,
         query
@@ -57,43 +58,43 @@ router.post('/search', auth, function (req, res) {
     if (!query) query = "";
     var dbQuery = {
         $or: [{
-                "message": {
-                    // $regex: "",
-                    $regex: query,
-                    $options: 'i'
-                }
-            }, {
-                "caption": {
-                    // $regex: "",
-                    $regex: query,
-                    $options: 'i'
-                }
-            }, {
-                "audioTitle": {
-                    // $regex: "",
-                    $regex: query,
-                    $options: 'i'
-                }
-            }, {
-                "fileName": {
-                    // $regex: "",
-                    $regex: query,
-                    $options: 'i'
-                }
-            }, {
-                "filePath": {
-                    // $regex: "",
-                    $regex: query,
-                    $options: 'i'
-                }
-            },
-            {
-                "replys.text": {
-                    // $regex: "",
-                    $regex: query,
-                    $options: 'i'
-                }
+            "message": {
+                // $regex: "",
+                $regex: query,
+                $options: 'i'
             }
+        }, {
+            "caption": {
+                // $regex: "",
+                $regex: query,
+                $options: 'i'
+            }
+        }, {
+            "audioTitle": {
+                // $regex: "",
+                $regex: query,
+                $options: 'i'
+            }
+        }, {
+            "fileName": {
+                // $regex: "",
+                $regex: query,
+                $options: 'i'
+            }
+        }, {
+            "filePath": {
+                // $regex: "",
+                $regex: query,
+                $options: 'i'
+            }
+        },
+        {
+            "replys.text": {
+                // $regex: "",
+                $regex: query,
+                $options: 'i'
+            }
+        }
         ]
     };
     var filterTypes = [];
@@ -135,9 +136,9 @@ router.post('/search', auth, function (req, res) {
 
 //Select last 5 messages sort by date
 router.post('/select/last/date', auth, function (req, res) {
-  var allowedPermissions=[111]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
+    var allowedPermissions = [111]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     message_sc.find({}).sort('-date').limit(5).exec(function (err, result) {
         //pagination should be handled
         if (!err) {
@@ -156,9 +157,9 @@ router.post('/select/last/date', auth, function (req, res) {
 
 //date.gethours
 router.post('/chart/daily', auth, function (req, res) {
-  var allowedPermissions=[131]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
+    var allowedPermissions = [131]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     // console.log(req.body);
     var h0 = new Date(req.body.date);
     var h24 = new Date(req.body.date);
@@ -188,52 +189,76 @@ router.post('/chart/daily', auth, function (req, res) {
             var videoCount = Array(24);
             var photoCount = Array(24);
             var documentCount = Array(24);
+            var othersCount=Array(24);
+            var date=Array(24);
 
             textCount.fill(0);
             audioCount.fill(0);
             videoCount.fill(0);
             photoCount.fill(0);
             documentCount.fill(0);
+            othersCount.fill(0);
+            date.fill("");
+            var index;
+            var stringDate;
 
 
             result.forEach(function (message) {
+                index=message._doc.date.getDate();
                 switch (message._doc.type) {
                     case 'text':
                         {
-                            textCount[message._doc.date.getDate()] += 1;
+                            textCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case ('audio' || 'voice'):
                         {
-                            audioCount[message._doc.date.getDate()] += 1;
+                            audioCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'video':
                         {
-                            videoCount[message._doc.date.getDate()] += 1;
+                            videoCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'photo':
                         {
-                            photoCount[message._doc.date.getDate()] += 1;
+                            photoCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'document':
                         {
-                            documentCount[message._doc.date.getDate()] += 1;
+                            documentCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
+                        }
+                        default: {
+                            othersCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                         }
 
                 }
-                msgCounts[message.date.getHours()] += 1;
+                // msgCounts[message.date.getHours()] += 1;
             });
             res.status(200).json({
 
-                text: msgCounts,
+                text: textCount,
                 voice: audioCount,
                 video: videoCount,
                 image: photoCount,
                 document: documentCount,
+                others:othersCount,
+                date:date,
                 // userId: req.body.token
                 userId: req.session.userId
             })
@@ -245,19 +270,19 @@ router.post('/chart/daily', auth, function (req, res) {
     })
 });
 router.post('/chart/weekly', auth, function (req, res) {
-  var allowedPermissions=[131]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
+    var allowedPermissions = [131]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     console.log('weekly', req.body);
     var today = new Date(req.body.date);
     // var sat = new Date(req.body.date);
     // var fri = new Date(req.body.date);
     var curr = new Date; // get current date
-    var dayOfWeek=(today.getDay())
-    if(dayOfWeek>5) dayOfWeek-=5
-    else dayOfWeek+=2
+    var dayOfWeek = (today.getDay())
+    if (dayOfWeek > 5) dayOfWeek -= 5
+    else dayOfWeek += 2
     console.log(today.getDate())
-    
+
     var first = today.getDate() - dayOfWeek + 1; // First day is the day of the month - the day of the week
     var last = first + 6; // last day is the first day + 6
 
@@ -288,12 +313,18 @@ router.post('/chart/weekly', auth, function (req, res) {
             var videoCount = Array(7);
             var photoCount = Array(7);
             var documentCount = Array(7);
+            var othersCount=Array(7);
+            var date=Array(7);
 
             textCount.fill(0);
             audioCount.fill(0);
             videoCount.fill(0);
             photoCount.fill(0);
             documentCount.fill(0);
+            othersCount.fill(0);
+            date.fill("");
+            var index;
+            var stringDate;
 
             var persianDay;
 
@@ -327,15 +358,19 @@ router.post('/chart/weekly', auth, function (req, res) {
                             documentCount[persianDay] += 1;
                             break;
                         }
+                        default: {
+                            othersCount[persianDay] += 1;
+                        }
                 }
                 msgCounts[persianDay] += 1;
             });
             res.status(200).json({
-                text: msgCounts,
+                text: textCount,
                 voice: audioCount,
                 video: videoCount,
                 image: photoCount,
                 document: documentCount,
+                others:othersCount,
             })
         } else {
             res.status(500).json({
@@ -345,9 +380,9 @@ router.post('/chart/weekly', auth, function (req, res) {
     })
 });
 router.post('/chart/monthly', auth, function (req, res) {
-  var allowedPermissions=[131]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
+    var allowedPermissions = [131]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     console.log('monthly', req.body);
     var today = new Date(req.body.date);
     // var sat = new Date(req.body.date);
@@ -356,7 +391,7 @@ router.post('/chart/monthly', auth, function (req, res) {
 
     // var first = curr.getDate() - curr.getDay() - 1; // First day is the day of the month - the day of the week
     // var last = first + 5; // last day is the first day + 6
-    // console.log(first, last)
+
 
     var firstday = new Date(curr.setDate(1));
     var lastday = new Date(curr.setDate(30));
@@ -371,68 +406,87 @@ router.post('/chart/monthly', auth, function (req, res) {
             $lt: lastday
         }
     }).exec(function (err, result) {
-        //pagination should be handled
         if (!err) {
 
             var msgCounts = Array(30);
             msgCounts.fill(0);
             // var msgType={text,image,video,voice}
-            // console.log(msgCounts.length)
+
             var textCount = Array(30);
             var audioCount = Array(30);
             var videoCount = Array(30);
             var photoCount = Array(30);
             var documentCount = Array(30);
+            var othersCount=Array(30);
+            var date=Array(30);
 
             textCount.fill(0);
             audioCount.fill(0);
             videoCount.fill(0);
             photoCount.fill(0);
             documentCount.fill(0);
+            othersCount.fill(0);
+            date.fill("");
+            var index;
+            var stringDate;
 
             result.forEach(function (message) {
                 //text,audio,voice,video,photo,document
+                index= gregorian_to_jalali(new Date(message._doc.date))[2];
                 switch (message._doc.type) {
                     case 'text':
                         {
-                            textCount[message._doc.date.getDate()] += 1;
+                            textCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case ('audio' || 'voice'):
                         {
-                            audioCount[message._doc.date.getDate()] += 1;
+                            audioCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'video':
                         {
-                            videoCount[message._doc.date.getDate()] += 1;
+                            videoCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'photo':
                         {
-                            photoCount[message._doc.date.getDate()] += 1;
+                            photoCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'document':
                         {
-                            documentCount[message._doc.date.getDate()] += 1;
+                            documentCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
+                        default: {
+                            othersCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
+                        }
                 }
-                msgCounts[message._doc.date.getDate()] += 1;
+                // msgCounts[gregorian_to_jalali(new Date(message._doc.date))[2]] += 1;
 
             });
-            console.log('textCount :', textCount)
-            console.log('audioCount :', audioCount)
-            console.log('videoCount :', videoCount)
-            console.log('photoCount :', photoCount)
-            console.log('documentCount :', documentCount)
+           
             res.status(200).json({
-                text: msgCounts,
+                text: textCount,
                 voice: audioCount,
                 video: videoCount,
                 image: photoCount,
                 document: documentCount,
+                others:othersCount,
+                date:date,
             })
         } else {
             res.status(500).json({
@@ -443,9 +497,9 @@ router.post('/chart/monthly', auth, function (req, res) {
 })
 
 router.post('/chart/selectedDate', auth, function (req, res) {
-  var allowedPermissions=[131]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
+    var allowedPermissions = [131]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     console.log('selectedDate', req.body);
     // var firstday = new Date(req.body.firstday);
     // var lastday = new Date(req.body.lastday);
@@ -459,8 +513,6 @@ router.post('/chart/selectedDate', auth, function (req, res) {
     lastday.setMonth(req.body.lastday.m);
     lastday.setDate(req.body.lastday.d);
 
-
-
     // sat=new Date(today.getFullYear(),today.getMonth,)
     // if(sat.getDay)
     firstday.setHours(0, 0, 0, 0);
@@ -472,80 +524,94 @@ router.post('/chart/selectedDate', auth, function (req, res) {
             $lt: lastday
         }
     }).exec(function (err, result) {
-        //pagination should be handled
+
         if (!err) {
-
-
             var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-
-
             var diffDays = Math.round(Math.abs((firstday.getTime() - lastday.getTime()) / (oneDay)));
-            // console.log('diffDays: ' + diffDays)
-
-
             var msgCounts = Array(diffDays);
             msgCounts.fill(0);
-            // console.log(msgCounts)
 
             // var msgType={text,image,video,voice}
-            // console.log(msgCounts.length)
             var textCount = Array(diffDays);
             var audioCount = Array(diffDays);
             var videoCount = Array(diffDays);
             var photoCount = Array(diffDays);
             var documentCount = Array(diffDays);
+            var othersCount = Array(diffDays);
+            var date=Array(diffDays);
 
             textCount.fill(0);
             audioCount.fill(0);
             videoCount.fill(0);
             photoCount.fill(0);
             documentCount.fill(0);
-
+            othersCount.fill(0);
+            date.fill("");
+            var index;
+            var stringDate;
 
             result.forEach(function (message) {
+                index = Math.round(Math.abs((message._doc.date.getTime() - firstday.getTime()) / (oneDay)))
                 switch (message._doc.type) {
                     case 'text':
                         {
-                            textCount[message._doc.date.getDate()] += 1;
+                            textCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            // textCount[message._doc.date.getDate()] += 1;
                             break;
                         }
                     case ('audio' || 'voice'):
                         {
-                            audioCount[message._doc.date.getDate()] += 1;
+                            audioCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'video':
                         {
-                            videoCount[message._doc.date.getDate()] += 1;
+                            videoCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'photo':
                         {
-                            photoCount[message._doc.date.getDate()] += 1;
+                            photoCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
                     case 'document':
                         {
-                            documentCount[message._doc.date.getDate()] += 1;
+                            documentCount[index] += 1;
+                            date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                            
                             break;
                         }
+                    default: {
+                        othersCount[index] += 1;
+                        date[index]=_.join(gregorian_to_jalali(new Date(message._doc.date)),seprator='/')
+                                                
+                    }
                 }
-                msgCounts[message._doc.date.getHours()] += 1;
+                // msgCounts[message._doc.date.getHours()] += 1;
             });
             res.status(200).json({
                 diffDays: diffDays,
-                text: msgCounts,
+                text: textCount,
                 voice: audioCount,
                 video: videoCount,
                 image: photoCount,
                 document: documentCount,
+                others: othersCount,
+                date:date,
             })
         } else {
             res.status(500).json({
                 error: err
             });
-            console.log(res)
         }
+        console.log(res)
     })
 })
 
@@ -554,8 +620,8 @@ router.post('/chart/selectedDate', auth, function (req, res) {
 
 //save reply for a message
 router.post('/reply/new', auth, function (req, res) {
-  var allowedPermissions=[112]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    var allowedPermissions = [112]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
 
     var reply = {
         _id: req.body._id,
@@ -564,20 +630,20 @@ router.post('/reply/new', auth, function (req, res) {
     }
 
     request.post({
-            url: botServer + "/sendMessage/reply/new",
-            json: reply
-        },
+        url: botServer + "/sendMessage/reply/new",
+        json: reply
+    },
         function (err, response) {
-            if (err) return res.status(500).json({error:err});
-            return res.status(200).json({sentMessage:response.body.sentMessage})
+            if (err) return res.status(500).json({ error: err });
+            return res.status(200).json({ sentMessage: response.body.sentMessage })
         }
     );
 });
 
 //edit reply for a message
 router.post('/reply/edit', auth, function (req, res) {
-  var allowedPermissions=[113]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    var allowedPermissions = [113]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
 
     var reply = {
         _id: req.body._id,
@@ -586,20 +652,20 @@ router.post('/reply/edit', auth, function (req, res) {
     }
 
     request.post({
-            url: botServer + "/sendMessage/reply/edit",
-            json: reply
-        },
+        url: botServer + "/sendMessage/reply/edit",
+        json: reply
+    },
         function (err, response) {
-            if (err) return res.status(500).json({error:err});
-            return res.status(200).json({updatedMessage:response})
+            if (err) return res.status(500).json({ error: err });
+            return res.status(200).json({ updatedMessage: response })
         }
     );
 });
 
 router.post('/view', auth, function (req, res) {
-  var allowedPermissions=[111]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-    
+    var allowedPermissions = [111]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     message_sc.findById(req.body._id).exec(function (err, result) {
         if (!err) {
             if (!err) {
@@ -618,9 +684,9 @@ router.post('/view', auth, function (req, res) {
 })
 
 router.post('/isSeen', auth, function (req, res) {
-  var allowedPermissions=[111]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-  
+    var allowedPermissions = [111]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
     message_sc.findOne({
         _id: req.body._id
     }).exec(function (err, msg) {
@@ -636,21 +702,21 @@ router.post('/isSeen', auth, function (req, res) {
         if (userSeen.length <= 0) message_sc.update({
             _id: req.body._id
         }, {
-            $push: {
-                isSeen: {
-                    userId
+                $push: {
+                    isSeen: {
+                        userId
+                    }
                 }
-            }
-        }).exec(function (err, updateInfo) {
-            console.log(updateInfo)
-            if (err) return res.status(500).json({
-                error: err
-            });
+            }).exec(function (err, updateInfo) {
+                console.log(updateInfo)
+                if (err) return res.status(500).json({
+                    error: err
+                });
 
-            return res.status(200).json({
-                message: msg
+                return res.status(200).json({
+                    message: msg
+                })
             })
-        })
         else
             return res.status(200).json({
                 message: msg

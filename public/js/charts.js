@@ -134,8 +134,11 @@ drawChart(element, data, options, type) {
             firstday,
             lastday
         }, function (response) {
+            console.log("selected response: ",response)
 
             var labels = Array(response.diffDays)
+            labels=response.date
+            console.log(labels)
             var datasets = [{
                 label: 'متن',
                 data: response.text
@@ -151,7 +154,10 @@ drawChart(element, data, options, type) {
             }, {
                 label: 'مستندات',
                 data: response.document
-            }, ]
+            }, {
+                label: 'سایر موارد',
+                data: response.others
+            },]
             var data = {
                 labels,
                 datasets
@@ -161,49 +167,12 @@ drawChart(element, data, options, type) {
         });
     })
     $(function () {
-        // var months = {
-        //     '1' : 'فروردین',
-        //     '2' : 'اردیبهشت',
-        //     '3' : 'خرداد',
-        //     '4' : 'تیر',
-        //     '5' : 'مرداد',
-        //     '6' : 'شهریور',
-        //     '7' : 'مهر',
-        //     '8' : 'آبان',
-        //     '9' : 'آذر',
-        //     '10' : 'دی',
-        //     '11' : 'بهمن',
-        //     '12' : 'اسفند',
-        // };
-        // jQuery(months).each(function(i,month){
-        //     jQuery('.month').append(`<option>`+month[i]+`</option>`)
-        // })
-        // var selectedOption = '12';
-
-        // var select = $('#fMonth');
-        // if(select.prop) {
-        //   var options = select.prop('options');
-        // }
-        // else {
-        //   var options = select.attr('options');
-        // }
-        // $('option', select).remove();
-
-        // $.each(months, function(val, text) {
-        //     options[options.length] = new Option(text, val);
-        // });
-        // select.val(selectedOption);
+        
 
 
         // if ($.cookie("token")&&!$.cookie("id")) {
         //     window.location.replace("../login.html");
         // }
-
-
-
-
-
-
 
 
         /////////////////////////////////////daily chart////////////////////////////
@@ -254,6 +223,9 @@ drawChart(element, data, options, type) {
             }, {
                 label: 'مستندات',
                 data: response.document
+            },{
+                label: 'سایر موارد',
+                data: response.others
             }, ]
             var data = {
                 labels,
@@ -268,8 +240,7 @@ drawChart(element, data, options, type) {
         post('/messages/chart/weekly', {
             date: now
         }, function (response) {
-            
-            console.log('weekly response: ',response)
+     
                 var labels = [
                 'شنبه',
                 'یکشنبه',
@@ -294,6 +265,9 @@ drawChart(element, data, options, type) {
             }, {
                 label: 'مستندات',
                 data: response.document
+            },{
+                label: 'سایر موارد',
+                data: response.others
             }, ]
             var data = {
                 labels,
@@ -335,6 +309,9 @@ drawChart(element, data, options, type) {
             }, {
                 label: 'مستندات',
                 data: response.document
+            },{
+                label: 'سایر موارد',
+                data: response.others
             }, ]
             var data = {
                 labels,
@@ -348,13 +325,12 @@ drawChart(element, data, options, type) {
             var labels = []
             var percent = [];
             response.votesArray.map(item => {
-                // console.log('vote-item', item)
+               
                 labels.push(item.title)
                 percent.push(Math.round(item.score * 100) / (item.count * 5))
 
             })
-            // console.log('labels: ', labels)
-            // console.log('score: ', percent)
+    
             var data = {
                 labels: labels,
                 datasets: [{
@@ -380,7 +356,6 @@ drawChart(element, data, options, type) {
                 }]
             }
             var options = {
-
                 scales: {
                     // xAxes:[],
                     yAxes: [{
@@ -402,8 +377,7 @@ drawChart(element, data, options, type) {
         post('/surveys/all', {}, function (surveys) {
            
             surveys.surveysArray.map(function (item) {
-                // console.log('item: ', item)
-
+               
                 $('#survey-charts').append(`
                     
                 <div class="col s12 m6">

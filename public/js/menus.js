@@ -69,6 +69,9 @@
             <li>
                 <a href="ConnectAdmin.html">ارتباط با ادمین</a>
             </li>`) : '') + `
+            <li>
+                  <a href="aboutUs.html">درباره ما</a>
+              </li>
           </ul>
       </div>
   </nav>

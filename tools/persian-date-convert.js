@@ -1,7 +1,8 @@
+var persianDate={}
 function div(a, b) {
     return parseInt((a / b));
 }
-function gregorian_to_jalali(date) {
+persianDate.gregorian_to_jalali=function gregorian_to_jalali(date) {
     var g_y = date.getFullYear();
     var g_m = date.getMonth();
     var g_d = date.getDate();
@@ -210,13 +211,13 @@ License: GNU/LGPL _ Open Source & Free _ Version: 2.72 : [2017=1396]
 
 
 /* time to jalali */
-function t2j(date, f) {
-    var g = t2g(date, false);
-    return ginj(g.y, g.m, g.d, f);
+persianDate.t2j=function t2j(date, f) {
+    var g = persianDate.t2g(date, false);
+    return persianDate.ginj(g.y, g.m, g.d, f);
 }
 
 /* gregorian to jalali */
-function ginj(year, month, day, f) {
+persianDate.ginj=function ginj(year, month, day, f) {
 
     var $g_days_in_month = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
     var $j_days_in_month = new Array(31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
@@ -270,7 +271,7 @@ function ginj(year, month, day, f) {
 
 
 /* jalali to gregorian  */
-function jing(year, month, day, f) {
+persianDate.jing=function jing(year, month, day, f) {
     function div(x, y) {
         return Math.floor(x / y);
     }
@@ -331,7 +332,7 @@ function jing(year, month, day, f) {
 }
 
 /* time to gregorian  */
-function t2g(date, f) {
+persianDate.t2g=function t2g(date, f) {
 
     date = date * 1000;
     var d = new Date(date);
@@ -349,3 +350,4 @@ function t2g(date, f) {
         return year + '/' + month + '/' + day;
 }
 
+module.exports=persianDate
