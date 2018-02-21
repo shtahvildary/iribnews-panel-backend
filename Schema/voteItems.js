@@ -11,5 +11,6 @@ var voteItemSchema=mongoose.Schema({
     //programs
     channelId:String,    
     personnels:[{type:String}],
+    departmentId:{ type:mongoose.SchemaTypes.ObjectId, ref:"voteItems"},
 });
 module.exports=mongoose.model("voteItems",voteItemSchema);

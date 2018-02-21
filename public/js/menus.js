@@ -52,6 +52,9 @@
               </li>
               <li>
                   <a href="VSResult.html">نظرسنجی ها</a>
+              </li>
+              <li>
+                  <a href="externalReports.html">گزارش های تحلیلی</a>
               </li>`);
 
     post('/users/type', {}, function (response) {

@@ -13,12 +13,11 @@ var post = function (endpoint, data, callback) {
             // url: "http://localhost:5010" +endpoint,
             // url: "http://192.168.1.4:5010" + endpoint,
             // url: "http://172.20.10.7:5010" + endpoint,
-            //            url: "http://178.33.79.204:5010" +endpoint,
+            // url: "http://178.33.79.204:5010" +endpoint,
             data: data,
             datatype:'application/json',
             headers: {
-                'x-access-token': $.cookie("token"),
-                
+                'x-access-token': $.cookie("token"),    
             },
             statusCode:{
                 401:function () {

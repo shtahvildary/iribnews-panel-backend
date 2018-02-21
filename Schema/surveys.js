@@ -17,6 +17,8 @@ var surveysSchema=mongoose.Schema({
     },
     text:String,
     keyboard:[String],
-    isSent:{type:Number,default:0}//0: this survey is sent to chatIds   1:it is not sent yet
+    isSent:{type:Number,default:0},//0: this survey is sent to chatIds   1:it is not sent yet
+    departmentId:{ type:mongoose.SchemaTypes.ObjectId, ref:"voteItems"},
+
 });
 module.exports=mongoose.model("surveys",surveysSchema);

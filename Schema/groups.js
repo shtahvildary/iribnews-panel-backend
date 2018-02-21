@@ -5,6 +5,7 @@ var sc_groups = mongoose.Schema({
   type:{type:'number',default:2},//0:zAdmin - 1:administrators - 2:users
    permissions:[String],
     description:String,
+    departmentId:{ type:mongoose.SchemaTypes.ObjectId, ref:"voteItems"},
     status:{type:'number',default:0},//0:active -  -1:deleted 
     readOnly:{type:'number',default:0}
     
