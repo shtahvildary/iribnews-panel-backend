@@ -21,6 +21,7 @@ var voteItems = require('./routes/voteItems');
 var votes = require('./routes/votes');
 var surveys = require('./routes/surveys');
 var permissions = require('./routes/permissions');
+var departments = require('./routes/departments');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
@@ -78,6 +79,7 @@ app.use('/voteItems', voteItems);
 app.use('/votes', votes);
 app.use('/surveys',surveys)
 app.use('/permissions',permissions)
+app.use('/departments',departments)
 
 
 

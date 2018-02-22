@@ -5,7 +5,7 @@ var sc_chats = mongoose.Schema({
    trusted:{type:'number',required:true,default:1},//0:NotTrusted , 1:trusted
    chatTiltle:String,
     chatType:String,
-    departmentId:[{ type:mongoose.SchemaTypes.ObjectId, ref:"voteItems"}],
+    departmentId:[{ type:mongoose.SchemaTypes.ObjectId, ref:"departments"}],
     
 });
 module.exports=mongoose.model('chat',sc_chats);

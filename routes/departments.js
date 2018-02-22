@@ -5,11 +5,12 @@ var departments_sc = require("../Schema/departments");
 var auth = require("../tools/authentication");
 var {checkPermissions}=require("../tools/auth");
 
-////////////////add new group/////////////////
+////////////////add new department/////////////////
 /*example:
-{"title":"zAdmin",
-	"type":0
-}
+{"title":"shmt_bot",
+	"bot":"449968526:AAGY4Tz48MiN8uxUD_0nWHFZSQscD9OQ_Vk",
+	"description":"word cloud department",
+	"status":0}
 */
 
 router.post("/new", auth, function(req, res) {
@@ -40,11 +41,10 @@ router.post("/all", auth, function(req, res) {
     
   var data;
  
-  if (req.userType <2 )
+  if (req.session.type <2 )
   
   departments_sc
     .find({})
-    .sort("-date")
     .exec(function(err, result) {
       if (!err) {
         if (result) {
@@ -65,58 +65,47 @@ router.post("/all", auth, function(req, res) {
 });
 
 ////////////////update a department (by id)/////////////////
+/**example:
+ * {
+            "_id": "5a8e9bf5074b3e034c221fcf",
+            "title": "newsNovinBot-irinn"
+        }
+ */
 
 router.post("/update", auth, function(req, res) {
+  if(req.session.type!=0){
   var allowedPermissions=[108]
   if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-  console.log("query:", req.body);
+  console.log("query:", req.body);}
   departments_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {
       var department = result._doc;
-      department.title = req.body.title || group.title;
-      department.type = req.body.type || group.type;
-      department.permissions = req.body.permissions || group.permissions;
-      department.description = req.body.description || group.description;
-
+      department.title = req.body.title || department.title;
+      // department.bot = req.body.type || department.type;
+      department.description = req.body.description || department.description;
+      department.port=req.body.port||department.port;
       // Save the updated document back to the database
-      groups_sc.update({ _id: req.body._id }, group, function(error, response) {
+      departments_sc.update({ _id: req.body._id }, department, function(error, response) {
         if (!err) res.status(200).json(response);
         else res.status(500).send(error);
       });
     } else res.status(500).send(err);
   });
 });
-////////////////delete a group for ever (by id)/////////////////
-//URL: localhost:5010/groups/delete
 
-router.post("/delete", auth, function(req, res) {
-  // var allowedPermissions=[]
-  // if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-  
-  console.log("query", req.body);
-  groups_sc.findByIdAndRemove(req.body._id).exec(function(err, result) {
-    if (!err) {
-      res.status(200);
-      console.log("selected group is deleted!!!!");
-    } else {
-      res.status(500).json({
-        error: err
-      });
-    }
-  });
-});
 
-////////////////change status of a group (by id): 0:active - -1:deleted/////////////////
+////////////////change status of a department (by id): 0:active - -1:deleted/////////////////
 //URL: localhost:5010/groups/status
 
 router.post("/status", auth, function(req, res) {
-  var allowedPermissions=[106]
+  if(req.session.type!=0){
+  var allowedPermissions=[108]
   if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
   
-  console.log("query", req.body);
-  group_sc.findById(req.body._id).exec(function(err, result) {
+  console.log("query", req.body);}
+  departments_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {
-      console.log("group:", result);
+      console.log("department:", result);
       result.status = req.body.status;
       result.save(function(err, result) {
         if (!err) {
@@ -126,7 +115,7 @@ router.post("/status", auth, function(req, res) {
         }
       });
       res.status(200);
-      console.log("status of group changed...");
+      console.log("status of department changed...");
     } else {
       res.status(500).json({
         error: err
