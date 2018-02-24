@@ -23,6 +23,23 @@
         })
         
     }
+    function fillSelectDepartment() {
+        post('/departments/all', {}, function (response) {
+    
+            console.log('response: ', response)
+            $("#department").append(`
+            <option value="" disabled selected>انتخاب کنید...</option>
+            `)
+            $(response.departmentsArray).each(function(i,department){
+                $("#department").append(`
+            <option value="`+department._id+`">`+department.title+`</option>
+            `)
+                
+            })
+        $('select').material_select();
+            
+        })
+    }
 
    
     //add group 
@@ -35,13 +52,15 @@
         for (var i = 0; i < permissionsList.length; i++) {
             if ($('#cbxPermissions-' + i).is(":checked")) permissions.push($('#cbxPermissions-' + i).val())
         }
-        console.log(permissions)
+        
         var description = $("#description").val();
+        var departmentId = $("#department").val();
         var group = {
             title: title,
             type: type,
             permissions: permissions,
             description: description,
+            departmentId,
         };
         console.log(group);
         //  var newGroup=function (group) {
@@ -90,6 +109,7 @@
     $(function () {
         
     fillPermissions();
+    fillSelectDepartment();
 
         //search in groups list   
         var search_groups = function (query) {
@@ -151,19 +171,21 @@
 
             $('.edit').click(function (e) {
 
-                var id = $(this).attr('editItem_id');
+                var _id = $(this).attr('editItem_id');
                 var title = $(this).attr('editItem_title');
                 var type = $(this).attr('editItem_type');
                 var permissions = $(this).attr('editItem_permissions');
                 var description = $(this).attr('editItem_description');
+                var department=$(this).attr('editItem_department')
 
 
                 groupEdit = {
-                    id: id,
-                    title: title,
-                    type: type,
-                    permissions: permissions,
-                    description: description,
+                    _id,
+                    title,
+                    type,
+                    permissions,
+                    description,
+                    department,
                 }
 
                 $('#groups-list').after(`
@@ -183,6 +205,14 @@
                                                 <input id="type" value="` + type + `" type="text" class="validate">
                                                 <label class="active" for="type">نوع گروه:</label>
                                             </div>
+                                            <div class="row">
+                                            <div class="input-field col s12">
+                                                <select id="department">
+                                                    
+                                                </select>
+                                                <label>واحد:</label>
+                                            </div>
+                                        </div>
                                         </div>
                                         <div class="row">
                                         دسترسی ها:
@@ -205,7 +235,7 @@
                         </div>
                     </div>       
                 `);
-
+                fillSelectDepartment();
                 fillPermissions();
 
                 $('.edit').modal();
@@ -219,6 +249,8 @@
                     groupEdit.type = $('#type').val();
                     groupEdit.permissions = permissions;
                     groupEdit.description = $('#description').val();
+                    groupEdit.departmentId = $("#department").val();
+                    
                     console.log('groupEdit:', groupEdit)
 
                     edit_groups(groupEdit, function (response) {
@@ -253,15 +285,7 @@
 
         function edit_groups(groupEdit, callback) {
             // console.log('groupEdit: ', groupEdit);
-            post('/groups/update', {
-                _id: groupEdit.id,
-                title: groupEdit.title,
-                type: groupEdit.type,
-                permissions: groupEdit.permissions,
-                description: groupEdit.description,
-
-
-            }, function (response) {
+            post('/groups/update', groupEdit, function (response) {
                 callback(response);
             })
         }

@@ -2,7 +2,7 @@ var mongoose=require('mongoose');
 
 var sc_groups = mongoose.Schema({
   title:String,
-  type:{type:'number',default:2},//0:zAdmin - 1:administrators - 2:users
+  type:{type:'number',default:2},//0:zAdmin - 1:Novin-administrators - 2:department-administrators -3:department-users
    permissions:[String],
     description:String,
     departmentId:{ type:mongoose.SchemaTypes.ObjectId, ref:"departments"},

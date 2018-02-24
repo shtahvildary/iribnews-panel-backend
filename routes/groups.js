@@ -44,7 +44,8 @@ router.post("/all", auth, function(req, res) {
     
   var data;
   if (req.userType == 0) data = {};
-  else if (req.session.type > 1) data = { readOnly: 0 };
+  else if (req.session.type == 1) data = { readOnly: 0 };
+  else if (req.session.type > 1) data = {$and:[{ readOnly: 0 },{departmentId:req.session.departmentId}]};
   
   groups_sc
     .find(data)
@@ -88,6 +89,7 @@ router.post("/update", auth, function(req, res) {
       group.type = req.body.type || group.type;
       group.permissions = req.body.permissions || group.permissions;
       group.description = req.body.description || group.description;
+      group.departmentId = req.body.departmentId || group.departmentId;
 
       // Save the updated document back to the database
       groups_sc.update({ _id: req.body._id }, group, function(error, response) {

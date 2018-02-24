@@ -16,9 +16,13 @@ var { gregorian_to_jalali } = require("../tools/persian-date-convert.js")
 //select all sort by date
 router.post('/select/all/date', auth, function (req, res, next) {
     var allowedPermissions = [111]
-    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
 
-    message_sc.find({}).populate({
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {'departmentId': req.session.departmentId};
+    
+    message_sc.find(data).populate({
         path: 'replys.userId',
         select: 'username'
     }).populate({
@@ -118,8 +122,10 @@ router.post('/search', auth, function (req, res) {
             $in: filterTypes
         }
     }
-
-    message_sc.find(dbQuery).sort('-date').exec(function (err, result) {
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {$and:[{'departmentId':req.session.departmentId},dbQuery]};
+    message_sc.find(data).sort('-date').exec(function (err, result) {
         if (!err) {
             res.status(200).json({
                 messages: result,
@@ -138,8 +144,10 @@ router.post('/search', auth, function (req, res) {
 router.post('/select/last/date', auth, function (req, res) {
     var allowedPermissions = [111]
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
-
-    message_sc.find({}).sort('-date').limit(5).exec(function (err, result) {
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {'departmentId':req.session.departmentId};
+    message_sc.find(data).sort('-date').limit(5).exec(function (err, result) {
         //pagination should be handled
         if (!err) {
             res.status(200).json({
@@ -169,13 +177,15 @@ router.post('/chart/daily', auth, function (req, res) {
 
     // console.log('h0:'+h0);
     // console.log('h24:'+h24);
-
-    message_sc.find({
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {$and:[{'departmentId':req.session.departmentId},{
         'date': {
             $gt: h0,
             $lt: h24
-        }
-    }).exec(function (err, result) {
+        }}]
+    };
+    message_sc.find(data).exec(function (err, result) {
         //pagination should be handled
         console.log(result)
         if (!err) {
@@ -281,11 +291,9 @@ router.post('/chart/weekly', auth, function (req, res) {
     var dayOfWeek = (today.getDay())
     if (dayOfWeek > 5) dayOfWeek -= 5
     else dayOfWeek += 2
-    console.log(today.getDate())
 
     var first = today.getDate() - dayOfWeek + 1; // First day is the day of the month - the day of the week
     var last = first + 6; // last day is the first day + 6
-
 
     var firstday = new Date(today.setDate(first));
     var lastday = new Date(today.setDate(last));
@@ -293,13 +301,16 @@ router.post('/chart/weekly', auth, function (req, res) {
     // if(sat.getDay)
     firstday.setHours(0, 0, 0, 0);
     lastday.setHours(23, 59, 59, 999);
-
-    message_sc.find({
+    
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {$and:[{'departmentId':req.session.departmentId},{
         'date': {
             $gt: firstday,
             $lt: lastday
         }
-    }).exec(function (err, result) {
+    }]};
+    message_sc.find(data).exec(function (err, result) {
 
         //pagination should be handled
         if (!err) {
@@ -383,7 +394,6 @@ router.post('/chart/monthly', auth, function (req, res) {
     var allowedPermissions = [131]
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
 
-    console.log('monthly', req.body);
     var today = new Date(req.body.date);
     // var sat = new Date(req.body.date);
     // var fri = new Date(req.body.date);
@@ -399,13 +409,16 @@ router.post('/chart/monthly', auth, function (req, res) {
     // if(sat.getDay)
     firstday.setHours(0, 0, 0, 0);
     lastday.setHours(23, 59, 59, 999);
-
-    message_sc.find({
+    
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {$and:[{'departmentId':req.session.departmentId},{
         'date': {
             $gt: firstday,
             $lt: lastday
         }
-    }).exec(function (err, result) {
+    }]};
+    message_sc.find(data).exec(function (err, result) {
         if (!err) {
 
             var msgCounts = Array(30);
@@ -517,13 +530,16 @@ router.post('/chart/selectedDate', auth, function (req, res) {
     // if(sat.getDay)
     firstday.setHours(0, 0, 0, 0);
     lastday.setHours(23, 59, 59, 999);
-
-    message_sc.find({
+    
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {$and:[{'departmentId':req.session.departmentId},{
         'date': {
             $gt: firstday,
             $lt: lastday
         }
-    }).exec(function (err, result) {
+    }]};
+    message_sc.find(data).exec(function (err, result) {
 
         if (!err) {
             var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds

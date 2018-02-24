@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="../icons/favicon.ico">
-    <title>واحد مرکزی خبر - افزودن گروه کاربری جدید</title>
+    <title>واحد مرکزی خبر - افزودن واحد جدید</title>
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -22,43 +22,39 @@
         <!-- <div class="container" dir="rtl"> -->
         <div class="row">
 
-            <form class="col s12 rtl" style="direction:rtl !important" id="newUserForm">
+            <form class="col s12 rtl" style="direction:rtl !important" id="newDepartmentForm">
                 <div class="row">
                     <div class="input-field col s6">
-                        <i class="material-icons prefix">group</i>
+                        <i class="material-icons prefix">account_circle</i>
                         <input id="title" type="text" class="validate">
-                        <label for="title">نام گروه: </label>
+                        <label for="title">عنوان: </label>
                     </div>
+                    
+                </div>
+                <div class="row">
                     <div class="input-field col s6">
-                        <input id="type" type="text" class="validate">
-                        <label for="type">نوع گروه:</label>
-                    </div>
-                    <div class="input-field col s12 ">
-                        <select id="department">
-                        </select>
-                        <label for="department">واحد:</label>
+                        <input id="bot" type="text" class="validate">
+                        <label for="bot"> روبات :</label>
                     </div>
                 </div>
-
                 <div class="row">
-                    <div class="input-field col s6 cbxPermissions-list">
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="input-field col s4">
-                        <i class="material-icons prefix">description</i>
+                    <div class="input-field col s6">
                         <input id="description" type="text" class="validate">
-                        <label for="description"> توضیحات: </label>
+                        <label for="description"> توضیحات :</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="port" type="number" class="validate">
+                        <label for="port"> شماره پورت :</label>
                     </div>
                 </div>
             </form>
-
-            <button class="btn waves-effect waves-light" type="submit" id="btnAddGroup">ذخیره
+            <button class="btn waves-effect waves-light" type="submit" id="btnAddDepartment">ذخیره
                 <i class="material-icons right">save</i>
             </button>
         </div>
+
     </div>
 
 
@@ -69,8 +65,8 @@
     <script src="../js/api.js"></script>
     <script src="../js/materialize.js"></script>
     <script src="../js/init.js"></script>
+    <script src="../js/departments.js"></script>
     <script src="../js/menus.js"></script>
-    <script src="../js/groups.js"></script>
     <script src="../js/logout.js"></script>
 
 

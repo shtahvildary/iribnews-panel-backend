@@ -1,9 +1,12 @@
 var express = require("express");
 var router = express.Router();
 var user_sc = require("../Schema/user");
+var groups_sc = require("../Schema/groups");
 var auth = require("../tools/authentication");
 //var auth=require('../tools/auth');
 var bcrypt = require("bcrypt");
+var {checkPermissions}=require("../tools/auth");
+
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
@@ -12,20 +15,13 @@ router.get("/", function(req, res, next) {
 
 //Add new user
 router.post("/register", auth, function(req, res) {
-  var allowedPermissions=[101]
-  var allowedPermissions=[103]
+  
+  // var allowedPermissions=[103]
   
   
   var userType = req.session.type;
-  if (userType > 1)
-    res.status(403).json({
-      error: "Forbidden: permission error"
-    });
-  else if (userType == 1 && req.body.type < 2)
-    res.status(403).json({
-      error: "Forbidden: permission error"
-    });
-  else {
+  if (userType!=0&&userType >= req.body.type)return res.status(403).json({error: "Forbidden: permission error"});
+  
     console.log("Now U can register a new user...");
     var user = new user_sc(req.body);
     user.save(function(err, result) {
@@ -65,8 +61,7 @@ router.post("/update/profile", auth, function(req, res) {
     //else
     
     
-    result.personelNumber =
-      req.body.personelNumber || result._doc.personelNumber;
+    result.personelNumber =req.body.personelNumber || result._doc.personelNumber;
     result.password = bcrypt.hash(req.body.password,10 ) || result._doc.password;
     result.email = req.body.email || result._doc.email;
     result.mobileNumber = req.body.mobileNumber || result._doc.mobileNumber;
@@ -89,17 +84,11 @@ router.post("/update/profile", auth, function(req, res) {
 
 //update user
 router.post("/update", auth, function(req, res) {
-  var allowedPermissions=[102]
-  var allowedPermissions=[104]
-  
-  console.log("U can update user...");
-  console.log("query:", req.body);
+  // var allowedPermissions=[102]
+  // var allowedPermissions=[104]
   var userType = req.session.type;
+  if (userType!=0&&userType >= req.body.type)return res.status(403).json({error: "Forbidden: permission error"});
 
-  if (userType > 1)
-    res.status(403).json({
-      error: "Forbidden: permission error"
-    });
   // else 
   // if (userType == 1)
   //   res.status(403).json({
@@ -224,10 +213,12 @@ router.post("/login", function(req, res) {
             req.session.userId = result._doc._id;
             req.session.type = result._doc.group._doc.type;
             req.session.permissions = result._doc.group._doc.permissions;
+            req.session.departmentId = result._doc.group._doc.departmentId;
 
             console.log(req.session.cookie);
             console.plain(req.session.userId);
             console.plain("type: ", req.session.type);
+            console.plain("departmentId: ", req.session.departmentId);
 
             res.json({
               user: result,
@@ -254,7 +245,30 @@ router.post("/login", function(req, res) {
 
 //Get all users
 router.post("/all", auth, function(req, res) {
-  user_sc.find({}).exec(function(err, result) {
+  var data;
+  if (req.session.type < 2) data = {};
+  else   { 
+    var group;
+    groups_sc.find({'departmentId': req.session.departmentId},{_id:1}).exec(function(err, group) {
+      if (!err) {
+        if (group) {
+          data={'group':group};
+        } else {
+         return res.json({
+            error: "There is no group with this _id..."
+          });
+        }
+      } else {
+        return res.status(500).json({
+          error: err
+        });
+      }
+    });
+    // data = {'group': group};
+  }
+  
+  
+  user_sc.find(data).exec(function(err, result) {
     if (!err) {
       if (result) {
         res.json({
@@ -294,6 +308,9 @@ router.post("/logout", function(req, res, next) {
 //INPUT:{"_id":"5a1e711ed411741d84d10a29"}
 
 router.post("/status", auth, function(req, res) {
+  var userType = req.session.type;
+  if (userType!=0)return res.status(403).json({error: "Forbidden: permission error"});
+
   console.log("query", req.body);
   user_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {

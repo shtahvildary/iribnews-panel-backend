@@ -5,6 +5,8 @@ var surveyResults_sc = require("../Schema/surveyResults");
 var chat_sc = require("../Schema/chats");
 var auth = require("../tools/authentication");
 var request = require("request");
+var {checkPermissions}=require("../tools/auth");
+
 
 // const botServer = "http://172.16.17.149:9002";
 const botServer = "http://localhost:9002";
@@ -28,6 +30,7 @@ router.post("/new", auth, function(req, res) {
 
   var survey = new survey_sc({title,voteItemId,text,keyboard});
   survey.userId = req.session.userId;
+  survey.departmentId=req.session.departmentId;
 
   survey.save(function(err, savedSurvey) {
     if(err)return res.status(500).json({error:err})
@@ -52,8 +55,12 @@ router.post("/new", auth, function(req, res) {
 router.post("/all", auth, function(req, res) {
   var allowedPermissions=[121]
   
+  var data;
+  if (req.session.type < 2) data = {};
+  else  data = {'departmentId': req.session.departmentId};
+  
   survey_sc
-    .find({})
+    .find(data)
     .sort("-date")
     .exec(function(err, result) {
       if (!err) {
@@ -76,9 +83,14 @@ router.post("/all", auth, function(req, res) {
 
 router.post("/all/result", auth, function(req, res) {
   var allowedPermissions=[123]
+
+  var data;
+  if (req.session.type < 2) data = {};
+  else  data = {'departmentId': req.session.departmentId};
+  
   
   surveyResults_sc
-    .find({})
+    .find(data)
     .populate({
       path: "surveyId",
       select: {
@@ -131,8 +143,13 @@ router.post("/all/result", auth, function(req, res) {
     });
 }) //Select last 3 surveys sort by date
   router.post("/select/last/date", auth, function(req, res) {
+
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {'departmentId': req.session.departmentId};
+    
     survey_sc
-      .find({})
+      .find(data)
       .sort("-date")
       .limit(3)
       .exec(function(err, result) {
@@ -154,8 +171,6 @@ router.post("/all/result", auth, function(req, res) {
 router.post("/select/one/result", auth, function(req, res) {
   var allowedPermissions=[123]
   
-  console.log("req.body: ", req.body);
-
   surveyResults_sc
     .find(
       {

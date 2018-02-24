@@ -1,23 +1,5 @@
-[{
-        "code": 101,
-        "title": "Add new user to administrators-group",
-        "description": "افزودن کاربر جدید به گروه مدیران"
-    },
-    {
-        "code": 102,
-        "title": "udate a user in administrators-group",
-        "description": "تغییر مشخصات کاربر در گروه مدیران"
-    },
-    {
-        "code": 103,
-        "title": "Add new user to users-group",
-        "description": "افزودن کاربر جدید به گروه کاربران"
-    },
-    {
-        "code": 104,
-        "title": "udate a user in users-group",
-        "description": "تغییر مشخصات کاربر در گروه کاربران"
-    },
+[
+    
     {
         "code": 105,
         "title": "Add new users-group",

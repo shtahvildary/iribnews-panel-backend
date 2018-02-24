@@ -11,7 +11,7 @@
         addVoteItem({
             title: voteItemTitle,
             type: type,
-            description
+            description,
         });
     });
     var addVoteItem = function (voteItem) {
