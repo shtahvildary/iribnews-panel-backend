@@ -96,7 +96,7 @@
                 $('#departments-list').after(`
             
             <!-- Modal Trigger -->
-            <div id="editModal" class="modal edit">
+            <div id="editModal" class="modal edit rtl">
                 <div class="modal-content">
                     <h5>ویرایش</h5>
                     <p>

@@ -6,6 +6,7 @@ var sc_departments = mongoose.Schema({
   description:{type:'string'},
   status:{type:Number},
   port:{type:Number},
+  logo:{type:String},
 
 });
 module.exports=mongoose.model('departments',sc_departments);

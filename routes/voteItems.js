@@ -127,7 +127,7 @@ router.post('/update',auth,function(req,res){
       result.description=req.body.description||result.description;
       result.channelId=req.body.channelId||result.channelId;
       result.personnels=req.body.personnels||result.personnels;
-      result.departmentId=req.body.departmentId||result.departmentId;
+      result.departmentId=req.session.departmentId||result.departmentId;
 
       // Save the updated document back to the database
       result.save(function(err,result){

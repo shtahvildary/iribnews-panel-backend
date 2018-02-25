@@ -37,8 +37,7 @@ router.post("/register", auth, function(req, res) {
           error: err
         });
       }
-    });
-  }
+    });  
 });
 
 //return user type

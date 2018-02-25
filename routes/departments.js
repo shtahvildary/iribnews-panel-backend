@@ -48,11 +48,35 @@ router.post("/all", auth, function(req, res) {
     .exec(function(err, result) {
       if (!err) {
         if (result) {
-          res.json({
+          res.status(200).json({
             departmentsArray: result
           });
         } else {
-          res.json({
+          res.status(500).json({
+            error: "There is no department to select..."
+          });
+        }
+      } else {
+        res.status(500).json({
+          error: err
+        });
+      }
+    });
+});
+////////////////select one department by ID/////////////////
+router.post("/select/one", auth, function(req, res) {
+    
+
+  departments_sc
+    .findById(req.session.departmentId)
+    .exec(function(err, result) {
+      if (!err) {
+        if (result) {
+          res.status(200).json({
+            department: result
+          });
+        } else {
+          res.status(500).json({
             error: "There is no department to select..."
           });
         }

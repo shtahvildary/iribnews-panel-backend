@@ -35,13 +35,13 @@
             $('#surveysResult-list').append(`
                 <div class="card rtl">
                     <div class="card-content activator ">
-                        <span class="card-title activator grey-text text-darken-4"> ` + item.title + `<i class="material-icons left">more_vert</i></span>
+                        <span class="activator grey-text text-darken-4"> ` + item.title + `<i class="material-icons left">more_vert</i></span>
                         <p>سوال: ` + item.text + `</p> 
                         <p>پاسخها: ` + item.keyboard + `</p> 
                     </div> 
                     <div class="card-reveal" >
-                <span class="card-title grey-text text-darken-4">` + item.title + `<i class="material-icons right">close</i></span>
-                <p id="result-` + item._id + `"></p>
+                        <span class=" grey-text text-darken-4">` + item.title + `<i class="material-icons right">close</i></span>
+                        <p id="result-` + item._id + `"></p>
                     </div>
                 </div>
                 `);

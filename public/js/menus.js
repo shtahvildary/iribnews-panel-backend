@@ -1,7 +1,5 @@
 (function ($) {
 
-
-
     $("#navbar").append(`
 
   <div id="navbar">
@@ -19,8 +17,8 @@
           <a href="#" data-activates="mobile-demo" class="right button-collapse">
               <i class="material-icons">menu</i>
           </a>
-          <a href="#!" class="right local-nav-title">واحد مرکزی خبر</a>
-
+            <div id="title" class="right">
+            </div>
           <ul class="left" >
               <li id="nav-logout" class="local-nav-items-large">
                   <a href="#" class="logout">خروج</a>
@@ -57,19 +55,32 @@
                   <a href="externalReports.html">گزارش های تحلیلی</a>
               </li>`);
 
+
+    post('/departments/select/one', {}, function (response) {
+        var department = response.department;
+        $('#title').append(
+            (department.logo?`
+            <div class="col s2">
+        <img class="circle  right responsive-img"style="max-width:70% max-width:70%" src="../icons/`+department.logo+`" > `:'')+
+        `          
+          <a  class="right local-nav-title" >`+ department.title + `</a>
+          <div>
+      `)
+    })
+
     post('/users/type', {}, function (response) {
         var userType = response.type;
         $("#mobile-demo").append(`
                 
 
-            ` + (userType != 2 ? (`
+            ` + (userType != 3 ? (`
             <li>
                 <a href="usersList.html">مدیریت کاربران</a>
                 <a href="groupsList.html">مدیریت گروه ها</a>
                 <a href="departmentsList.html">مدیریت واحدها</a>
             </li>`) : '') + `
             ` + (userType != 0 ? (
-            `
+                `
             <li>
                 <a href="ConnectAdmin.html">ارتباط با ادمین</a>
             </li>`) : '') + `
@@ -89,4 +100,8 @@
 `);
     })
 
+
+
 })(jQuery);
+
+

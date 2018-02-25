@@ -1,65 +1,86 @@
 (function ($) {
-    
+
 
     var permissionsList;
-    
-    
+
+
     function fillPermissions(groupPermissions) {
-        post('/permissions/read',{},(response)=>{
-            permissionsList=response.permissionsList;
+        console.log('groupPermissions: ', groupPermissions)
+        post('/permissions/read', {}, (response) => {
+            permissionsList = response.permissionsList;
         })
         $(permissionsList).each(function (i, item) {
             $('.cbxPermissions-list').append(`<p>
-            <input type="checkbox" id="cbxPermissions-` + i + `" value="`+item.code+`"/>
+            <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"` + ($.inArray(item.code, groupPermissions) ? 'checked="checked"' : '') + `/>
             <label for="cbxPermissions-` + i + `">` + item.description + `</label>
           </p>
         `)
-        // $(permissionsList).each(function (i, item) {
-        //     $('.cbxPermissions-list').append(`<p>
-        //     <input type="checkbox" id="cbxPermissions-` + i + `" value="`+item.code+`"`+(permissions.includes(item.code)?'checked="checked"':'')+`/>
-        //     <label for="cbxPermissions-` + i + `">` + item.description + `</label>
-        //   </p>
-        // `)
+            // $(permissionsList).each(function (i, item) {
+            //     $('.cbxPermissions-list').append(`<p>
+            //     <input type="checkbox" id="cbxPermissions-` + i + `" value="`+item.code+`"`+(permissions.includes(item.code)?'checked="checked"':'')+`/>
+            //     <label for="cbxPermissions-` + i + `">` + item.description + `</label>
+            //   </p>
+            // `)
         })
-        
+
     }
-    function fillSelectDepartment() {
+    function fillSelectDepartment(departmentId) {
         post('/departments/all', {}, function (response) {
-    
-            console.log('response: ', response)
+
+            console.log('departmentId: ', departmentId)
             $("#department").append(`
             <option value="" disabled selected>انتخاب کنید...</option>
             `)
-            $(response.departmentsArray).each(function(i,department){
+            $(response.departmentsArray).each(function (i, department) {
                 $("#department").append(`
-            <option value="`+department._id+`">`+department.title+`</option>
+            <option value="`+ department._id + `"  `+ (departmentId == department._id ? 'selected' : '') + `>` + department.title + `</option>
             `)
-                
+
             })
-        $('select').material_select();
-            
+            $('select').material_select();
+
+        })
+    }
+    function fillGroupType(groupType) {
+        post('/users/type', {}, function (response) {
+            var userType = response.type;
+            if (userType < 2)
+                $('#groupTypeSelect').append(`
+                <select id="groupType"  class="validate">
+                    <option value="" disabled `+ (!groupType ? 'selected' : '') + `>انتخاب کنید...</option>
+                    <option value="3" `+ (groupType == 3 ? 'selected' : '') + `>کاربران واحدها</option>
+                    <option value="2" `+ (groupType == 2 ? 'selected' : '') + ` >مدیران واحدها</option>         
+                </select>
+                <label for="groupType">نوع گروه:</label>
+                        `)
+            if (userType == 0)
+                $('#groupType').append(`
+            <option value="1" `+ (groupType == 1 ? 'selected' : '') + ` >مدیران رسانه های نوین</option>         
+            `)
+            $('select').material_select();
+
         })
     }
 
-   
+
     //add group 
     $("#btnAddGroup").click(function () {
 
         console.log('btnAddGroup is clicked...');
-        var title = $("#title").val();
-        var type = $("#type").val();
+        var title = $("#groupTitle").val();
+        var type = $("#groupType").val();
         var permissions = []
         for (var i = 0; i < permissionsList.length; i++) {
             if ($('#cbxPermissions-' + i).is(":checked")) permissions.push($('#cbxPermissions-' + i).val())
         }
-        
+
         var description = $("#description").val();
         var departmentId = $("#department").val();
         var group = {
-            title: title,
-            type: type,
-            permissions: permissions,
-            description: description,
+            title,
+            type,
+            permissions,
+            description,
             departmentId,
         };
         console.log(group);
@@ -81,16 +102,16 @@
     // isLoggedin();
     $("#btnUpdateGroup").click(function () {
 
-        var title = $("#title").val();
+        var title = $("#groupTitle").val();
         var type = $("#type").val();
         var permissions;
         var description = $("#description").val();
 
         updategroup({
-            title: title,
-            type: type,
-            permissions: permissions,
-            description: description,
+            title,
+            type,
+            permissions,
+            description,
         });
     });
 
@@ -107,9 +128,11 @@
 
 
     $(function () {
-        
-    fillPermissions();
-    fillSelectDepartment();
+
+        fillPermissions([]);
+        fillSelectDepartment("");
+        fillGroupType()
+
 
         //search in groups list   
         var search_groups = function (query) {
@@ -148,6 +171,7 @@
             }
         });
 
+
         //show a list of groups   
         post('/groups/all', {}, function (response) {
 
@@ -176,7 +200,7 @@
                 var type = $(this).attr('editItem_type');
                 var permissions = $(this).attr('editItem_permissions');
                 var description = $(this).attr('editItem_description');
-                var department=$(this).attr('editItem_department')
+                var department = $(this).attr('editItem_department')
 
 
                 groupEdit = {
@@ -190,33 +214,31 @@
 
                 $('#groups-list').after(`
                     <!-- Modal Trigger -->
-                    <div class="container">
+                    <div class="container ">
                         <div id="editModal" class="modal modal-fixed-footer edit rtl">
                             <div class="modal-content">
                                 <h5>ویرایش</h5>
-                                    <form class="col s12" id="newGroupForm">
+                                    <form class="col s12" id="newGroupForm ">
                                         <div class="row">
                                             <div class="input-field col s6">
                                                 <i class="material-icons prefix">account_circle</i>
-                                                <input id="title" value="` + title + `" type="text" class="validate">
-                                                <label class="active" for="title">نام گروه: </label>
+                                                <input id="groupTitle" value="` + title + `" type="text" class="validate">
+                                                <label class="active" for="groupTitle">نام گروه: </label>
                                             </div>
-                                            <div class="input-field col s6">
-                                                <input id="type" value="` + type + `" type="text" class="validate">
-                                                <label class="active" for="type">نوع گروه:</label>
+                                            <div class="input-field col s6" id="groupTypeSelect">
                                             </div>
                                             <div class="row">
-                                            <div class="input-field col s12">
-                                                <select id="department">
+                                                <div class="input-field col s12">
+                                                    <select id="department">
                                                     
-                                                </select>
-                                                <label>واحد:</label>
+                                                    </select>
+                                                    <label>واحد:</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         </div>
                                         <div class="row">
                                         دسترسی ها:
-                                            <div class="col s12 cbxPermissions-list">
+                                            <div class="col s12 cbxPermissions-list ">
                                                 
                                             </div>
                                         </div>
@@ -235,8 +257,9 @@
                         </div>
                     </div>       
                 `);
-                fillSelectDepartment();
-                fillPermissions();
+                fillSelectDepartment(department);
+                fillPermissions(permissions);
+                fillGroupType(type)
 
                 $('.edit').modal();
 
@@ -245,24 +268,25 @@
                     for (var i = 0; i < permissionsList.length; i++) {
                         if ($('#cbxPermissions-' + i).is(":checked")) permissions.push($('#cbxPermissions-' + i).val())
                     }
-                    groupEdit.title = $('#title').val();
-                    groupEdit.type = $('#type').val();
+                    groupEdit.title = $('#groupTitle').val();
+                    groupEdit.type = $('#groupType').val();
                     groupEdit.permissions = permissions;
                     groupEdit.description = $('#description').val();
                     groupEdit.departmentId = $("#department").val();
-                    
+
                     console.log('groupEdit:', groupEdit)
 
                     edit_groups(groupEdit, function (response) {
-                        console.log('response', response)
-
                         if (response.ok) {
                             $('#editModal').modal('close');
                             alert("به روز رسانی با موفقیت انجام شد.");
+
                         } else {
                             alert("در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. کدخطا: ")
                         }
                     })
+                    location.reload()
+
                 })
             })
 
@@ -271,15 +295,10 @@
                 var del = confirm("آیا قصد پاک کردن « " + $(this).attr('title') + " » را دارید؟");
                 if (del == true) {
                     var groupId = $(this).attr('uniqueId');
-
-                    // console.log('query', {
-                    //     text: groupId
-                    // })
                     $('.card[uniqueId=' + groupId + ']').fadeOut();
                     delete_groups(groupId);
                     alert("«" + $(this).attr('title') + "» با موفقیت پاک شد.");
                 }
-
             })
         })
 
@@ -294,9 +313,7 @@
             post('/groups/status', {
                 _id: groupId,
                 status: -1
-            }, function (response) {
-                // console.log('delete group', response);
-            })
+            }, function (response) { })
         }
     });
 })(jQuery);
