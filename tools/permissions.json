@@ -11,12 +11,6 @@
         "description": "تغییر مشخصات گروه کاربری "
     },
     {
-        "code": 107,
-        "title": "add a new department",
-        "description": "افزودن  دپارتمان جدید"
-        
-    },
-    {
         "code": 108,
         "title": "update a department",
         "description": "تغییر مشخصات دپارتمان "

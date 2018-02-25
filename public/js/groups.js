@@ -11,23 +11,16 @@
         })
         $(permissionsList).each(function (i, item) {
             $('.cbxPermissions-list').append(`<p>
-            <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"` + ($.inArray(item.code, groupPermissions) ? 'checked="checked"' : '') + `/>
+            <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"` + (groupPermissions.indexOf(item.code)!=-1 ? 'checked="checked"' : '') + `/>
             <label for="cbxPermissions-` + i + `">` + item.description + `</label>
           </p>
         `)
-            // $(permissionsList).each(function (i, item) {
-            //     $('.cbxPermissions-list').append(`<p>
-            //     <input type="checkbox" id="cbxPermissions-` + i + `" value="`+item.code+`"`+(permissions.includes(item.code)?'checked="checked"':'')+`/>
-            //     <label for="cbxPermissions-` + i + `">` + item.description + `</label>
-            //   </p>
-            // `)
         })
 
     }
     function fillSelectDepartment(departmentId) {
         post('/departments/all', {}, function (response) {
 
-            console.log('departmentId: ', departmentId)
             $("#department").append(`
             <option value="" disabled selected>انتخاب کنید...</option>
             `)
@@ -66,7 +59,6 @@
     //add group 
     $("#btnAddGroup").click(function () {
 
-        console.log('btnAddGroup is clicked...');
         var title = $("#groupTitle").val();
         var type = $("#groupType").val();
         var permissions = []
@@ -83,10 +75,9 @@
             description,
             departmentId,
         };
-        console.log(group);
+        
         //  var newGroup=function (group) {
         post('/groups/new', group, function (response) {
-            console.log(response)
             if (response.error)
                 alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
             else {
@@ -174,20 +165,20 @@
 
         //show a list of groups   
         post('/groups/all', {}, function (response) {
-
             response.groupsArray.map(function (item) {
                 $('#groups-list').append(`
 
                 <div class="card" unqueId=` + item._id + `>
                     <div class="card-content">
-                        <p>` + item.title + `</p>
+                        <p>عنوان: ` + item.title + `</p>
                         
-                        <p>` + item.description + `</p>
-                        
-                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_title="` + item.title + `" editItem_type="` + item.type + `" editItem_permissions="` + item.permissions + `" editItem_description="` + item.description + `">ویرایش
+                        <p>توضیحات: ` + item.description + `</p>
+                        `+(item.type>1?`
+                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_title="` + item.title + `" editItem_type="` + item.type + `" editItem_permissions="` + item.permissions + `" editItem_description="` + item.description + `" editItem_department="` + item.departmentId + `">ویرایش
                         <i class="material-icons">edit</i></a>
                         <a class="waves-effect waves-light btn delete" id="btnDelete" uniqueId="` + item._id + `" >حذف
-                        <i class="material-icons">delete</i></a>
+                        <i class="material-icons">delete</i></a>`:'')+`
+                        
                     </div>   
                 </div>`);
             });
@@ -273,8 +264,6 @@
                     groupEdit.permissions = permissions;
                     groupEdit.description = $('#description').val();
                     groupEdit.departmentId = $("#department").val();
-
-                    console.log('groupEdit:', groupEdit)
 
                     edit_groups(groupEdit, function (response) {
                         if (response.ok) {

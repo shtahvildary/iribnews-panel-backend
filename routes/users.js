@@ -5,8 +5,8 @@ var groups_sc = require("../Schema/groups");
 var auth = require("../tools/authentication");
 //var auth=require('../tools/auth');
 var bcrypt = require("bcrypt");
-var {checkPermissions}=require("../tools/auth");
-
+var { checkPermissions } = require("../tools/auth");
+// var async = require("async");
 
 /* GET users listing. */
 router.get("/", function(req, res, next) {
@@ -15,29 +15,28 @@ router.get("/", function(req, res, next) {
 
 //Add new user
 router.post("/register", auth, function(req, res) {
-  
   // var allowedPermissions=[103]
-  
-  
+
   var userType = req.session.type;
-  if (userType!=0&&userType >= req.body.type)return res.status(403).json({error: "Forbidden: permission error"});
-  
-    console.log("Now U can register a new user...");
-    var user = new user_sc(req.body);
-    user.save(function(err, result) {
-      if (!err) {
-        //var token=auth.tokenize(result._id);
-        // req.session.userId = result._id;
-        res.json({
-          user: result
-          //token: token
-        });
-      } else {
-        res.json({
-          error: err
-        });
-      }
-    });  
+  if (userType != 0 && userType >= req.body.type)
+    return res.status(403).json({ error: "Forbidden: permission error" });
+
+  console.log("Now U can register a new user...");
+  var user = new user_sc(req.body);
+  user.save(function(err, result) {
+    if (!err) {
+      //var token=auth.tokenize(result._id);
+      // req.session.userId = result._id;
+      res.json({
+        user: result
+        //token: token
+      });
+    } else {
+      res.json({
+        error: err
+      });
+    }
+  });
 });
 
 //return user type
@@ -58,10 +57,11 @@ router.post("/update/profile", auth, function(req, res) {
       });
     }
     //else
-    
-    
-    result.personelNumber =req.body.personelNumber || result._doc.personelNumber;
-    result.password = bcrypt.hash(req.body.password,10 ) || result._doc.password;
+
+    result.personelNumber =
+      req.body.personelNumber || result._doc.personelNumber;
+    result.password =
+      bcrypt.hash(req.body.password, 10) || result._doc.password;
     result.email = req.body.email || result._doc.email;
     result.mobileNumber = req.body.mobileNumber || result._doc.mobileNumber;
     result.phoneNumber = req.body.phoneNumber || result._doc.phoneNumber;
@@ -86,54 +86,50 @@ router.post("/update", auth, function(req, res) {
   // var allowedPermissions=[102]
   // var allowedPermissions=[104]
   var userType = req.session.type;
-  if (userType!=0&&userType >= req.body.type)return res.status(403).json({error: "Forbidden: permission error"});
-
-  // else 
-  // if (userType == 1)
-  //   res.status(403).json({
-  //     error: "Forbidden: permission error"
-  //   });
+  if (userType != 0 && userType >= req.body.type)
+    return res.status(403).json({ error: "Forbidden: permission error" });
   else {
-    
-    var user={firstName,lastName,personelNumber,group,email,mobileNumber,phoneNumber,status,permitedChannelsId}=req.body;
-    if(req.body.password) {
-     bcrypt.hash(req.body.password,10 , function(err,hash) {
+    var user = ({
+      firstName,
+      lastName,
+      personelNumber,
+      group,
+      email,
+      mobileNumber,
+      phoneNumber,
+      status,
+      permitedChannelsId
+    } = req.body);
+    if (req.body.password) {
+      var hash = bcrypt.hash(req.body.password, 10, function(err, hash) {
+        console.log("hash: ", hash);
         if (err) {
-          return (err);
+          return err;
         }
         user.password = hash;
-        
-      })
-    }
-   
-    
+        userUpdate(req.body._id, user);
+      });
+    } else userUpdate(req.body._id, user);
+
     // }
     //save updated user
-    user_sc.update({ _id: req.body._id }, user, function(err, result) {
-      console.log(err)
-      if (err) {
-        return res.status(500).json({
-          error: err
+    function userUpdate(_id, user) {
+      user_sc.update({ _id: req.body._id }, user, function(err, result) {
+        console.log(err);
+        if (err) {
+          return res.status(500).json({
+            error: err
+          });
+        }
+        // else
+        return res.status(200).json({
+          user: result
         });
-      }
-      // else
-      return res.status(200).json({
-        user: result
       });
-    });
+    }
   }
 });
 
-// var result=updateUser(req.body._id,req.body,req.session.type)
-// if (result.error) {
-//         return res.status(500).json({
-//           error:error
-//         })
-//       }
-//       // else
-//       return res.status(200).json({
-//         user:result
-//       })
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateUser(userId, userInfo, type) {
@@ -190,8 +186,7 @@ router.post("/login", function(req, res) {
       //'password': req.body.password
     })
     .populate({
-      path: "group",
-      
+      path: "group"
     })
     .exec(function(err, result) {
       console.plain(err, result);
@@ -246,27 +241,28 @@ router.post("/login", function(req, res) {
 router.post("/all", auth, function(req, res) {
   var data;
   if (req.session.type < 2) data = {};
-  else   { 
+  else {
     var group;
-    groups_sc.find({'departmentId': req.session.departmentId},{_id:1}).exec(function(err, group) {
-      if (!err) {
-        if (group) {
-          data={'group':group};
+    groups_sc
+      .find({ departmentId: req.session.departmentId }, { _id: 1 })
+      .exec(function(err, group) {
+        if (!err) {
+          if (group) {
+            data = { group: group };
+          } else {
+            return res.json({
+              error: "There is no group with this _id..."
+            });
+          }
         } else {
-         return res.json({
-            error: "There is no group with this _id..."
+          return res.status(500).json({
+            error: err
           });
         }
-      } else {
-        return res.status(500).json({
-          error: err
-        });
-      }
-    });
+      });
     // data = {'group': group};
   }
-  
-  
+
   user_sc.find(data).exec(function(err, result) {
     if (!err) {
       if (result) {
@@ -308,7 +304,8 @@ router.post("/logout", function(req, res, next) {
 
 router.post("/status", auth, function(req, res) {
   var userType = req.session.type;
-  if (userType!=0)return res.status(403).json({error: "Forbidden: permission error"});
+  if (userType != 0)
+    return res.status(403).json({ error: "Forbidden: permission error" });
 
   console.log("query", req.body);
   user_sc.findById(req.body._id).exec(function(err, result) {

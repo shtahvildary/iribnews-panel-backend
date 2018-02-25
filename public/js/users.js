@@ -1,16 +1,17 @@
 (function ($) {
 
 
-    function fillSelectGroup() {
+    function fillSelectGroup(groupId) {
         post('/groups/all', {}, function (response) {
     
             console.log('response: ', response)
+            console.log('groupId: ', groupId)
             $("#userGroup").append(`
             <option value="" disabled selected>انتخاب کنید...</option>
             `)
             $(response.groupsArray).each(function(i,group){
                 $("#userGroup").append(`
-            <option value="`+group._id+`">`+group.title+`</option>
+            <option value="`+group._id+`"`+(group._id==groupId?'selected':'')+`>`+group.title+`</option>
             `)
                 
             })
@@ -43,17 +44,17 @@
             var group=$("#userGroup").val()
 
             var user = {
-                firstName: firstName,
-                lastName: lastName,
-                personelNumber: personelNumber,
-                username: username,
-                password: password,
-                email: email,
-                mobileNumber: mobileNumber,
-                phoneNumber: phoneNumber,
+                firstName,
+                lastName,
+                personelNumber,
+                username,
+                password,
+                email,
+                mobileNumber,
+                phoneNumber,
                 // permitedChannels: permitedChannels,
                 // type: type
-                group:group
+                group,
             };
             console.log(user);
             //  var newUser=function (user) {
@@ -191,7 +192,7 @@
                         <p>` + item.mobileNumber + `</p>
                         <p>` + item.phoneNumber + `</p>
                         <p>` + item.email + `</p>
-                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `">ویرایش
+                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_un="` + item.username + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `" editItem_group="` + item.group + `">ویرایش
                         <i class="material-icons">edit</i></a>
                         <a class="waves-effect waves-light btn delete" id="btnDelete" username="` + item.username + `" uniqueId="` + item._id + `" >حذف
                         <i class="material-icons">delete</i></a>
@@ -202,21 +203,24 @@
             $('.edit').click(function (e) {
 
                 var id = $(this).attr('editItem_id');
+                var username = $(this).attr('editItem_un');
                 var firstName = $(this).attr('editItem_firstName');
                 var lastName = $(this).attr('editItem_lastName');
                 var mobileNumber = $(this).attr('editItem_mobileNumber');
                 var phoneNumber = $(this).attr('editItem_phoneNumber');
                 var personelNumber = $(this).attr('editItem_personelNumber');
                 var email = $(this).attr('editItem_email');
+                var group = $(this).attr('editItem_group');
 
                 userEdit = {
                     id: id,
-                    firstName: firstName,
-                    lastName: lastName,
-                    mobileNumber: mobileNumber,
-                    phoneNumber: phoneNumber,
-                    personelNumber: personelNumber,
-                    email: email,
+                    firstName,
+                    lastName,
+                    mobileNumber,
+                    phoneNumber,
+                    personelNumber,
+                    email,
+                    group
                 }
 
                 $('#users-list').after(`
@@ -227,7 +231,9 @@
                                 <h5>ویرایش</h5>
                                     <form class="col s12" id="newUserForm">
                                         <div class="row">
+                                        <p>نام کاربری: ` + username  + `</p>
                                             <div class="input-field col s6">
+                                            
                                                 <i class="material-icons prefix">account_circle</i>
                                                 <input id="firstName" value="` + firstName + `" type="text" class="validate">
                                                 <label class="active" for="firstName">نام: </label>
@@ -300,7 +306,7 @@
                         </div>
                     </div>       
                 `);
-                fillSelectGroup();
+                fillSelectGroup(group);
 
                 $('#cbxChangePassword').change(function () {
                     if ($('#cbxChangePassword').is(":checked")) $('.pass').show();
