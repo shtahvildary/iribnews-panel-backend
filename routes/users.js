@@ -85,8 +85,16 @@ router.post("/update/profile", auth, function(req, res) {
 router.post("/update", auth, function(req, res) {
   // var allowedPermissions=[102]
   // var allowedPermissions=[104]
+  groups_sc.findById(req.body.group,{_id:0,"type":1 }).exec(function(err, result) {
+    if (err) {
+      return res.status(500).json({
+        error: err
+      });
+    }
+  var groupType=result.type;
+    
   var userType = req.session.type;
-  if (userType != 0 && userType >= req.body.type)
+  if (userType != 0 && userType >=groupType)
     return res.status(403).json({ error: "Forbidden: permission error" });
   else {
     var user = ({
@@ -128,6 +136,8 @@ router.post("/update", auth, function(req, res) {
       });
     }
   }
+})
+  
 });
 
 
