@@ -2,7 +2,22 @@ function searchFilter(checkbox) {}
 (function($) {
   const fileserver = "http://localhost:9000";
   // const fileserver = "http://172.16.17.149:9000";
-
+  
+  function fillUsersList() {
+    var usersList;
+    post("/users/all", {}, response => {
+      usersList = response.usersArray;
+      $(usersList).each(function(i, user) {
+        $("#cbxUsers-list").append(
+          `<p>
+              <input type="checkbox" id="cbxUser-` +i +`" value="` +user._id +`"/>
+              <label for="cbxUser-` +i +`">` +user.firstName +` ` +user.lastName +`</label>
+          </p>`
+        );
+      });
+    });
+  }
+  
   var search_message = function(query, filters) {
     post(
       "/messages/search",
@@ -20,35 +35,10 @@ function searchFilter(checkbox) {}
     );
   };
 
-  var usersList;
-  function fillUsersList() {
-    post("/users/all", {}, response => {
-      usersList = response.usersArray;
-    
-    console.log("usersList: ", usersList);
-    $(usersList).each(function(i, user) {
-      $(".cbxUsers-list").append(
-        `<p>
-                <input type="checkbox" id="cbxUser-` +
-          i +
-          `" value="` +
-          user._id +
-          `" onchange='selectedUsers(this);/>
-                <label for="cbxUser-` +
-          i +
-          `">` +
-          user.firstName +
-          ` ` +
-          user.lastName +
-          `</label>
-              </p>
-            `
-      );
-    });
-});
-  }
+
 
   $(function() {
+   
     ///////////////////////////////////search filters///////////////////////////////////
     var filters = {
       messages: 1,
@@ -318,29 +308,45 @@ function searchFilter(checkbox) {}
         );
       });
     }
-    function pinModal(item) {
+    function showPinModal(item) {
       $("#messages-list").after(`
+      <div class="container ">
+      
                 <div id="pinModal" class="modal pin modal-fixed-footer">
-                    <div class="modal-content">
+                  <div class="modal-content">
                     <h5>انتخاب کاربران:</h5>
                     
-                    <div class="input-field col s6 cbxUsers-list">
-                            
-                            </div>
-                        
-                            
-            
-                            <div class="modal-footer">
-                            
-                                <button class="btn waves-effect waves-light modal-close">انصراف
-                                   <i class="material-icons right">cancel</i>
-                                </button>
-                            </div>
-                        </div>
-                    </p>
-                </div>
-            </div>`);
+                    <div class="row">
+                    
+                    <div class="input-field col s12" id="cbxUsers-list">
+               
+                    </div>
+                    </div>
+                   
+                    <div class="modal-footer">
+                    <button class="btn waves-effect waves-light" id="btnSavePin">ثبت
+                    <i class="material-icons right">send</i>
+                </button>    
+                      <button class="btn waves-effect waves-light modal-close">انصراف
+                        <i class="material-icons right">cancel</i>
+                      </button>
+                    </div>
+                  </div> 
+                  </div>
+                </div>`);
       fillUsersList();
+      // var usersList;
+      // post("/users/all", {}, response => {
+      //   usersList = response.usersArray;
+      //   $(usersList).each(function(i, user) {
+      //     $("#cbxUsers-list").append(
+      //       `<p>
+      //           <input type="checkbox" id="cbxUser-` +i +`" value="` +user._id +`"/>
+      //           <label for="cbxUser-` +i +`">` +user.firstName +` ` +user.lastName +`</label>
+      //       </p>`
+      //     );
+      //   });
+      // });
     }
 
     $("#icnIsSeen-" + item._id).click(function(e) {
@@ -348,7 +354,7 @@ function searchFilter(checkbox) {}
       $("#isSeenModal").modal();
     });
     $("#icnPin-" + item._id).click(function(e) {
-      pinModal(item);
+      showPinModal(item);
       $("#pinModal").modal();
     });
 
@@ -568,4 +574,6 @@ function searchFilter(checkbox) {}
 
   //     })
   // })
+
+  
 })(jQuery);

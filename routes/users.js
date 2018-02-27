@@ -250,11 +250,11 @@ router.post("/login", function(req, res) {
 //Get all users
 router.post("/all", auth, function(req, res) {
   var data;
-  if (req.session.type < 2) data = {};
+  if (req.session.type < 2) data = {status:0};
   else {
     var group;
     groups_sc
-      .find({ departmentId: req.session.departmentId }, { _id: 1 })
+      .find({$and:[{ departmentId: req.session.departmentId },{status:0}]}, { _id: 1 })
       .exec(function(err, group) {
         if (!err) {
           if (group) {
