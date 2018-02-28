@@ -28,6 +28,8 @@ router.post('/select/all/date', auth, function (req, res, next) {
     }).populate({
         path: 'isSeen.userId',
         select: 'username'
+    }).populate({
+        path:'departmentId',select:'title'
     }).sort('-date').exec(function (err, result) {
         //pagination should be handled
         if (!err) {

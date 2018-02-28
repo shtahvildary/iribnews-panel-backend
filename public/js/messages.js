@@ -3,20 +3,7 @@ function searchFilter(checkbox) {}
   const fileserver = "http://localhost:9000";
   // const fileserver = "http://172.16.17.149:9000";
   
-  function fillUsersList() {
-    var usersList;
-    post("/users/all", {}, response => {
-      usersList = response.usersArray;
-      $(usersList).each(function(i, user) {
-        $("#cbxUsers-list").append(
-          `<p>
-              <input type="checkbox" id="cbxUser-` +i +`" value="` +user._id +`"/>
-              <label for="cbxUser-` +i +`">` +user.firstName +` ` +user.lastName +`</label>
-          </p>`
-        );
-      });
-    });
-  }
+ 
   
   var search_message = function(query, filters) {
     post(
@@ -26,7 +13,6 @@ function searchFilter(checkbox) {}
         query: query
       },
       function(response) {
-        console.log("search messages", response);
         $("#messages-list").empty();
         response.messages.map(function(item) {
           cardsAppend(item);
@@ -66,35 +52,29 @@ function searchFilter(checkbox) {}
     // })
 
     $("#cbxPhotos").change(function() {
-      console.log($("#cbxMessages").val());
 
       if ($("#cbxPhotos").is(":checked")) filters.photos = 1;
       else filters.photos = 0;
 
-      console.log(filters);
       search_message($("#search").val(), filters);
     });
 
     $("#cbxMovies").change(function() {
-      console.log($("#cbxMessages").val());
 
       if ($("#cbxMovies").is(":checked")) filters.movies = 1;
       else filters.movies = 0;
 
-      console.log(filters);
       search_message($("#search").val(), filters);
     });
 
     $("#cbxVoices").change(function() {
       if ($("#cbxVoices").is(":checked")) filters.voices = 1;
       else filters.voices = 0;
-      console.log(filters);
       search_message($("#search").val(), filters);
     });
     $("#cbxDocs").change(function() {
       if ($("#cbxDocs").is(":checked")) filters.documents = 1;
       else filters.documents = 0;
-      console.log(filters);
       search_message($("#search").val(), filters);
     });
     ///////////////////////////////////search///////////////////////////////////
@@ -144,7 +124,6 @@ function searchFilter(checkbox) {}
         userId: reply.userId
       },
       function(response) {
-        console.log("our response is ihihihih", response.sentMessage);
         if (response.sentMessage) callback(true);
         else callback(false);
       }
@@ -164,13 +143,30 @@ function searchFilter(checkbox) {}
       }
     );
   }
+  function fillUsersList() {
+    var usersList;
+    post("/users/all", {}, response => {
+      usersList = response.usersArray;
+      $(usersList).each(function(i, user) {
+        $("#cbxUsersList").append(
+          `<p>
+              <input type="checkbox" id="cbxUser-` +i +`" value="` +user._id +`"/>
+              <label for="cbxUser-` +i +`">` +user.firstName +` ` +user.lastName +`</label>
+          </p>`
+        );
+      });
+    });
+  }
 
   function cardsAppend(item, userId) {
     if (!item.pin) item.pin = [];
+    var alarmBorder;
+    var today=new Date();
+    if(item.isSeen==0&&(today.getTime()-new Date(item.date).getTime()>60 * 60 * 24 * 1000))  alarmBorder=true;
     $("#messages-list").append(
       `
                     <div class="card " style="` +
-        (item.replys.length > 0 ? "background-color:#d8d8d8" : "") +
+        (item.replys.length > 0 ? "background-color:#d8d8d8" : (alarmBorder? "border:5px solid #FFBD33; margin-top:10px; ":"")) +
         `">
                     <div class="card-content activator ">
                     <div class="container">
@@ -235,6 +231,7 @@ function searchFilter(checkbox) {}
         `:` +
         new Date(item.date).getSeconds() +
         `</p>
+        <p>واحد: `+item.departmentId.title+`
                                 
                             </div>
                         </div>
@@ -259,7 +256,7 @@ function searchFilter(checkbox) {}
         `
                       <a id="icnPin-` +
         item._id +
-        `" class="modal-trigger" href="#pinModal"><img class="msg-icons pin"   ` +
+        `" class="modal-trigger " href="#pinModal"><img class="msg-icons pin"   ` +
         (item.pin.length > 0
           ? ` src="../icons/pin-blue.png" >`
           : `src="../icons/pin-gray.png" >`) +
@@ -275,7 +272,6 @@ function searchFilter(checkbox) {}
       // console.log(replys)
     });
     function isSeenModal(item) {
-      console.log("item.isSeen:", item.isSeen);
       $("#messages-list").after(`
             <div id="isSeenModal" class="modal isSeen modal-fixed-footer ">
                 <div class="modal-content rtl">
@@ -308,6 +304,7 @@ function searchFilter(checkbox) {}
         );
       });
     }
+    
     function showPinModal(item) {
       $("#messages-list").after(`
       <div class="container ">
@@ -318,18 +315,18 @@ function searchFilter(checkbox) {}
                     
                     <div class="row">
                     
-                    <div class="input-field col s12" id="cbxUsers-list">
+                    <div class="input-field col s12" id="cbxUsersList">
                
                     </div>
                     </div>
                    
                     <div class="modal-footer">
                     <button class="btn waves-effect waves-light" id="btnSavePin">ثبت
-                    <i class="material-icons right">send</i>
-                </button>    
-                      <button class="btn waves-effect waves-light modal-close">انصراف
-                        <i class="material-icons right">cancel</i>
-                      </button>
+                     <i class="material-icons right">send</i>
+                    </button>    
+                    <button class="btn waves-effect waves-light modal-close">انصراف
+                     <i class="material-icons right">cancel</i>
+                    </button>
                     </div>
                   </div> 
                   </div>
@@ -339,7 +336,7 @@ function searchFilter(checkbox) {}
       // post("/users/all", {}, response => {
       //   usersList = response.usersArray;
       //   $(usersList).each(function(i, user) {
-      //     $("#cbxUsers-list").append(
+      //     $("#cbxUsersList").append(
       //       `<p>
       //           <input type="checkbox" id="cbxUser-` +i +`" value="` +user._id +`"/>
       //           <label for="cbxUser-` +i +`">` +user.firstName +` ` +user.lastName +`</label>
@@ -353,9 +350,12 @@ function searchFilter(checkbox) {}
       isSeenModal(item);
       $("#isSeenModal").modal();
     });
-    $("#icnPin-" + item._id).click(function(e) {
+    // $(".pinmdl").click(function(e) {
+      $("#icnPin-" + item._id).click(function(e) {
       showPinModal(item);
+      // $("#pinModal").modal();
       $("#pinModal").modal();
+      
     });
 
     // btnView-` + item._id + `
@@ -389,7 +389,6 @@ function searchFilter(checkbox) {}
       $("#btnSendReply").click(function(e) {
         reply.text = $("#replyTxt").val();
         replyToMsg(reply, function(sentMessage) {
-          console.log("anjam shod");
           if (sentMessage == true) {
             $("#viewModal").modal("close");
             location.reload();
@@ -534,7 +533,6 @@ function searchFilter(checkbox) {}
          </a></p>`
       );
       $("#replyEdit-" + reply._id).click(function(e) {
-        console.log(reply.text);
         $("#replyTxt").val(reply.text);
         $("#replyTxt").trigger("autoresize");
 
@@ -547,11 +545,9 @@ function searchFilter(checkbox) {}
         $("#btnSendReply").remove();
 
         $("#btnUpdateReply").click(function(e) {
-          console.log("btnUpdateReply is clicked...");
           reply.text = $("#replyTxt").val();
           reply.msgId = item._id;
           editReply(reply, function(updatedMessage) {
-            console.log("anjam shod");
             if (updatedMessage == true) {
               $("#viewModal").modal("close");
               location.reload();
