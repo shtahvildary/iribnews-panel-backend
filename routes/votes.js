@@ -59,6 +59,7 @@ router.post('/all/scores', auth, function (req, res) {
         var votes = {};
         result.map(vote => {
           var vote = vote.vote;
+        // if (vote.score==0) next()
           if (!votes[vote.destinationId._id]) votes[vote.destinationId._id] = {
             score: 0,
             title: vote.destinationId.title,
@@ -68,6 +69,7 @@ router.post('/all/scores', auth, function (req, res) {
           votes[vote.destinationId._id].count++;
 
         })
+      
         // console.log(votes.length)
         // for(var i=0;i<votes.length;i++){
         //   votes[i].percent=Math.round((votes[i].score*100)/(votes[i].count*5))
@@ -99,6 +101,41 @@ router.post('/all/scores', auth, function (req, res) {
       } else {
         res.json({
           error: 'There is no Vote...'
+        });
+      }
+    } else {
+      res.status(500).json({
+        error: err
+      })
+    }
+  })
+})
+
+router.post('/all/comments', auth, function (req, res) {
+  if(req.session.type!=0){
+    var allowedPermissions=[123]
+    if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    }
+  
+  votes_sc.find({},{'comment':1}, function (err, result) {
+    if (!err) {
+      if (result) {
+        // var commentsArray=[];
+        // result.map(comment => {
+        //   if (comment.text) {
+        //     console.log(comment)
+        //     commentsArray.push(comment)}
+        // })
+          
+        // res.json({
+        //   commentsArray
+        // });
+        res.json({
+          commentsArray:result
+        })
+      } else {
+        res.json({
+          error: 'There is no comment...'
         });
       }
     } else {
