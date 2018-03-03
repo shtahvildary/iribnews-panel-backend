@@ -22,7 +22,7 @@ var voteSchema = mongoose.Schema({
         destinationId:{ type:mongoose.SchemaTypes.ObjectId, ref:"voteItems"}, //channelId or programId
         text: {
             type: String,
-            default: ""
+            
         }
     },
 })

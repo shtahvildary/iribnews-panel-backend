@@ -52,6 +52,9 @@
                   <a href="VSResult.html">نظرسنجی ها</a>
               </li>
               <li>
+                  <a href="comments.html">دیدگاه مخاطبان</a>
+              </li>
+              <li>
                   <a href="externalReports.html">گزارش های تحلیلی</a>
               </li>`);
 

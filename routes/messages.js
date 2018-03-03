@@ -15,9 +15,10 @@ var { gregorian_to_jalali } = require("../tools/persian-date-convert.js")
 
 //select all sort by date
 router.post('/select/all/date', auth, function (req, res, next) {
+    if(req.session.type!=0){
     var allowedPermissions = [111]
-
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+    }
     var data;
     if (req.session.type < 2) data = {};
     else  data = {'departmentId': req.session.departmentId};
@@ -54,9 +55,11 @@ router.post('/select/all/date', auth, function (req, res, next) {
 
 //search
 router.post('/search', auth, function (req, res) {
+    if(req.session.type!=0){
+
     var allowedPermissions = [111]
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
-
+    }
     var {
         filters,
         query
@@ -144,8 +147,10 @@ router.post('/search', auth, function (req, res) {
 
 //Select last 5 messages sort by date
 router.post('/select/last/date', auth, function (req, res) {
+    if(req.session.type!=0){
     var allowedPermissions = [111]
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+    }
     var data;
     if (req.session.type < 2) data = {};
     else  data = {'departmentId':req.session.departmentId};
@@ -167,9 +172,10 @@ router.post('/select/last/date', auth, function (req, res) {
 
 //date.gethours
 router.post('/chart/daily', auth, function (req, res) {
+    if(req.session.type!=0){
     var allowedPermissions = [131]
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
-
+    }
     // console.log(req.body);
     var h0 = new Date(req.body.date);
     var h24 = new Date(req.body.date);
@@ -179,13 +185,13 @@ router.post('/chart/daily', auth, function (req, res) {
 
     // console.log('h0:'+h0);
     // console.log('h24:'+h24);
-    var data;
-    if (req.session.type < 2) data = {};
-    else  data = {$and:[{'departmentId':req.session.departmentId},{
+    var data={
         'date': {
             $gt: h0,
             $lt: h24
-        }}]
+        }}
+    if (req.session.type >1 ) 
+      data = {$and:[{'departmentId':req.session.departmentId},data]
     };
     message_sc.find(data).exec(function (err, result) {
         //pagination should be handled
@@ -282,14 +288,11 @@ router.post('/chart/daily', auth, function (req, res) {
     })
 });
 router.post('/chart/weekly', auth, function (req, res) {
+    if(req.session.type!=0){
     var allowedPermissions = [131]
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
-
-    console.log('weekly', req.body);
+    }
     var today = new Date(req.body.date);
-    // var sat = new Date(req.body.date);
-    // var fri = new Date(req.body.date);
-    var curr = new Date; // get current date
     var dayOfWeek = (today.getDay())
     if (dayOfWeek > 5) dayOfWeek -= 5
     else dayOfWeek += 2
@@ -304,14 +307,12 @@ router.post('/chart/weekly', auth, function (req, res) {
     firstday.setHours(0, 0, 0, 0);
     lastday.setHours(23, 59, 59, 999);
     
-    var data;
-    if (req.session.type < 2) data = {};
-    else  data = {$and:[{'departmentId':req.session.departmentId},{
-        'date': {
-            $gt: firstday,
-            $lt: lastday
-        }
-    }]};
+    var data={'date': {
+        $gt: firstday,
+        $lt: lastday
+    }}
+    if (req.session.type >1) 
+      data = {$and:[{'departmentId':req.session.departmentId},date]};
     message_sc.find(data).exec(function (err, result) {
 
         //pagination should be handled
@@ -393,9 +394,11 @@ router.post('/chart/weekly', auth, function (req, res) {
     })
 });
 router.post('/chart/monthly', auth, function (req, res) {
+    if(req.session.type!=0){
+    
     var allowedPermissions = [131]
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
-
+    }
     var today = new Date(req.body.date);
     // var sat = new Date(req.body.date);
     // var fri = new Date(req.body.date);
@@ -412,14 +415,12 @@ router.post('/chart/monthly', auth, function (req, res) {
     firstday.setHours(0, 0, 0, 0);
     lastday.setHours(23, 59, 59, 999);
     
-    var data;
-    if (req.session.type < 2) data = {};
-    else  data = {$and:[{'departmentId':req.session.departmentId},{
-        'date': {
-            $gt: firstday,
-            $lt: lastday
-        }
-    }]};
+    var data={'date': {
+        $gt: firstday,
+        $lt: lastday
+    }}
+    if (req.session.type >1)
+      data = {$and:[{'departmentId':req.session.departmentId},date]};
     message_sc.find(data).exec(function (err, result) {
         if (!err) {
 
@@ -512,12 +513,11 @@ router.post('/chart/monthly', auth, function (req, res) {
 })
 
 router.post('/chart/selectedDate', auth, function (req, res) {
+    if(req.session.type!=0){    
     var allowedPermissions = [131]
     if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+    }
 
-    console.log('selectedDate', req.body);
-    // var firstday = new Date(req.body.firstday);
-    // var lastday = new Date(req.body.lastday);
     var firstday = new Date();
     var lastday = new Date();
     firstday.setYear(req.body.firstday.y);
@@ -533,14 +533,13 @@ router.post('/chart/selectedDate', auth, function (req, res) {
     firstday.setHours(0, 0, 0, 0);
     lastday.setHours(23, 59, 59, 999);
     
-    var data;
-    if (req.session.type < 2) data = {};
-    else  data = {$and:[{'departmentId':req.session.departmentId},{
+    var data={
         'date': {
             $gt: firstday,
             $lt: lastday
-        }
-    }]};
+        }}
+    if (req.session.type >1) 
+      data = {$and:[{'departmentId':req.session.departmentId},date]};
     message_sc.find(data).exec(function (err, result) {
 
         if (!err) {

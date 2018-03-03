@@ -15,8 +15,13 @@ router.post('/all', auth, function (req, res) {
     var allowedPermissions=[123]
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
-  
-  votes_sc.find({}, function (err, result) {
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {'departmentId': req.session.departmentId};
+  votes_sc.find(data).populate({
+    path: 'vote.destinationId',
+    select: 'title'
+  }).exec( function (err, result) {
     if (!err) {
       if (result) {
         res.json({
@@ -111,39 +116,134 @@ router.post('/all/scores', auth, function (req, res) {
   })
 })
 
-router.post('/all/comments', auth, function (req, res) {
+// router.post('/all/comments', auth, function (req, res) {
+//   if(req.session.type!=0){
+//     var allowedPermissions=[123]
+//     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+//     }
+  
+//   votes_sc.find({},{'comment':1}, function (err, result) {
+//     if (!err) {
+//       if (result) {
+//         // var commentsArray=[];
+//         // result.map(comment => {
+//         //   if (comment.text) {
+//         //     console.log(comment)
+//         //     commentsArray.push(comment)}
+//         // })
+          
+//         // res.json({
+//         //   commentsArray
+//         // });
+//         res.json({
+//           commentsArray:result
+//         })
+//       } else {
+//         res.json({
+//           error: 'There is no comment...'
+//         });
+//       }
+//     } else {
+//       res.status(500).json({
+//         error: err
+//       })
+//     }
+//   })
+// })
+
+router.post('/search', auth, function (req, res) {
   if(req.session.type!=0){
     var allowedPermissions=[123]
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
-  
-  votes_sc.find({},{'comment':1}, function (err, result) {
-    if (!err) {
-      if (result) {
-        // var commentsArray=[];
-        // result.map(comment => {
-        //   if (comment.text) {
-        //     console.log(comment)
-        //     commentsArray.push(comment)}
-        // })
-          
-        // res.json({
-        //   commentsArray
-        // });
-        res.json({
-          commentsArray:result
-        })
-      } else {
-        res.json({
-          error: 'There is no comment...'
-        });
+  var {
+      filters,
+      query
+  } = req.body;
+  if (!query) query = "";
+  var dbQuery = {
+      $or: [{
+          "message": {
+              // $regex: "",
+              $regex: query,
+              $options: 'i'
+          }
+      }, {
+          "caption": {
+              // $regex: "",
+              $regex: query,
+              $options: 'i'
+          }
+      }, {
+          "audioTitle": {
+              // $regex: "",
+              $regex: query,
+              $options: 'i'
+          }
+      }, {
+          "fileName": {
+              // $regex: "",
+              $regex: query,
+              $options: 'i'
+          }
+      }, {
+          "filePath": {
+              // $regex: "",
+              $regex: query,
+              $options: 'i'
+          }
+      },
+      {
+          "replys.text": {
+              // $regex: "",
+              $regex: query,
+              $options: 'i'
+          }
       }
-    } else {
-      res.status(500).json({
-        error: err
-      })
-    }
+      ]
+  };
+  var filterTypes = [];
+  if (filters) {
+      if (filters.messages == 1) {
+          filterTypes.push("text");
+      }
+      if (filters.photos == 1) {
+          filterTypes.push("photo");
+      }
+      if (filters.movies == 1) {
+          filterTypes.push("video");
+      }
+      if (filters.voices == 1) {
+          filterTypes.push("voice", "audio");
+      }
+      if (filters.files == 1) {
+          filterTypes.push("document");
+      }
+      if (filterTypes.length > 0) dbQuery.type = {
+          $in: filterTypes
+      }
+  }
+  var departmentSelect;
+  var voteItemSelect;
+  var data;
+  if (req.session.type < 2) data = {};
+  else  data = {$and:[{'departmentId':req.session.departmentId},dbQuery]};
+  votes_sc.find(data).populate({
+    path: 'vote.destinationId',
+    select: 'title'
+  }).sort('-date').exec(function (err, result) {
+      if (!err) {
+          res.status(200).json({
+              votes: result,
+              // userId: req.body.token
+              userId: req.session.userId
+          });
+      } else {
+          res.status(500).json({
+              error: err
+          });
+      }
   })
-})
+});
 
 module.exports = router;

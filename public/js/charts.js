@@ -303,15 +303,20 @@ function drawChart(element, data, options, type) {
                   }
                   
               }],
-            yAxes: [
-              {
-                scaleLabel: {
-                  display: true,
-                  labelString: "تعداد پیام ها"
+              yAxes: [{
+                ticks: {
+                  stepSize: 1,
+                  min: 0,
+                  autoSkip: false
+              },
+                
+                  scaleLabel: {
+                    display: true,
+                    labelString: "تعداد پیام ها"
+                  }
                 }
-              }
-            ]
-          }
+              ]
+            }
         };
 
         drawChart("chart-msg-today", data, options, "line");
@@ -368,6 +373,11 @@ function drawChart(element, data, options, type) {
           scales: { 
             yAxes: [
               {
+                ticks: {
+                  stepSize: 1,
+                  min: 0,
+                  autoSkip: false
+              },
                 scaleLabel: {
                   display: true,
                   labelString: "تعداد پیام ها"
@@ -462,6 +472,11 @@ function drawChart(element, data, options, type) {
             scales: { 
               yAxes: [
                 {
+                  ticks: {
+                    stepSize: 1,
+                    min: 0,
+                    autoSkip: false
+                },
                   scaleLabel: {
                     display: true,
                     labelString: "تعداد پیام ها"
