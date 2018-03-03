@@ -490,13 +490,15 @@ function drawChart(element, data, options, type) {
     );
     /////////////////////////////////////vote chart////////////////////////////
     post("/votes/all/scores", {}, function(response) {
+      console.log('vote response: ',response)
       var labels = [];
       var percent = [];
       response.votesArray.map(item => {
         labels.push(item.title);
         percent.push(Math.round(item.score * 100) / (item.count * 5));
       });
-
+console.log('labels: ',labels)
+console.log('percent: ',percent)
       var data = {
         labels: labels,
         datasets: [
@@ -548,6 +550,7 @@ function drawChart(element, data, options, type) {
 
     post("/surveys/all", {}, function(surveys) {
       surveys.surveysArray.map(function(item) {
+        console.log('survey: ',item)
         $("#survey-charts").append(
           `
                     
@@ -560,7 +563,6 @@ function drawChart(element, data, options, type) {
                         </div>
                     </div>
                 </div>
-
               `
         );
 

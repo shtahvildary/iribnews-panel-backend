@@ -159,6 +159,7 @@ function searchFilter(checkbox) {}
   }
 
   function cardsAppend(item, userId) {
+    console.log(item)
     if (!item.pin) item.pin = [];
     var alarmBorder;
     var today=new Date();
@@ -491,6 +492,15 @@ function searchFilter(checkbox) {}
                             <div class="input-field col s12">
                                 <textarea id="replyTxt" type="text" class="materialize-textarea"></textarea>
                                 <label class="active" for="description">پاسخ</label>
+                                <div class="file-field input-field">
+      <div class="btn">
+        <span>File</span>
+        <input type="file" multiple>
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text" placeholder="Upload one or more files">
+      </div>
+    </div>
                             </div>
                             </div>
                         </form>  
