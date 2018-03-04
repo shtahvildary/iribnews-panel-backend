@@ -93,6 +93,12 @@ body {
     top: 160px;
 }
 
+ .overflow{
+  overflow: hidden;
+  max-width: inherit;
+  text-overflow: ellipsis
+}
+
 
 
 

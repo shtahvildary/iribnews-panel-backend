@@ -24,6 +24,7 @@ function searchFilter(checkbox) {}
 
 
   $(function() {
+    $('.pNums').persiaNumber();
    
     ///////////////////////////////////search filters///////////////////////////////////
     var filters = {
@@ -166,14 +167,14 @@ function searchFilter(checkbox) {}
     if(item.isSeen==0&&(today.getTime()-new Date(item.date).getTime()>60 * 60 * 24 * 1000))  alarmBorder=true;
     $("#messages-list").append(
       `
-                    <div class="card " style="` +
+                    <div class="card overflow" style="` +
         (item.replys.length > 0 ? "background-color:#d8d8d8" : (alarmBorder? "border:5px solid #FFBD33; margin-top:10px; ":"")) +
         `">
                     <div class="card-content activator ">
-                    <div class="container">
+                    <div class="container ">
                         <div class="row">
-                            <div class="col m6">                            
-                            <p>` +
+                            <div class="col m6 class="pNums" ">                           
+                            <p >` +
         (item.type == "video"
           ? '<video class="responsive-video" style="max-width:50%" ><source src="' +
             fileserver +
@@ -202,7 +203,7 @@ function searchFilter(checkbox) {}
         `</p>
                             </div>
     
-                            <div class="col m6">
+                            <div class="col m6 class="pNums" ">
                                 <p>` +
         (item.type == "video"
           ? item.caption + `<p><i class="material-icons">movie</i></p>`
@@ -277,7 +278,7 @@ function searchFilter(checkbox) {}
             <div id="isSeenModal" class="modal isSeen modal-fixed-footer ">
                 <div class="modal-content rtl">
                     <h5>کاربرانی که این پیام را مشاهده کرده اند:</h5>
-                    <form id="isSeenForm">
+                    <form id="isSeenForm" class="pNums">
                     </form>
                     
                     <div class="modal-footer">
@@ -386,6 +387,8 @@ function searchFilter(checkbox) {}
       // $('#btnView-' + item._id).modal();
       // $('.reply').modal();
       $("#viewModal").modal();
+    $('.materialboxed').materialbox();
+      
 
       $("#btnSendReply").click(function(e) {
         reply.text = $("#replyTxt").val();
@@ -429,11 +432,11 @@ function searchFilter(checkbox) {}
               item.filePath +
               '" type="video/mp4"></video>'
             : item.type == "photo"
-              ? '<img style="max-width:100%" src="' +
+              ? '<img class="materialboxed responsive-img" style="max-width:100%" src="' +
                 fileserver +
                 `/` +
                 item.filePath +
-                '" alt="" class=" responsive-img">'
+                '" alt="" data-caption="'+item.caption+'">'
               : item.type == "voice" || item.type == "audio"
                 ? '<audio controls><source src="' +
                   fileserver +

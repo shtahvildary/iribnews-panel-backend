@@ -5,13 +5,14 @@
             // console.log({token:$.cookie("token")})
             // console.log('last messages',response)
             response.messages.map(function(item){
+                console.log()
             $('#last-messages').append(`<li class="collection-item">
             
-            <p>` + (item.type == 'video' ? item.caption+ `<p><i class="material-icons">movie</i></p>`:
+            <p class="truncate ">`+(item.isSeen.length==0?`<b>`:"") + (item.type == 'video' ? item.caption+ `<p><i class="material-icons">movie</i></p>`:
             (item.type == 'photo' ? item.caption+`<p><i class="material-icons">photo</i></p>` :
             (item.type == 'voice'||item.type =='audio'? item.audioTitle+`<p><i class="material-icons">audiotrack</i></p>` :
             (item.type == 'text' ? item.message :
-            (item.type == 'document' ? item.fileName :'')))))+ `</p>
+            (item.type == 'document' ? item.fileName :'')))))+ (item.isSeen.length==0?`</b>`:"")+`</p>
             
           </li>`);
           });
