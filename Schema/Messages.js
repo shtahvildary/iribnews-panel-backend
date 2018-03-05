@@ -6,20 +6,33 @@ var messageSchema = mongoose.Schema({
     voteItemId: String, //channel or program ID
     type: String,
     chatType: String,
-    message_id:String, 
-    replyTo:String,          
+    message_id: String,
+    replyTo: String,
     message: String,
     date: {
         type: Date,
         default: Date.now
     },
-    departmentId:{ type:mongoose.SchemaTypes.ObjectId, ref:"departments"},
-    
+    departmentId: { type: mongoose.SchemaTypes.ObjectId, ref: "departments" },
+
     keywords: [{
         word: String,
         count: Number
     }],
-    pin: [Number],
+    pin: [{
+        status: {
+            type: Number, //0:unPin     1:pin
+             default: 0,
+        },
+        userId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'User'
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }],
     isSeen: [{
         userId: {
             type: mongoose.SchemaTypes.ObjectId,
@@ -40,13 +53,13 @@ var messageSchema = mongoose.Schema({
             type: Date,
             default: Date.now
         },
-        message_id:String,
+        message_id: String,
     }],
     //video,Audio,voice,photo,document,sticker,video_note
     fileId: String,
     mime: String,
     filePath: String,
-    
+
     //video,photo
     caption: String,
     //Audio

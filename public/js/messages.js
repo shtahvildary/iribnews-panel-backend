@@ -312,46 +312,46 @@ function searchFilter(checkbox) { }
 
     }
 
-    function showPinModal(item) {
-      $("#messages-list").after(`
-      <div class="container ">
+    // function showPinModal(item) {
+    //   $("#messages-list").after(`
+    //   <div class="container ">
       
-                <div id="pinModal" class="modal pin modal-fixed-footer">
-                  <div class="modal-content ">
-                    <h5>انتخاب کاربران:</h5>
+    //             <div id="pinModal" class="modal pin modal-fixed-footer">
+    //               <div class="modal-content ">
+    //                 <h5>انتخاب کاربران:</h5>
                     
-                    <div class="row">
+    //                 <div class="row">
                     
-                    <div class="input-field col s12" id="cbxUsersList">
+    //                 <div class="input-field col s12" id="cbxUsersList">
                
-                    </div>
-                    </div>
+    //                 </div>
+    //                 </div>
                    
-                    <div class="modal-footer">
-                    <button class="btn waves-effect waves-light" id="btnSavePin">ثبت
-                     <i class="material-icons right">send</i>
-                    </button>    
-                    <button class="btn waves-effect waves-light modal-close">انصراف
-                     <i class="material-icons right">cancel</i>
-                    </button>
-                    </div>
-                  </div> 
-                  </div>
-                </div>`);
-      fillUsersList();
-      // var usersList;
-      // post("/users/all", {}, response => {
-      //   usersList = response.usersArray;
-      //   $(usersList).each(function(i, user) {
-      //     $("#cbxUsersList").append(
-      //       `<p>
-      //           <input type="checkbox" id="cbxUser-` +i +`" value="` +user._id +`"/>
-      //           <label for="cbxUser-` +i +`">` +user.firstName +` ` +user.lastName +`</label>
-      //       </p>`
-      //     );
-      //   });
-      // });
-    }
+    //                 <div class="modal-footer">
+    //                 <button class="btn waves-effect waves-light" id="btnSavePin">ثبت
+    //                  <i class="material-icons right">send</i>
+    //                 </button>    
+    //                 <button class="btn waves-effect waves-light modal-close">انصراف
+    //                  <i class="material-icons right">cancel</i>
+    //                 </button>
+    //                 </div>
+    //               </div> 
+    //               </div>
+    //             </div>`);
+    //   fillUsersList();
+    //   // var usersList;
+    //   // post("/users/all", {}, response => {
+    //   //   usersList = response.usersArray;
+    //   //   $(usersList).each(function(i, user) {
+    //   //     $("#cbxUsersList").append(
+    //   //       `<p>
+    //   //           <input type="checkbox" id="cbxUser-` +i +`" value="` +user._id +`"/>
+    //   //           <label for="cbxUser-` +i +`">` +user.firstName +` ` +user.lastName +`</label>
+    //   //       </p>`
+    //   //     );
+    //   //   });
+    //   // });
+    // }
 
     $("#icnIsSeen-" + item._id).click(function (e) {
       isSeenModal(item);
@@ -359,9 +359,10 @@ function searchFilter(checkbox) { }
     });
     // $(".pinmdl").click(function(e) {
     $("#icnPin-" + item._id).click(function (e) {
-      showPinModal(item);
+      // showPinModal(item);
+      // // $("#pinModal").modal();
       // $("#pinModal").modal();
-      $("#pinModal").modal();
+      
 
     });
 

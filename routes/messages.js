@@ -742,5 +742,45 @@ router.post('/isSeen', auth, function (req, res) {
     })
 })
 
+router.post('/pin', auth, function (req, res) {
+    var allowedPermissions = [111]
+    if (!checkPermissions(allowedPermissions, req.session.permissions)) return res.status(403).json({ error: "You don't have access to this api." })
+
+    message_sc.findOne({
+        _id: req.body._id
+    }).exec(function (err, msg) {
+        if (err) return res.status(500).json({
+            error: err
+        })
+        var {
+            userId
+        } = req.session; // var userId=req.session.userId;
+        var pin = msg.pin
+        if (userSeen.length <= 0) message_sc.update({
+            _id: req.body._id
+        }, {
+                $push: {
+                    pin: {
+                        userId
+                    }
+                }
+            }).exec(function (err, updateInfo) {
+                console.log(updateInfo)
+                if (err) return res.status(500).json({
+                    error: err
+                });
+
+                return res.status(200).json({
+                    message: msg
+                })
+            })
+        else
+            return res.status(200).json({
+                message: msg
+            })
+
+    })
+})
+
 
 module.exports = router;
