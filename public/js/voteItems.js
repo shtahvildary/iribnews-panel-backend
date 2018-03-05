@@ -1,5 +1,6 @@
 (function ($) {
 
+    $(function () {
 
     
     $("#btnVoteItemsAdd").click(function () {
@@ -215,4 +216,7 @@
 
             })
         }
+        $('.pNums').persiaNumber();
+
+    })
     })(jQuery);

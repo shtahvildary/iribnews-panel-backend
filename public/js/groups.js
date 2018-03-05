@@ -304,5 +304,7 @@
                 status: -1
             }, function (response) { })
         }
+        $('.pNums').persiaNumber();
     });
+
 })(jQuery);

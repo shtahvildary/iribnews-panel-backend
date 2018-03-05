@@ -177,4 +177,8 @@
 
             })
         }
+        $(function(){
+            $('.pNums').persiaNumber();
+
+        })
     })(jQuery);

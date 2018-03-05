@@ -225,11 +225,11 @@
 
                 $('#users-list').after(`
                     <!-- Modal Trigger -->
-                    <div class="container">
+                    <div class="container ">
                         <div id="editModal" class="modal modal-fixed-footer edit rtl">
-                            <div class="modal-content">
+                            <div class="modal-content ">
                                 <h5>ویرایش</h5>
-                                    <form class="col s12" id="newUserForm">
+                                    <form class="col s12 " id="newUserForm">
                                         <div class="row">
                                         <p>نام کاربری: ` + username  + `</p>
                                             <div class="input-field col s6">
@@ -244,7 +244,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="input-field col s6">
+                                            <div class="input-field col s6 pNums">
                                                 <input id="personelNumber"  value="` + personelNumber + `" class="validate">
                                                 <label class="active" for="personelNumber">شماره کارمندی :</label>
                                             </div>
@@ -306,6 +306,7 @@
                         </div>
                     </div>       
                 `);
+                
                 fillSelectGroup(group);
 
                 $('#cbxChangePassword').change(function () {
@@ -349,6 +350,8 @@
                         }
                     })
                 })
+                $('.pNums').persiaNumber();
+                
             })
 
             $('.delete').click(function (e) {
@@ -391,5 +394,7 @@
                 // console.log('delete vote item', response);
             })
         }
+        $('.pNums').persiaNumber();
     });
+
 })(jQuery);

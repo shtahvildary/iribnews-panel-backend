@@ -120,7 +120,6 @@ function drawChart(element, data, options, type) {
     };
   }
 
-  // console.log('options: ',options)
   var newChart = new Chart(ctx, {
     type: type,
     data: {
@@ -163,7 +162,6 @@ function drawChart(element, data, options, type) {
 
         var labels = Array(response.diffDays);
         labels = response.date;
-        console.log(labels);
         var datasets = [
           {
             label: "متن",
@@ -232,7 +230,6 @@ function drawChart(element, data, options, type) {
         date: now
       },
       function(response) {
-        console.log(response);
         var labels = [
           "0",
           "1",
@@ -397,7 +394,6 @@ function drawChart(element, data, options, type) {
         date: now
       },
       function(response) {
-        // console.log('chart/monthly: ', response)
         var labels = [
           "1",
           "2",
@@ -497,8 +493,7 @@ function drawChart(element, data, options, type) {
         labels.push(item.title);
         percent.push(Math.round(item.score * 100) / (item.count * 5));
       });
-console.log('labels: ',labels)
-console.log('percent: ',percent)
+
       var data = {
         labels: labels,
         datasets: [
@@ -554,7 +549,7 @@ console.log('percent: ',percent)
         $("#survey-charts").append(
           `
                     
-                <div class="col s12 m6">
+                <div class="col s12 m6 pNums">
                     <div class="card modal-trigger" href="#chartModal">
                         <div class="card-content">
                             <canvas id="chart-survey-` +
@@ -638,7 +633,7 @@ console.log('percent: ',percent)
             function chartAfter(item) {
               $("#tab-chart-survey").after(
                 `
-                    <div id="chartModal" class="modal chartModal modal-fixed-footer">
+                    <div id="chartModal" class="modal chartModal modal-fixed-footer pNums">
                         <div class="modal-content">
                             <canvas id="chart-survey-modal-` +
                   item._id +
@@ -659,6 +654,9 @@ console.log('percent: ',percent)
           }
         );
       });
-    });
+    }); 
+    
+    $('.pNums').persiaNumber();
   }); // end of document ready
+
 })(jQuery); // end of jQuery name space

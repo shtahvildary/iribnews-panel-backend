@@ -52,7 +52,6 @@
         `)
     }
     $(function () {
-
         post('/users/findeUser', {}, function (user) {
             showProfile(user)
 
@@ -141,6 +140,7 @@
                     }
                 })
             })
+            
         })
 
         function edit_user(user, callback) {
@@ -161,5 +161,6 @@
                 // return false
             })
         }
+        $('.pNums').persiaNumber();
     })
 })(jQuery)

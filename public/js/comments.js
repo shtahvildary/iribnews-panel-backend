@@ -72,6 +72,8 @@
             if (commentsCount == 0)
                 $('#comments-list').append(`تا کنون هیچ دیدگاهی ثبت نشده است.`);
         })
+        $('.pNums').persiaNumber();
+   
     })
 })
     (jQuery);

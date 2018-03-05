@@ -19,7 +19,8 @@
                 
                 })
             })
+            $('.pNums').persiaNumber();
         })
-         
+  
     })
 (jQuery);
