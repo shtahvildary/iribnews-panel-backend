@@ -162,10 +162,11 @@ function searchFilter(checkbox) { }
 
   function cardsAppend(item, userId) {
     console.log(item)
-    if (!item.pin) item.pin = [];
+    if (!item.pin[0]) item.pin[0]= {};
     var alarmBorder;
     var today = new Date();
     if (item.isSeen == 0 && (today.getTime() - new Date(item.date).getTime() > 60 * 60 * 24 * 1000)) alarmBorder = true;
+    console.log('pin.status: ',item.pin[0].status)
     $("#messages-list").append(
       `
                     <div class="card overflow" style="` +
@@ -260,7 +261,7 @@ function searchFilter(checkbox) { }
                       <a id="icnPin-` +
       item._id +
       `" class="modal-trigger " href="#pinModal"><img class="msg-icons pin"   ` +
-      (item.pin.length > 0
+      (item.pin[0].status ==1 
         ? ` src="../icons/pin-blue.png" >`
         : `src="../icons/pin-gray.png" >`) +
       `</a>
@@ -362,7 +363,12 @@ function searchFilter(checkbox) { }
       // showPinModal(item);
       // // $("#pinModal").modal();
       // $("#pinModal").modal();
-      
+      var newStatus;
+      if(item.status==0) newStatus=1;
+      else newStatus=0;
+      console.log('newStatus: ',newStatus)
+      post("/messages/pin",{_id:item._id,pin:newStatus},function(response){
+      })
 
     });
 
