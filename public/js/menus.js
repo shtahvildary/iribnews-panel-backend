@@ -12,8 +12,15 @@
       </li>
 
   </ul>
-  <nav class="light-blue darken-3">
+  <nav class="light-blue darken-3" id="mainNav">
       <div class="nav-wrapper">
+      
+     <!-- <div class="col s12">
+        <a href="#!" class="breadcrumb">First</a>
+        <a href="#!" class="breadcrumb">Second</a>
+        <a href="#!" class="breadcrumb">Third</a>
+      </div> --!>
+   
           <a href="#" data-activates="mobile-demo" class="right button-collapse">
               <i class="material-icons">menu</i>
           </a>
@@ -98,11 +105,25 @@
           </ul>
       </div>
   </nav>
+
+  
 </div>
 
 `);
     })
-
+// $("#mainNav").append(`
+// <div>
+// <nav>
+//   <div class="nav-wrapper">
+//     <div class="col s12">
+//       <a href="#!" class="breadcrumb">First</a>
+//       <a href="#!" class="breadcrumb">Second</a>
+//       <a href="#!" class="breadcrumb">Third</a>
+//     </div>
+//   </div>
+// </nav>
+// </div>
+// `)
 
 
 })(jQuery);

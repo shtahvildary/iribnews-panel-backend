@@ -25,7 +25,9 @@
                     <div class="card-tabs">
                         <ul class="tabs tabs-fixed-width blue-text">
                             <li class="tab">
-                                <a class="active" href="#tab-chart-msg-today">امروز</a>
+                                <a class="active" href="#tab-chart-msg-today" id="today">امروز
+                                    <!-- <script>("#today").append( gregorian_to_jalali(now))</script> -->
+                                </a>
                             </li>
                             <li class="tab">
                                 <a href="#tab-chart-msg-thisweek">این هفته</a>
@@ -48,12 +50,15 @@
                     </div>
                     <div class="tab-inside card-content grey lighten-4 pNums">
                         <div id="tab-chart-msg-today" >
-                            <canvas id="chart-msg-today" width="400" height="400"></canvas>
+                                <p>امروز</p>
+                                <canvas id="chart-msg-today" width="400" height="400"></canvas>
                         </div>
                         <div id="tab-chart-msg-thisweek">
+                                <p>این هفته</p>                            
                             <canvas id="chart-msg-thisweek" width="400" height="400">
                         </div>
                         <div id="tab-chart-msg-thismonth">
+                            <p>این ماه</p>
                             <canvas id="chart-msg-thismonth" width="400" height="400">
                         </div>
                         <div id="tab-chart-msg-selectedDate">
@@ -100,10 +105,12 @@
                             </div>
                         </div>
                         <div id="tab-chart-vote">
-                            <canvas id="chart-vote" width="400" height="400">
+                                <p>کانالها و برنامه ها</p>
+                                <canvas id="chart-vote" width="400" height="400">
                         </div>
                         <div id="tab-chart-survey">
-                            <div id="goTop" class="fixed-action-btn">
+                                <p>سایر نظرسنجی ها</p>
+                                <div id="goTop" class="fixed-action-btn">
                                 <a class="btn-floating btn-large " color="BDBDBD" href="#top">
                                     <i class="large material-icons">vertical_align_top</i>
                                 </a>

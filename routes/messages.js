@@ -200,10 +200,8 @@ router.post("/chart/daily", auth, function(req, res) {
         .status(403)
         .json({ error: "You don't have access to this api." });
   }
-  // console.log(req.body);
   var h0 = new Date(req.body.date);
   var h24 = new Date(req.body.date);
-  // console.log(h0);
   h0.setHours(0, 0, 0, 0);
   h24.setHours(23, 59, 59, 999);
 
@@ -221,7 +219,6 @@ router.post("/chart/daily", auth, function(req, res) {
     };
   message_sc.find(data).exec(function(err, result) {
     //pagination should be handled
-    console.log(result);
     if (!err) {
       var msgCounts = Array(24);
       msgCounts.fill(0);
@@ -301,6 +298,7 @@ router.post("/chart/daily", auth, function(req, res) {
             );
           }
         }
+        console.log('date: ',date)
         // msgCounts[message.date.getHours()] += 1;
       });
       res.status(200).json({
@@ -380,7 +378,6 @@ router.post("/chart/weekly", auth, function(req, res) {
       var persianDay;
 
       result.forEach(function(message) {
-        console.log("message._doc.date.getDay(): ", message._doc.date.getDay());
         persianDay = message._doc.date.getDay() + 1;
         if (persianDay == 7) persianDay = 0;
         switch (message._doc.type) {
@@ -628,6 +625,8 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
+            console.log('message._doc.date: ',message._doc.date)
+            console.log('date[index]: ',date[index])
             // textCount[message._doc.date.getDate()] += 1;
             break;
           }
@@ -637,6 +636,8 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
+            console.log('message._doc.date: ',message._doc.date)
+            console.log('date[index]: ',date[index])
 
             break;
           }
@@ -646,6 +647,8 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
+            console.log('message._doc.date: ',message._doc.date)
+            console.log('date[index]: ',date[index])
 
             break;
           }
@@ -655,6 +658,8 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
+            console.log('message._doc.date: ',message._doc.date)
+            console.log('date[index]: ',date[index])
 
             break;
           }
@@ -664,6 +669,8 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
+            console.log('message._doc.date: ',message._doc.date)
+            console.log('date[index]: ',date[index])
 
             break;
           }
@@ -673,10 +680,15 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
+            console.log('message._doc.date: ',message._doc.date)
+            console.log('date[index]: ',date[index])
+            
           }
         }
         // msgCounts[message._doc.date.getHours()] += 1;
       });
+     console.log('date: ',date)
+      
       res.status(200).json({
         diffDays: diffDays,
         text: textCount,
@@ -692,7 +704,6 @@ router.post("/chart/selectedDate", auth, function(req, res) {
         error: err
       });
     }
-    console.log(res);
   });
 });
 
@@ -807,7 +818,6 @@ router.post("/isSeen", auth, function(req, res) {
             }
           )
           .exec(function(err, updateInfo) {
-            console.log(updateInfo);
             if (err)
               return res.status(500).json({
                 error: err
@@ -848,19 +858,16 @@ router.post("/pin", auth, function(req, res) {
       {
         _id: req.body._id
       },
-      {upsert:{
-        "pin.status":req.body.pin,
-        "pin.userId":req.session.userId
-      }},{new:true}
+      
+      {"pin":msg.pin},
+      {upsert:true,new:true}
       
     )
     .exec(function(err, updateInfo) {
-      console.log(updateInfo);
       if (err)
         return res.status(500).json({
           error: err
         });
-
       return res.status(200).json({
         updateInfo
       });

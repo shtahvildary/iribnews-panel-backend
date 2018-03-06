@@ -34,12 +34,10 @@ function searchFilter(checkbox) { }
       voices: 1,
       documents: 1
     };
-    // console.log(filters)
 
     $("#cbxMessages").change(function () {
       if ($("#cbxMessages").is(":checked")) filters.messages = 1;
       else filters.messages = 0;
-      // console.log(filters)
       search_message($("#search").val(), filters);
     });
 
@@ -82,9 +80,6 @@ function searchFilter(checkbox) { }
     $("#search").keypress(function (e) {
       if (e.which == 13) {
         var value = $("#search").val();
-        // console.log('query', {
-        //     text: value
-        // })
         search_message(value, filters);
         return false; //<---- Add this line
       }
@@ -106,7 +101,6 @@ function searchFilter(checkbox) { }
     // );
 
     post("/messages/select/all/date", {}, function (response) {
-      // console.log('all messages', response)
       var reply;
       response.messages.map(function (item) {
         cardsAppend(item, response.userId);
@@ -161,12 +155,10 @@ function searchFilter(checkbox) { }
   }
 
   function cardsAppend(item, userId) {
-    console.log(item)
     if (!item.pin[0]) item.pin[0]= {};
     var alarmBorder;
     var today = new Date();
     if (item.isSeen == 0 && (today.getTime() - new Date(item.date).getTime() > 60 * 60 * 24 * 1000)) alarmBorder = true;
-    console.log('pin.status: ',item.pin[0].status)
     $("#messages-list").append(
       `
                     <div class="card overflow" style="` +
@@ -274,7 +266,6 @@ function searchFilter(checkbox) { }
 
     $("#replys-" + item._id).click(function (e) {
       replys = $(this).attr(item.replys);
-      // console.log(replys)
     });
     function isSeenModal(item) {
       $("#messages-list").after(`
@@ -363,24 +354,25 @@ function searchFilter(checkbox) { }
       // showPinModal(item);
       // // $("#pinModal").modal();
       // $("#pinModal").modal();
-      var newStatus;
-      if(item.status==0) newStatus=1;
-      else newStatus=0;
-      console.log('newStatus: ',newStatus)
+      
+      if(item.pin[0].status==1) var newStatus=0;
+      else var newStatus=1;
+      
       post("/messages/pin",{_id:item._id,pin:newStatus},function(response){
+        if (response.error) return alert(
+          "خطا! لطفا دوباره اقدام نمایید." 
+        );
+        else location.reload();
+           
+        
+        
+
       })
 
     });
 
-    // btnView-` + item._id + `
     $("#btnView-" + item._id).click(function (e) {
       var msgId = $(this).attr("msgId");
-      // console.log('msgID::::::::::', msgId)
-      // var msgIsSeen= {
-      //     msgId:msgId,
-      //     userId: userId,
-      //     date: Date.now(),
-      // };
       post(
         "/messages/isSeen",
         {
@@ -419,9 +411,6 @@ function searchFilter(checkbox) { }
   }
 
   function cardsAfter(item, userId) {
-    // console.log('item._id in cardsAfter: ', item);
-    // console.log('userId in cardsAfter: ',userId);
-
     $("#messages-list").after(
       `
         
@@ -581,7 +570,7 @@ function searchFilter(checkbox) { }
               return alert("ارسال پیام با موفقیت انجام شد.");
             }
             return alert(
-              "پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. کدخطا: " + status
+              "پیام شما ارسال نشد. لطفا دوباره اقدام نمایید." 
             );
           });
         });
