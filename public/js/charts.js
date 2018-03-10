@@ -158,8 +158,6 @@ function drawChart(element, data, options, type) {
         lastday
       },
       function(response) {
-        console.log("selected response: ", response);
-
         var labels = Array(response.diffDays);
         labels = response.date;
         var datasets = [
@@ -486,7 +484,6 @@ function drawChart(element, data, options, type) {
     );
     /////////////////////////////////////vote chart////////////////////////////
     post("/votes/all/scores", {}, function(response) {
-      console.log('vote response: ',response)
       var labels = [];
       var percent = [];
       response.votesArray.map(item => {
@@ -545,7 +542,6 @@ function drawChart(element, data, options, type) {
 
     post("/surveys/all", {}, function(surveys) {
       surveys.surveysArray.map(function(item) {
-        console.log('survey: ',item)
         $("#survey-charts").append(
           `
                     
