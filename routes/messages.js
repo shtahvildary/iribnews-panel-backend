@@ -5,6 +5,22 @@ var moment = require("moment");
 var auth = require("../tools/authentication");
 var request = require("request");
 var _ = require("lodash");
+var mime =require("mime");
+var multer=require("multer");
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    var format=mime.getExtension(file.mimetype);
+    if(!format ||format==null) format=file.mimetype.substring(file.mimetype.lastIndexOf("/")+1);
+    cb(null,  Date.now() + '.' + format);
+    
+  }
+  });
+  var upload = multer({ storage: storage });
+var upFileserver=require("../tools/upload")
+
 // const botServer = "http://172.16.17.149:9002";
 const botServer = "http://localhost:9002";
 var { checkPermissions } = require("../tools/auth");
@@ -708,23 +724,29 @@ router.post("/chart/selectedDate", auth, function(req, res) {
 });
 
 //save reply for a message
-router.post("/reply/new", auth, function(req, res) {
+router.post("/reply/new", auth,upload.single('file') ,function(req, res) {
   var allowedPermissions = [112];
   if (!checkPermissions(allowedPermissions, req.session.permissions))
     return res
       .status(403)
       .json({ error: "You don't have access to this api." });
 
-  var reply = {
-    _id: req.body._id,
-    text: req.body.text,
-    userId: req.session.userId
-  };
-
+  
+  
+  console.log("OUR FILE",req.file)
+upFileserver("http://localhost:5010/uploads/"+req.file.filename,function(err,body,response){
+console.error(err)
+if(err) return err
+console.log('response: ',response)
   request.post(
     {
       url: botServer + "/sendMessage/reply/new",
-      json: reply
+      json:{
+        _id:req.body._id,
+        text:req.body.text,
+        userId:req.session.userId,
+        filePath:response.filePath
+      }
     },
     function(err, response) {
       if (err) return res.status(500).json({ error: err });
@@ -732,6 +754,7 @@ router.post("/reply/new", auth, function(req, res) {
     }
   );
 });
+})
 
 //edit reply for a message
 router.post("/reply/edit", auth, function(req, res) {
@@ -789,6 +812,7 @@ router.post("/isSeen", auth, function(req, res) {
     return res
       .status(403)
       .json({ error: "You don't have access to this api." });
+
 
   message_sc
     .findOne({

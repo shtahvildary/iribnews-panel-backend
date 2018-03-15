@@ -111,14 +111,16 @@ function searchFilter(checkbox) { }
   });
 
   function replyToMsg(reply, callback) {
+    console.log(reply.msgId,$("#inputFile-"+reply.msgId).files)
+    console.log(document.getElementById("inputFile-"+reply.msgId).files[0])
+    var formData=new FormData();
+    formData.append("_id",reply.msgId)
+    formData.append("text",reply.text)
+    formData.append("userId",reply.userId)
+    formData.append("file",document.getElementById("inputFile-"+reply.msgId).files[0])
     post(
       "/messages/reply/new",
-      {
-        _id: reply.msgId,
-        // chatId: reply.chatId,
-        text: reply.text,
-        userId: reply.userId
-      },
+      {formData},
       function (response) {
         if (response.sentMessage) callback(true);
         else callback(false);
@@ -501,7 +503,7 @@ function searchFilter(checkbox) { }
                                 <div class="file-field input-field">
       <div class="btn">
         <span>File</span>
-        <input type="file" multiple>
+        <input type="file" multiple id="inputFile-`+item._id+`">
       </div>
       <div class="file-path-wrapper">
         <input class="file-path validate" type="text" placeholder="Upload one or more files">
