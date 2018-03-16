@@ -730,30 +730,37 @@ router.post("/reply/new", auth,upload.single('file') ,function(req, res) {
     return res
       .status(403)
       .json({ error: "You don't have access to this api." });
-
-  
-  
   console.log("OUR FILE",req.file)
-upFileserver("http://localhost:5010/uploads/"+req.file.filename,function(err,body,response){
-console.error(err)
-if(err) return err
-console.log('response: ',response)
-  request.post(
-    {
-      url: botServer + "/sendMessage/reply/new",
-      json:{
-        _id:req.body._id,
-        text:req.body.text,
-        userId:req.session.userId,
-        filePath:response.filePath
+  var reply={
+    _id:req.body._id,
+            text:req.body.text,
+            userId:req.session.userId,
+  }
+  function sendReply(reply){
+    request.post(
+      {
+        url: botServer + "/sendMessage/reply/new",
+       reply
+      },
+      function(err, response) {
+        if (err) return res.status(500).json({ error: err });
+        return res.status(200).json({ sentMessage: response.body.sentMessage });
       }
-    },
-    function(err, response) {
-      if (err) return res.status(500).json({ error: err });
-      return res.status(200).json({ sentMessage: response.body.sentMessage });
-    }
-  );
-});
+    );
+  }
+  if(req.file){
+
+    upFileserver("http://localhost:5010/uploads/"+req.file.filename,function(err,body,response){
+    console.error(err)
+    if(err) return err
+    console.log('response: ',response)
+    reply.filePath=response.filePath
+      sendReply(reply)
+    });
+  }
+  else{
+    sendReply(reply)
+  }
 })
 
 //edit reply for a message
