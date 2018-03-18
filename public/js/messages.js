@@ -306,47 +306,6 @@ function searchFilter(checkbox) { }
 
     }
 
-    // function showPinModal(item) {
-    //   $("#messages-list").after(`
-    //   <div class="container ">
-      
-    //             <div id="pinModal" class="modal pin modal-fixed-footer">
-    //               <div class="modal-content ">
-    //                 <h5>انتخاب کاربران:</h5>
-                    
-    //                 <div class="row">
-                    
-    //                 <div class="input-field col s12" id="cbxUsersList">
-               
-    //                 </div>
-    //                 </div>
-                   
-    //                 <div class="modal-footer">
-    //                 <button class="btn waves-effect waves-light" id="btnSavePin">ثبت
-    //                  <i class="material-icons right">send</i>
-    //                 </button>    
-    //                 <button class="btn waves-effect waves-light modal-close">انصراف
-    //                  <i class="material-icons right">cancel</i>
-    //                 </button>
-    //                 </div>
-    //               </div> 
-    //               </div>
-    //             </div>`);
-    //   fillUsersList();
-    //   // var usersList;
-    //   // post("/users/all", {}, response => {
-    //   //   usersList = response.usersArray;
-    //   //   $(usersList).each(function(i, user) {
-    //   //     $("#cbxUsersList").append(
-    //   //       `<p>
-    //   //           <input type="checkbox" id="cbxUser-` +i +`" value="` +user._id +`"/>
-    //   //           <label for="cbxUser-` +i +`">` +user.firstName +` ` +user.lastName +`</label>
-    //   //       </p>`
-    //   //     );
-    //   //   });
-    //   // });
-    // }
-
     $("#icnIsSeen-" + item._id).click(function (e) {
       isSeenModal(item);
       $("#isSeenModal").modal();
@@ -365,12 +324,7 @@ function searchFilter(checkbox) { }
           "خطا! لطفا دوباره اقدام نمایید." 
         );
         else location.reload();
-           
-        
-        
-
       })
-
     });
 
     $("#btnView-" + item._id).click(function (e) {
@@ -489,7 +443,13 @@ function searchFilter(checkbox) { }
                     <div class="rtl">پاسخها</div>
                     ` +
       (item.replys.length > 0
-        ? `<div id="replys-` + item._id + `"></div>`
+        ? `<div id="replys-` + item._id + `"></div>`+
+        (item.reply.filePath? 
+            '<a href="' +
+          fileserver +
+          `/` +
+          item.reply.filePath +
+          '" alt="" download> دانلود</a>':"")
         : `تاکنون هیچ پاسخی ارسال نشده است.`) +
       `
                     </div>
@@ -497,19 +457,19 @@ function searchFilter(checkbox) { }
                         <div class="row">
           
                             <div class="row">
-                            <div class="input-field col s12">
+                              <div class="input-field col s12">
                                 <textarea id="replyTxt" type="text" class="materialize-textarea"></textarea>
                                 <label class="active" for="description">پاسخ</label>
                                 <div class="file-field input-field">
-      <div class="btn">
-        <span>File</span>
-        <input type="file" multiple id="inputFile-`+item._id+`">
-      </div>
-      <div class="file-path-wrapper">
-        <input class="file-path validate" type="text" placeholder="Upload one or more files">
-      </div>
-    </div>
-                            </div>
+                                  <div class="btn">
+                                    <span>File</span>
+                                    <input type="file" multiple id="inputFile-`+item._id+`">
+                                  </div>
+                                  <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                         </form>  
                     </div>
