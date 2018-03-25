@@ -1,6 +1,6 @@
 var mongoose=require('mongoose');
 var url;
-if(process.env.DB_HOST=='localhost'){
+if(process.env.DB_HOST=='localhost'||process.env.DB_AUTH==0){
     url=process.env.DB_HOST+':'+process.env.DB_PORT+'/'+process.env.DB_NAME;
 }
 else{
