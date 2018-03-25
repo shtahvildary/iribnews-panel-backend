@@ -64,15 +64,17 @@ router.post('/all/scores', auth, function (req, res) {
         var votes = {};
         result.map(vote => {
           var vote = vote.vote;
-        // if (vote.score==0) next()
-          if (!votes[vote.destinationId._id]) votes[vote.destinationId._id] = {
+        if (vote.score!=0) {
+          if (!votes[vote.destinationId._id])
+          {
+           votes[vote.destinationId._id] = {
             score: 0,
             title: vote.destinationId.title,
             count: 0
-          };
+          };}
           votes[vote.destinationId._id].score += vote.score;
           votes[vote.destinationId._id].count++;
-
+        }
         })
       
         // console.log(votes.length)
@@ -245,5 +247,37 @@ router.post('/search', auth, function (req, res) {
       }
   })
 });
+
+router.post('/all/comments', auth, function (req, res) {
+  if(req.session.type!=0){
+    var allowedPermissions=[123]
+    if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    }
+    
+    var data ;
+    
+    if (req.session.type < 2) data = {"comment.destinationId":{$exists: true}};
+    else  data = {$and:[{'departmentId':req.session.departmentId},{"comment.destinationId":{$exists: true}}]};
+  votes_sc.find(data).populate({
+    path: 'vote.destinationId',
+    select: 'title'
+  }).exec( function (err, result) {
+    if (!err) {
+      if (result) {
+        res.json({
+          votesArray: result
+        });
+      } else {
+        res.json({
+          error: 'There is no Vote...'
+        });
+      }
+    } else {
+      res.status(500).json({
+        error: err
+      })
+    }
+  })
+})
 
 module.exports = router;

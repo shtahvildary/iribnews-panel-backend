@@ -18,13 +18,12 @@
 
     function fillSelectvoteItems() {
         post('/voteItems/all', {}, function (response) {
-            console.log(response)
 
             $("#voteItems").append(`
             <option value="all"  selected>همه</option>
             `)
             $(response.voteItemsArray).each(function (i, voteItem) {
-                console.log(voteItem)
+               
                 $("#voteItems").append(`
             <option value="`+ voteItem._id + `"  >` + voteItem.title + `</option>
             `)
@@ -53,8 +52,9 @@
         
 
 
-        post('/votes/all', {}, function (response) {
+        post('/votes/all/comments', {}, function (response) {
             var commentsCount = 0;
+            console.log(response)
             response.votesArray.map(function (item) {
                 if (item.comment) {
                     commentsCount++;
