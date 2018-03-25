@@ -56,6 +56,9 @@
                   <a href="voteItems.html">برنامه ها و کانال ها</a>
               </li>
               <li>
+                  <a href="competitions.html">مسابقه</a>
+              </li>
+              <li>
                   <a href="VSResult.html">نظرسنجی ها</a>
               </li>
               <li>

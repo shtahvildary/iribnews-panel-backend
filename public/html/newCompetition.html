@@ -22,7 +22,7 @@
         <!-- <div class="container" dir="rtl"> -->
         <div class="row">
 
-            <form class="col s12 rtl" style="direction:rtl !important" id="newSurveyForm">
+            <form class="col s12 rtl" style="direction:rtl !important" id="newCompetitionsForm">
                 <div class="row">
                     <div class="input-field col s6">
                         <!-- <i class="material-icons prefix">account_circle</i> -->
@@ -35,7 +35,7 @@
                 <div class="row">
                     <div class="input-field col s4">
                         <input id="tbxText" type="text" class="validate">
-                        <label for="tbxText"> پرسش نظرسنجی: </label>
+                        <label for="tbxText"> پرسش مسابقه: </label>
                     </div>
                 </div>
                 <label for="replys" style="direction:rtl"> پاسخ ها: </label>
@@ -43,8 +43,16 @@
                 <div class="row">
                     
                     <div class="input-field col s4" id="replys">
+                        <p>
+                            <input class="with-gap col s6" name="answers" type="radio"  id="rdbKeyboard1" value=1 />
+                            <label for="rdbKeyboard1">پاسخ صحیح</label>
                             <input id="tbxKeyboard1" type="text" class="validate">
+                        </p>
+                        <p>
+                            <input class="with-gap" name="answers" type="radio"  id="rdbKeyboard2" value=2 />
+                            <label for="rdbKeyboard2">پاسخ صحیح</label>
                             <input id="tbxKeyboard2" type="text" class="validate">
+                        </p>
                     </div>
                     <a class="waves-effect waves-light btn left" id="btnAddTbxKeyboard">
                         <i class="material-icons">add</i>
@@ -61,7 +69,7 @@
 
                         <select id="selectVoteItems">
                         </select>
-                        <label for="selectVoteItems">این نظرسنجی مربوط به کدام کانال یا برنامه است؟</label>
+                        <label for="selectVoteItems">این مسابقه مربوط به کدام کانال یا برنامه است؟</label>
 
                     </div>
                 </div>
@@ -83,7 +91,7 @@
     <script src="../js/api.js"></script>
     <script src="../js/materialize.js"></script>
     <script src="../js/init.js"></script>
-    <script src="../js/surveys.js"></script>
+    <script src="../js/competitions.js"></script>
     <script src="../js/isLoggedin.js"></script>    
     <script src="../js/menus.js"></script>
     <script src="../js/logout.js"></script>

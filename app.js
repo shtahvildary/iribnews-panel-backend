@@ -20,6 +20,7 @@ var messages = require('./routes/messages');
 var voteItems = require('./routes/voteItems');
 var votes = require('./routes/votes');
 var surveys = require('./routes/surveys');
+var competitions = require('./routes/competitions');
 var permissions = require('./routes/permissions');
 var departments = require('./routes/departments');
 var session = require('express-session');
@@ -78,6 +79,7 @@ app.use('/messages', messages);
 app.use('/voteItems', voteItems);
 app.use('/votes', votes);
 app.use('/surveys',surveys)
+app.use('/competitions',competitions)
 app.use('/permissions',permissions)
 app.use('/departments',departments)
 
