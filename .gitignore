@@ -60,3 +60,4 @@ typings/
 *.null
 *.php
 *.jpeg
+package-lock.json

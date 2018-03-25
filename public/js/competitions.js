@@ -3,12 +3,12 @@
     //new competition
     $("#btnSave").click(function () {
         var keyboard = [];
-        for (i = 1; i <= tbxKeyboarCount; i++) {
+        for (i = 1; i <= tbxKeyboardCount; i++) {
             var correctAnswer = false;
             if ($("#tbxKeyboard" + i).val()) {
                 if ($('#rdbKeyboard' + i).is(':checked'))
                     correctAnswer = true;
-                key = {
+                var key = {
                     text: $("#tbxKeyboard" + i).val(),
                     correctAnswer
                 }
@@ -20,7 +20,7 @@
             var newCompetition = {
                 title: $("#tbxTitle").val(),
                 question: $("#tbxText").val(),
-                keyboard: { text: keyboard },
+                keyboard,
 
             }
             if ($("#selectVoteItems").val()) newCompetition.voteItemId = $("#selectVoteItems").val();
@@ -37,13 +37,13 @@
             alert("لطفا تمامی موارد را وارد کنید!")
 
     })
-    var tbxKeyboarCount = 2
+    var tbxKeyboardCount = 2
     $("#btnAddTbxKeyboard").click(function () {
-        tbxKeyboarCount++;
+        tbxKeyboardCount++;
         $('#replys').append(`
-        <input class="with-gap" name="answers" type="radio"  id="rdbKeyboard`+ tbxKeyboarCount + `" value="` + tbxKeyboarCount + `" />
-            <label for="rdbKeyboard`+ tbxKeyboarCount + `">
-        <input id="tbxKeyboard`+ tbxKeyboarCount + `" type="text" class="validate">
+        <input class="with-gap" name="answers" type="radio"  id="rdbKeyboard`+ tbxKeyboardCount + `" value="` + tbxKeyboardCount + `" />
+            <label for="rdbKeyboard`+ tbxKeyboardCount + `">
+        <input id="tbxKeyboard`+ tbxKeyboardCount + `" type="text" class="validate">
         </label>
 
         `)

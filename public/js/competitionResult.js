@@ -58,7 +58,8 @@
                 
                 <p `+(keyboard.correctAnswer?`style="color:green;"`:"")+`>‍` + keyboard.text + `</p> 
            
-            `);})
+            `);
+        })
             
            
 
