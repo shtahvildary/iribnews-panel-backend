@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var competition_sc = require("../Schema/competitions");
+var competitionResults_sc=require("../Schema/competitionResults")
 // var competitionResults_sc = require("../Schema/competitionResults");
 var chat_sc = require("../Schema/chats");
 var auth = require("../tools/authentication");
@@ -80,6 +81,99 @@ router.post("/all", auth, function(req, res) {
       }
     });
 });
+
+router.post("/all/result", auth, function(req, res) {
+  var allowedPermissions=[123]
+
+  var data;
+  if (req.session.type < 2) data = {};
+  else  data = {'departmentId': req.session.departmentId};
+  
+  
+  competitionResults_sc
+    .find(data)
+    .populate({
+      path: "competitionId",
+      select: {
+        question: "question",
+        keyboard: "keyboard",
+        _id: "_id"
+      }
+    })
+    .sort("-date")
+    .exec(function(error, result) {
+      if (error)
+        return res.status(500).json({
+          error
+        });
+      var x = {};
+      console.log(result)
+      result.map(compResult => {
+        console.log(compResult)
+        var id = compResult.competitionId._id;
+        var question = compResult.question;
+        if (!x[id])
+          x[id] = {
+            total: 0,
+            votes: {}
+          };
+        if (!x[id]["votes"][text]) x[id]["votes"][text] = 0;
+        x[id]["votes"][text]++;
+        x[id].total++;
+      });
+      var final = [];
+      _.mapKeys(x, (value, key) => {
+        var answers = [];
+        _.mapKeys(value.votes, (v, k) => {
+          answers.push({
+            text: k,
+            count: v,
+            percent: Math.round(v * 100 / value.total)
+          });
+        });
+        final.push({
+          surveyId: key,
+          answers,
+          totalCount: value.total
+        });
+      });
+
+      // return console.ok(final)
+
+      return res.status(200).json({
+        surveys: final
+      });
+    });
+})
+
+// router.post("/all/result",auth,function(req,res){
+//   var allowedPermissions=[121]
+  
+//   var data;
+//   if (req.session.type < 2) data = {};
+//   else  data = {'departmentId': req.session.departmentId};
+  
+//   competitionResults_sc
+//     .find(data)
+//     .sort("-date")
+//     .exec(function(err, result) {
+//       if (!err) {
+//         if (result) {
+//           res.json({
+//             competitionsArray: result
+//           });
+//         } else {
+//           res.json({
+//             error: "There is no competition to select..."
+//           });
+//         }
+//       } else {
+//         res.status(500).json({
+//           error: err
+//         });
+//       }
+//     });
+// })
 
  //Select last 3 surveys sort by date
   // router.post("/select/last/date", auth, function(req, res) {

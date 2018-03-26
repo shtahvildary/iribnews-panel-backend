@@ -4,20 +4,20 @@
 
     post('/competitions/all/result', {}, function (response) {
         var {
-            surveys
+            competitions
         } = response
-        surveys.map(item => {
+        competitions.map(item => {
             result.push(item)
         })
         console.log(result)
     })
 
-    function revealAppend(surveyId) {
-        console.log(surveyId)
+    function revealAppend(competitionId) {
+        console.log(competitionId)
         // console.log("result:::: ",result[0])
         var answers = {}
         for (var i = 0; i < result.length; i++) {
-            if (result[i].surveyId == surveyId) {
+            if (result[i].competitionId == competitionId) {
                 var answers= {totalCount:result[i].totalCount,answers:result[i].answers};
                 return answers;
             }
@@ -67,7 +67,8 @@
             console.log('competition: ', competition)
             if (competition==0) $('#result-' + item._id).append(`<p>تا کنون پاسخی ثبت نشده است.</p>`)
             else $('#result-' + item._id).append(
-                `<p>مجموع پاسخ های ثبت شده:` + competition.totalCount + 
+                `<p>تعداد شرکت کنندگان:` + competition.totalCount + 
+                `<p>تعداد پاسخ های درست:` + competition.totalCorrectAnswers + 
                 `<p id="answers-`+ item._id+`"></p>
               </div> `)
 

@@ -54,7 +54,7 @@
 
         post('/votes/all/comments', {}, function (response) {
             var commentsCount = 0;
-            console.log(response)
+            
             response.votesArray.map(function (item) {
                 if (item.comment) {
                     commentsCount++;
