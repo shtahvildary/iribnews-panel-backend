@@ -18,7 +18,7 @@
         var answers = {}
         for (var i = 0; i < result.length; i++) {
             if (result[i].competitionId == competitionId) {
-                var answers= {totalCount:result[i].totalCount,answers:result[i].answers};
+                var answers= {totalCount:result[i].totalCount,totalCorrectAnswers:result[i].totalCorrectAnswers};
                 return answers;
             }
         }

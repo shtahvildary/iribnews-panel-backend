@@ -107,41 +107,37 @@ router.post("/all/result", auth, function(req, res) {
           error
         });
       var x = {};
-      console.log(result)
       result.map(compResult => {
-        console.log(compResult)
         var id = compResult.competitionId._id;
         var question = compResult.question;
         if (!x[id])
           x[id] = {
             total: 0,
-            votes: {}
+            totalCorrectAnswers:0,
           };
-        if (!x[id]["votes"][text]) x[id]["votes"][text] = 0;
-        x[id]["votes"][text]++;
+          var correctAnswer;
+          compResult.competitionId.keyboard.map(key=>{
+            if(key.correctAnswer) correctAnswer=key.text;
+          })
+         if(compResult.answer.text==correctAnswer)  x[id].totalCorrectAnswers++;
+        // if (!x[id]["votes"][text]) x[id]["votes"][text] = 0;
+        // x[id]["votes"][text]++;
         x[id].total++;
       });
       var final = [];
       _.mapKeys(x, (value, key) => {
-        var answers = [];
-        _.mapKeys(value.votes, (v, k) => {
-          answers.push({
-            text: k,
-            count: v,
-            percent: Math.round(v * 100 / value.total)
-          });
-        });
         final.push({
-          surveyId: key,
-          answers,
-          totalCount: value.total
+          competitionId: key,
+          
+          totalCount: value.total,
+          totalCorrectAnswers:value.totalCorrectAnswers
         });
       });
 
       // return console.ok(final)
 
       return res.status(200).json({
-        surveys: final
+        competitions: final
       });
     });
 })
