@@ -259,8 +259,14 @@ router.post('/all/comments', auth, function (req, res) {
     if (req.session.type < 2) data = {"comment.destinationId":{$exists: true}};
     else  data = {$and:[{'departmentId':req.session.departmentId},{"comment.destinationId":{$exists: true}}]};
   votes_sc.find(data).populate({
-    path: 'vote.destinationId',
-    select: 'title'
+    path: 'comment.destinationId',
+    select:{ title:'title'},
+      
+      populate:{
+        path:'departmentId',
+        select:'title'
+      
+    }
   }).exec( function (err, result) {
     if (!err) {
       if (result) {

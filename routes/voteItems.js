@@ -87,29 +87,44 @@ router.post('/all/recover', auth,function (req, res) {
   })
 })
 
-// //Search voteItems
-// router.post('/search', function (req, res) {
-//   console.log('query', req.body.query)
-//   voteItem_sc.find({
-//     "title": {
-//       $regex: req.body,
-//       $options: 'i'
-//     }
-//   }).sort('-date').exec(function (err, result) {
-//     if (!err) {
-//       res.status(200).json({
-//         voteItems: result
-//       });
-//     } else {
-//       res.status(500).json({
-//         error: err
-//       });
-//     }
-//   })
-// })
-
-
-
+//Search voteItems
+router.post('/search', auth,function (req, res) {
+  if(req.session.type!=0) return res.status(403).json({error:"You don't have access to this api."})  
+  console.log('query', req.body.query)
+  var { query } = req.body;
+    if (!query) query = "";
+    var dbQuery = {
+      $or: [
+        {"title": {
+          $regex: query,
+          $options: 'i'
+        }},
+      {"description": {
+          $regex: query,
+          $options: 'i'
+        }},
+      {"personels": {
+          $regex: query,
+          $options: 'i'
+        }
+      }
+      ]}
+      var data;
+        if (req.session.type < 2) data = dbQuery;
+        else data = { $and: [{ departmentId: req.session.departmentId }, dbQuery] };
+  voteItem_sc.find(data).sort('-date').exec(function (err, result) {
+    if (!err) {
+      res.status(200).json({
+        voteItemsArray: result
+      });
+    } else {
+      res.status(500).json({
+        error: err
+      });
+    }
+  })
+})
+    
 //update voteItems (by id)
 router.post('/update',auth,function(req,res){
   if(req.session.type!=0){

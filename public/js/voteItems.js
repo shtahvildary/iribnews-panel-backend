@@ -1,10 +1,26 @@
 (function ($) {
+    function voteItemList(voteItemsArray){
+        voteItemsArray.map(function (item) {
+            $('#voteItems-list').append(`
+
+            <div class="card" unqueId=` + item._id + `>
+                <div class="card-content">
+                    <p>` + item.title + `</p>
+                    <p>` + item.description + `</p>
+                    <p>` + item.personnels + `</p>
+                    <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_title="` + item.title + `" editItem_description="` + item.description + `" editItem_personnels="` + item.personnels + `">ویرایش
+                    <i class="material-icons">edit</i></a>
+                    <a class="waves-effect waves-light btn delete" id="btnDelete" title="` + item.title + `" uniqueId="` + item._id + `" >حذف
+                    <i class="material-icons">delete</i></a>
+                </div>   
+            </div>`);
+    })
+}
 
     $(function () {
 
     
     $("#btnVoteItemsAdd").click(function () {
-        console.log('btnVoteItemsAdd clicked...')
         var voteItemTitle = $("#voteItemTitle").val();
         var type = $('input[name=voteItemType]:checked').val();
         var description = $("#description").val();
@@ -16,16 +32,12 @@
         });
     });
     var addVoteItem = function (voteItem) {
-        console.log('addVoteItem.... hi...')
         post('/voteItems/new', voteItem, function (response) {
             if (response.voteItem == false) {
                 alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
             } else {
                 alert("ثبت اطلاعات با موفقیت انجام شد")
-                // $("#newVoteItemForm").reset();
                 document.getElementById("newVoteItemForm").reset()
-                // document.getElementById("voteItemTitle").reset()
-                // document.getElementById("description").reset()
             }
         });
     }
@@ -33,20 +45,11 @@
     //show a list of vote items    
     var search_voteItems = function (query) {
 
-        post('/voteItems/all', {
+        post('/voteItems/search', {
             query: query
         }, function (response) {
-            // console.log('search vote items', response)
             $('#voteItems-list').empty();
-            response.voteItemsArray.map(function (item) {
-                $('#voteItems-list').append(`
-                    <div class="card">
-                    <div class="card-content">     
-                    <p>` + item.title + `</p>
-                    </div>
-                    
-                  </div>`);
-            });
+            voteItemList(response.voteItemsArray)
         })
     }
 
@@ -60,9 +63,6 @@
         $('#search').keypress(function (e) {
             if (e.which == 13) {
                 var value = $('#search').val();
-                // console.log('query', {
-                //     text: value
-                // })
                 search_voteItems(value);
                 return false;
             }
@@ -70,36 +70,10 @@
 
         post('/voteItems/all', {}, function (response) {
     
-            response.voteItemsArray.map(function (item) {
-                $('#voteItems-list').append(`
-
-                <div class="card" unqueId=` + item._id + `>
-                    <div class="card-content">
-                        <p>` + item.title + `</p>
-                        <p>` + item.description + `</p>
-                        <p>` + item.personnels + `</p>
-                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_title="` + item.title + `" editItem_description="` + item.description + `" editItem_personnels="` + item.personnels + `">ویرایش
-                        <i class="material-icons">edit</i></a>
-                        <a class="waves-effect waves-light btn delete" id="btnDelete" title="` + item.title + `" uniqueId="` + item._id + `" >حذف
-                        <i class="material-icons">delete</i></a>
-                    </div>   
-                </div>`);
-            });
-
-            // <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem="` + JSON.stringify(item)+ `">ویرایش
-
-
-
-            // var voteItemEdit={
-            //     title:0,
-            //     description:0
-            // };
+            voteItemList(response.voteItemsArray);
+         
 
             $('.edit').click(function (e) {
-                
-                //console.log($(this).attr('editItem'));
-
-                // var voteItemEdit=JSON.parse($(this).attr('editItem'));
 
                 voteItemEdit = {
                     id: $(this).attr('editItem_id'),
@@ -149,16 +123,13 @@
 
                 $('#btnVoteItemsUpdate').click(function (e) {
 
-                    // console.log(voteItemEdit);
                     voteItemEdit.title = $('#voteItemTitle').val();
                     //id: $(this).attr('editItem_id'),
 
                     //personnels: $(this).attr('editItem_personnels'),
                     voteItemEdit.description = $('#description').val();
 
-                    // console.log('voteItemEdit:', voteItemEdit)
                     // var status=edit_voteItems(voteItemEdit);
-                    // console.log('status:',status)
                     if (edit_voteItems(voteItemEdit)) {
                         // if (status==true) {
                         $('#editModal').modal('close');
@@ -174,10 +145,6 @@
                 var del = confirm("آیا قصد پاک کردن « " + $(this).attr('title') + " » را دارید؟");
                 if (del == true) {
                     var voteItemId = $(this).attr('uniqueId');
-
-                    // console.log('query', {
-                    //     text: voteItemId
-                    // })
                     $('.card[uniqueId=' + voteItemId + ']').fadeOut();
                     delete_voteItems(voteItemId);
                     alert("«" + $(this).attr('title') + "» با موفقیت پاک شد.");
@@ -186,7 +153,6 @@
         })
 
         function edit_voteItems(voteItemEdit) {
-            // console.log('voteItemEdit: ', voteItemEdit);
             post('/voteItems/update', {
                 _id: voteItemEdit.id,
                 title: voteItemEdit.title,
@@ -195,7 +161,6 @@
                 channelId: voteItemEdit.channelId,
                 personnels: voteItemEdit.personnels,
             }, function (response) {
-                // console.log('edit vote item', response);
                 return new Promise(function (resolve, reject) {
                     resolve(response)
                 })
@@ -207,13 +172,10 @@
         }
 
         function delete_voteItems(voteItemId) {
-            // console.log('voteItemId: ', voteItemId);
 
             post('/voteItems/disable', {
                 _id: voteItemId
             }, function (response) {
-                // console.log('delete vote item', response);
-
             })
         }
         $('.pNums').persiaNumber();
