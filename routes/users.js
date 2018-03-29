@@ -273,7 +273,8 @@ router.post("/all", auth, function(req, res) {
     // data = {'group': group};
   }
 
-  user_sc.find(data).exec(function(err, result) {
+  user_sc.find(data)
+  .populate({path:"group",select:"title",populate:{path:"departmentId",select:"title"}}).exec(function(err, result) {
     if (!err) {
       if (result) {
         res.json({

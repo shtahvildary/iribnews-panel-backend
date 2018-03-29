@@ -155,7 +155,7 @@ router.post("/search", auth, function(req, res) {
       };
   }
   var data;
-  if (req.session.type < 2) data = {};
+  if (req.session.type < 2) data = dbQuery;
   else data = { $and: [{ departmentId: req.session.departmentId }, dbQuery] };
   message_sc
     .find(data)

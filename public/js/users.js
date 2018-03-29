@@ -4,8 +4,6 @@
     function fillSelectGroup(groupId) {
         post('/groups/all', {}, function (response) {
     
-            console.log('response: ', response)
-            console.log('groupId: ', groupId)
             $("#userGroup").append(`
             <option value="" disabled selected>انتخاب کنید...</option>
             `)
@@ -56,10 +54,8 @@
                 // type: type
                 group,
             };
-            console.log(user);
             //  var newUser=function (user) {
             post('/users/register', user, function (response) {
-                console.log(response)
                 if (response.error) {
 
                     alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
@@ -149,7 +145,6 @@
             post('/users/all', {
                 query: query
             }, function (response) {
-                // console.log('search vote items', response)
                 $('#users-list').empty();
                 response.usersArray.map(function (item) {
                     $('#users-list').append(`
@@ -172,7 +167,6 @@
         $('#search').keypress(function (e) {
             if (e.which == 13) {
                 var value = $('#search').val();
-                // console.log('query', {
                 //     text: value
                 // })
                 search_users(value);
@@ -189,9 +183,11 @@
                 <div class="card" unqueId=` + item._id + `>
                     <div class="card-content">
                         <p>` + item.firstName + ` ` + item.lastName + `</p>
-                        <p>` + item.mobileNumber + `</p>
-                        <p>` + item.phoneNumber + `</p>
+                        <p موبایل:` + item.mobileNumber + `</p>
+                        <p> شماره داخلی:` + item.phoneNumber + `</p>
                         <p>` + item.email + `</p>
+                        <p> واحد:` + item.group.departmentId.title + `</p>
+                        <p>گروه کاربری:` + item.group.title + `</p>
                         <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_un="` + item.username + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `" editItem_group="` + item.group + `">ویرایش
                         <i class="material-icons">edit</i></a>
                         <a class="waves-effect waves-light btn delete" id="btnDelete" username="` + item.username + `" uniqueId="` + item._id + `" >حذف
@@ -273,14 +269,14 @@
                                         </div>
                                         <div class="row">
                                             <div class="input-field col s6">
-                                                <i class="material-icons prefix">phone</i>
+                                                <i class="material-icons prefix">phone_android</i>
                                                 <input id="mobile" value="` + mobileNumber + `" type="tel" required class="validate">
-                                                <label class="active" for="mobile">شماره تلفن همراه: </label>
+                                                <label class="active" for="mobile">شماره همراه: </label>
                                             </div>
                                             <div class="input-field col s6">
                                                 <i class="material-icons prefix">phone</i>
                                                 <input id="phone" value="` + phoneNumber + `" type="tel" class="validate">
-                                                <label class="active" for="phone">شماره تلفن ثابت: </label>
+                                                <label class="active" for="phone">شماره داخلی: </label>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -336,12 +332,7 @@
                     // userEdit.permitedChannels = $("#permitedChannels").val();
                     userEdit.group = $("#userGroup").val();
 
-
-                    console.log('userEdit:', userEdit)
-                    
                     edit_users(userEdit, function (response) {
-                        console.log('response', response)
-
                         if (response.user) {
                             $('#editModal').modal('close');
                             alert("به روز رسانی با موفقیت انجام شد.");
@@ -367,7 +358,6 @@
         })
 
         function edit_users(userEdit, callback) {
-            // console.log('voteItemEdit: ', voteItemEdit);
             post('/users/update', {
                 _id: userEdit.id,
                 firstName: userEdit.firstName,
@@ -391,7 +381,6 @@
                 _id: userId,
                 status: -1
             }, function (response) {
-                // console.log('delete vote item', response);
             })
         }
         $('.pNums').persiaNumber();

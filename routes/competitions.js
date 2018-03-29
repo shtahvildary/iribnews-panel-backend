@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var competition_sc = require("../Schema/competitions");
+var competitionResults_sc=require("../Schema/competitionResults")
 // var competitionResults_sc = require("../Schema/competitionResults");
 var chat_sc = require("../Schema/chats");
 var auth = require("../tools/authentication");
@@ -81,111 +82,94 @@ router.post("/all", auth, function(req, res) {
     });
 });
 
- //Select last 3 surveys sort by date
-  // router.post("/select/last/date", auth, function(req, res) {
+router.post("/all/result", auth, function(req, res) {
+  var allowedPermissions=[123]
 
-  //   var data;
-  //   if (req.session.type < 2) data = {};
-  //   else  data = {'departmentId': req.session.departmentId};
-    
-  //   survey_sc
-  //     .find(data)
-  //     .sort("-date")
-  //     .limit(3)
-  //     .exec(function(err, result) {
-  //       //pagination should be handled
-  //       if (!err) {
-  //         res.status(200).json({
-  //           surveys: result,
-  //           // userId: req.body.token
-  //           userId: req.session.userId
-  //         });
-  //       } else {
-  //         res.status(500).json({
-  //           error: err
-  //         });
-  //       }
-  //     });
-  // });
-
-// router.post("/select/one/result", auth, function(req, res) {
-//   var allowedPermissions=[123]
+  var data;
+  if (req.session.type < 2) data = {};
+  else  data = {'departmentId': req.session.departmentId};
   
-//   surveyResults_sc
-//     .find(
-//       {
-//         surveyId: req.body.surveyId
-//       },
-//       {
-//         _id: 0,
-//         text: 1
-//       }
-//     )
-//     .populate({
-//       path: "surveyId",
-//       select: {
-//         title: "title",
-//         text: "text"
-//       }
-//     })
-//     .exec(function(error, result) {
-//       if (error)
-//         return res.status(500).json({
-//           error
-//         });
+  
+  competitionResults_sc
+    .find(data)
+    .populate({
+      path: "competitionId",
+      select: {
+        question: "question",
+        keyboard: "keyboard",
+        _id: "_id"
+      }
+    })
+    .sort("-date")
+    .exec(function(error, result) {
+      if (error)
+        return res.status(500).json({
+          error
+        });
+      var x = {};
+      result.map(compResult => {
+        var id = compResult.competitionId._id;
+        var question = compResult.question;
+        if (!x[id])
+          x[id] = {
+            total: 0,
+            totalCorrectAnswers:0,
+          };
+          var correctAnswer;
+          compResult.competitionId.keyboard.map(key=>{
+            if(key.correctAnswer) correctAnswer=key.text;
+          })
+         if(compResult.answer.text==correctAnswer)  x[id].totalCorrectAnswers++;
+        // if (!x[id]["votes"][text]) x[id]["votes"][text] = 0;
+        // x[id]["votes"][text]++;
+        x[id].total++;
+      });
+      var final = [];
+      _.mapKeys(x, (value, key) => {
+        final.push({
+          competitionId: key,
+          
+          totalCount: value.total,
+          totalCorrectAnswers:value.totalCorrectAnswers
+        });
+      });
 
-//       console.log("survey: ", result);
-//       var totalCount = result.length;
-//       var count = {};
-//       if (result) {
-//         //this will loop in result.
-//         result.map(surveyResult => {
-//           var item = surveyResult._doc;
-//           console.log(item.text);
-//           //item is one item of result array. its like this:
-//           /**
-//            * {
-//            *  text:"fine"
-//            * }
-//            */
-//           if (!count[item.text]) count[item.text] = 1;
-//           else count[item.text]++;
-//         });
-//         //now count is a json like this:
-//         /**
-//          * {
-//          * "fine":3,
-//          * "not bad":2
-//          * }
-//          */
+      // return console.ok(final)
 
-//         console.log(count);
-//         //we have to make it beauty to make our result more readable.
-//         var votes = [];
-//         //This will loop in keys of a json(count)
-//         /*
-//        * in first loop >> value is 3, key is "fine"
-//        * in second loop >> value is 2,key is "not bad"
-//        */
-//         _.mapKeys(count, (value, key) => {
-//           //I'm just make a more readable result here, votes is an array of jsons with title key and count key.
-//           votes.push({
-//             title: key,
-//             count: value,
-//             percent: Math.round(value * 100 / totalCount)
-//           });
-//         });
+      return res.status(200).json({
+        competitions: final
+      });
+    });
+})
 
-//         res.status(200).json({
-//           survey: result,
-//           answers: votes,
-//           totalCount
-//         });
-//       } else {
-//         res.json({
-//           error: "There is no user to select..."
-//         });
-//       }
-//     });
-// });
+
+
+//  Select last 3 competitions sort by date
+  router.post("/select/last/date", auth, function(req, res) {
+
+    var data;
+    if (req.session.type < 2) data = {};
+    else  data = {'departmentId': req.session.departmentId};
+    
+    competition_sc
+      .find(data)
+      .sort("-date")
+      .limit(3)
+      .exec(function(err, result) {
+        //pagination should be handled
+        if (!err) {
+          res.status(200).json({
+            competitions: result,
+            // userId: req.body.token
+            userId: req.session.userId
+          });
+        } else {
+          res.status(500).json({
+            error: err
+          });
+        }
+      });
+  });
+
+
 module.exports = router;

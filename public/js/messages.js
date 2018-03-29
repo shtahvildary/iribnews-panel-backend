@@ -1,4 +1,4 @@
-function searchFilter(checkbox) { }
+// function searchFilter(checkbox) { }
 (function ($) {
   const fileserver = "http://localhost:9000";
   // const fileserver = "http://172.16.17.149:9000";

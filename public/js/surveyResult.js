@@ -1,7 +1,6 @@
 (function ($) {
 
     var result = []
-
     post('/surveys/all/result', {}, function (response) {
         var {
             surveys
@@ -14,21 +13,19 @@
 
     function revealAppend(surveyId) {
         console.log(surveyId)
-        // console.log("result:::: ",result[0])
         var answers = {}
         for (var i = 0; i < result.length; i++) {
             if (result[i].surveyId == surveyId) {
-                var answers= {totalCount:result[i].totalCount,answers:result[i].answers};
+                var answers = { totalCount: result[i].totalCount, answers: result[i].answers };
                 return answers;
             }
         }
-         return 0;
+        return 0;
     }
 
 
-    $(function () {})
+    $(function () { })
     post('/surveys/all', {}, function (response) {
-        // console.log('response: ',response)
         response.surveysArray.map(function (item) {
             console.log('item: ', item)
 
@@ -47,20 +44,18 @@
                 `);
 
             var survey = revealAppend(item._id)
-            console.log('survey: ', survey)
-            if (survey==0) $('#result-' + item._id).append(`<p>تا کنون نظری ثبت نشده است.</p>`)
+            if (survey == 0) $('#result-' + item._id).append(`<p>تا کنون نظری ثبت نشده است.</p>`)
             else $('#result-' + item._id).append(
-                `<p>مجموع آرای ثبت شده:` + survey.totalCount + 
-                `<p id="answers-`+ item._id+`"></p>
+                `<p>مجموع آرای ثبت شده:` + survey.totalCount +
+                `<p id="answers-` + item._id + `"></p>
               </div> `)
 
-              jQuery(survey.answers).each(function (i, answer) {
-
-                jQuery('#answers-'+ item._id).append(answer.text + ` :   `+answer.percent+`%</p>
+            jQuery(survey.answers).each(function (i, answer) {
+                jQuery('#answers-' + item._id).append(answer.text + ` :   ` + answer.percent + `%</p>
                  `);
             });
         })
     })
 
 })
-(jQuery);
+    (jQuery);

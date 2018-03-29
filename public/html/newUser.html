@@ -8,7 +8,7 @@
     <title>رسانه های نوین - افزودن کاربر جدید</title>
 
     <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/css/materialIcons.css" rel="stylesheet">
     <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="../css/materialize-rtl.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
@@ -68,10 +68,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="input-field col s12">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">phone_android</i>
+                        <input id="mobile" type="tel" class="validate">
+                        <label for="mobile">شماره همراه: </label>
+                    </div>
+                
+                
+                    <div class="input-field col s6">
                         <i class="material-icons prefix">phone</i>
                         <input id="phone" type="tel" class="validate">
-                        <label for="phone">شماره تماس: </label>
+                        <label for="phone">شماره داخلی: </label>
                     </div>
                 </div>
                 <!-- <div class="row">
@@ -97,8 +104,9 @@
 
 
     <!--  Scripts-->
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> -->
+    <script src="../js/materialize.min.js"></script>    
     <script src="../js/jquery.cookie.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/materialize.js"></script>

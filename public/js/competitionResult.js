@@ -4,81 +4,60 @@
 
     post('/competitions/all/result', {}, function (response) {
         var {
-            surveys
+            competitions
         } = response
-        surveys.map(item => {
+        competitions.map(item => {
             result.push(item)
         })
-        console.log(result)
     })
 
-    function revealAppend(surveyId) {
-        console.log(surveyId)
-        // console.log("result:::: ",result[0])
+    function revealAppend(competitionId) {
         var answers = {}
         for (var i = 0; i < result.length; i++) {
-            if (result[i].surveyId == surveyId) {
-                var answers= {totalCount:result[i].totalCount,answers:result[i].answers};
+            if (result[i].competitionId == competitionId) {
+                var answers = { totalCount: result[i].totalCount, totalCorrectAnswers: result[i].totalCorrectAnswers };
                 return answers;
             }
         }
-         return 0;
+        return 0;
     }
 
-
-    $(function () {})
+    $(function () { })
     post('/competitions/all', {}, function (response) {
-        // console.log('response: ',response)
         response.competitionsArray.map(function (item) {
-            console.log('item: ', item)
-            var answers=[]
-            
-
+            var answers = []
             $('#competitionsResult-list').append(`
                 <div class="card rtl">
                     <div class="card-content activator ">
                         <span class="activator grey-text text-darken-4"> ` + item.title + `<i class="material-icons left">more_vert</i></span>
                         <p>سوال: ` + item.question + `</p> 
-                        <div id="answers">
-                        <p>پاسخ ها:</p>
+                        <div id="answers-` + item._id + `">
+                            <p>پاسخ ها:</p>
+                            <p>
                         </div>
-                        
-                        </div> 
+                    </div> 
                     <div class="card-reveal" >
                         <span class=" grey-text text-darken-4">` + item.title + `<i class="material-icons right">close</i></span>
                         <p id="result-` + item._id + `"></p>
-                    </div>
+                    
                 </div>
-
                 `);
-                item.keyboard.map(function(keyboard){
-                    console.log(keyboard)
-                
-            $('#answers').append(`
-                
-                <p `+(keyboard.correctAnswer?`style="color:green;"`:"")+`>‍` + keyboard.text + `</p> 
-           
-            `);
-        })
-            
-           
 
             var competition = revealAppend(item._id)
-            console.log('competition: ', competition)
-            if (competition==0) $('#result-' + item._id).append(`<p>تا کنون پاسخی ثبت نشده است.</p>`)
+            if (competition == 0) $('#result-' + item._id).append(`<p>تا کنون پاسخی ثبت نشده است.</p>`)
             else $('#result-' + item._id).append(
-                `<p>مجموع پاسخ های ثبت شده:` + competition.totalCount + 
-                `<p id="answers-`+ item._id+`"></p>
-              </div> `)
+                `<p>تعداد شرکت کنندگان:` + competition.totalCount +
+                `<p>تعداد پاسخ های درست:` + competition.totalCorrectAnswers +
+                `</div> `)
+            jQuery(item.keyboard).each(function (i, keyboard) {
+                var style = ""
+                if (keyboard.correctAnswer) style = "color:green;"
+                jQuery('#answers-' + item._id).append(
+                    `<p style="` + style + `">‍` + keyboard.text + `</p>                
+                    ` );
 
-            //   jQuery(competition.answers).each(function (i, answer) {
-
-            //     jQuery('#answers-'+ item._id).append(answer.text + ` :   `+answer.percent+`%</p>
-            //      `);
-            // });
+            })
         })
-        
     })
-
 })
-(jQuery);
+    (jQuery);
