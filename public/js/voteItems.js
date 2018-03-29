@@ -91,6 +91,7 @@
                             <form>
                             <div class="row">
                                 <div class="input-field col s12">
+                                <i class="material-icons prefix">title</i>                                
                                     <input id="voteItemTitle" type="text" class="validate" value="` + voteItemEdit.title + `">
                                     <label class="active" for="voteItemTitle">عنوان</label>
                                 </div>
@@ -98,6 +99,7 @@
                                 
                                 <div class="row">
                                 <div class="input-field col s12">
+                                <i class="material-icons prefix">description</i>                                
                                     <textarea id="description" type="text" class="materialize-textarea">` + voteItemEdit.description + `</textarea>
                                     <label class="active" for="description">توضیحات</label>
                                 </div>

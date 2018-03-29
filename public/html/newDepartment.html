@@ -25,30 +25,40 @@
             <form class="col s12 rtl" style="direction:rtl !important" id="newDepartmentForm">
                 <div class="row">
                     <div class="input-field col s6">
-                        <i class="material-icons prefix">account_circle</i>
-                        <input id="title" type="text" class="validate">
-                        <label for="title">عنوان: </label>
+                            <i class="material-icons prefix">title</i>                                                        
+                        <input id="tbxTitle" type="text" class="validate">
+                        <label for="tbxTitle">عنوان: </label>
                     </div>
                     
                 </div>
                 <div class="row">
                     <div class="input-field col s6">
-                        <input id="bot" type="text" class="validate">
-                        <label for="bot"> روبات :</label>
+                        <input id="tbxtbxBot" type="text" class="validate">
+                        <label for="tbxBot"> روبات :</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s6">
-                        <input id="description" type="text" class="validate">
-                        <label for="description"> توضیحات :</label>
+                        <i class="material-icons prefix">description</i>
+                        <input id="tbxDescription" type="text" class="validate">
+                        <label for="tbxDescription"> توضیحات :</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s6">
-                        <input id="port" type="number" class="validate">
-                        <label for="port"> شماره پورت :</label>
+                        <input id="tbxPort" type="number" class="validate">
+                        <label for="tbxPort"> شماره پورت :</label>
                     </div>
                 </div>
+                <div class="file-field input-field col s6">
+                        <div class="btn">
+                          <span>افزودن لوگو</span>
+                          <input type="file" multiple id="inputLogo">
+                        </div>
+                        <div class="file-path-wrapper">
+                          <input class="file-path validate" type="text" placeholder="Upload one file">
+                        </div>
+                      </div>
             </form>
             <button class="btn waves-effect waves-light" type="submit" id="btnAddDepartment">ذخیره
                 <i class="material-icons right">save</i>

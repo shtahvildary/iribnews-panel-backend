@@ -153,14 +153,16 @@ router.post('/all/scores', auth, function (req, res) {
 //   })
 // })
 
-router.post('/search', auth, function (req, res) {
+router.post('/search/comments', auth, function (req, res) {
   if(req.session.type!=0){
     var allowedPermissions=[123]
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
   var {
       filters,
-      query
+      query,
+      departmentId,
+      voteItemId,
   } = req.body;
   if (!query) query = "";
   var dbQuery = {
@@ -225,14 +227,37 @@ router.post('/search', auth, function (req, res) {
           $in: filterTypes
       }
   }
-  var departmentSelect;
-  var voteItemSelect;
+  
   var data;
-  if (req.session.type < 2) data = {};
+  var $and=[]
+
+  if (req.session.type < 2)
+        {
+        if(departmentId||voteItemId) 
+         {
+           data={ $and: [dbQuery] };
+           
+          if(departmentId) $and.push({ departmentId }, dbQuery) ;
+          if(voteItemId) $and.push({ voteItemId }, dbQuery) ;
+
+        }
+        else data = dbQuery;
+           
+      }
+        
+
+
+  // if (req.session.type < 2) data = {};
   else  data = {$and:[{'departmentId':req.session.departmentId},dbQuery]};
   votes_sc.find(data).populate({
-    path: 'vote.destinationId',
-    select: 'title'
+    path: 'comment.destinationId',
+    select:{ title:'title'},
+      
+      populate:{
+        path:'departmentId',
+        select:'title'
+      
+      }
   }).sort('-date').exec(function (err, result) {
       if (!err) {
           res.status(200).json({
@@ -267,7 +292,7 @@ router.post('/all/comments', auth, function (req, res) {
         select:'title'
       
     }
-  }).exec( function (err, result) {
+  }).sort('-date').exec( function (err, result) {
     if (!err) {
       if (result) {
         res.json({

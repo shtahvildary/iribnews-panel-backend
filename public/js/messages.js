@@ -85,34 +85,15 @@
       }
     });
 
-    // $('.modal').modal({
-    //     dismissible: true, // Modal can be dismissed by clicking outside of the modal
-    //     opacity: .5, // Opacity of modal background
-    //     inDuration: 300, // Transition in duration
-    //     outDuration: 200, // Transition out duration
-    //     startingTop: '4%', // Starting top style attribute
-    //     endingTop: '10%', // Ending top style attribute
-    //     ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
-    //       alert("Ready");
-    //       console.log(modal, trigger);
-    //     },
-    //     complete: function() { alert('Closed'); } // Callback for Modal close
-    //   }
-    // );
-
     post("/messages/select/all/date", {}, function (response) {
       var reply;
       response.messages.map(function (item) {
         cardsAppend(item, response.userId);
       });
     });
-
-
   });
 
   function replyToMsg(reply, callback) {
-    console.log(reply.msgId,$("#inputFile-"+reply.msgId).files)
-    console.log(document.getElementById("inputFile-"+reply.msgId).files[0])
     var formData=new FormData();
     formData.append("_id",reply.msgId)
     formData.append("text",reply.text)
@@ -462,11 +443,11 @@
                                 <label class="active" for="description">پاسخ</label>
                                 <div class="file-field input-field">
                                   <div class="btn">
-                                    <span>File</span>
-                                    <input type="file" multiple id="inputFile-`+item._id+`">
+                                    <span>افزودن فایل</span>
+                                    <input type="file"  id="inputFile-`+item._id+`" multiple>
                                   </div>
                                   <div class="file-path-wrapper">
-                                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                                    <input class="file-path validate" type="text" placeholder="Upload one file">
                                   </div>
                                 </div>
                               </div>

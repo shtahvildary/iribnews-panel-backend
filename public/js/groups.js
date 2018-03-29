@@ -170,9 +170,13 @@
 
                 <div class="card" unqueId=` + item._id + `>
                     <div class="card-content">
-                        <p>عنوان: ` + item.title + `</p>
+                        <p>
+                        <i class="material-icons prefix">title</i>                                                        
+                        عنوان: ` + item.title + `</p>
                         
-                        <p>توضیحات: ` + item.description + `</p>
+                        <p>
+                        <i class="material-icons prefix">description</i>                        
+                        توضیحات: ` + item.description + `</p>
                         `+(item.type>1?`
                         <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_title="` + item.title + `" editItem_type="` + item.type + `" editItem_permissions="` + item.permissions + `" editItem_description="` + item.description + `" editItem_department="` + item.departmentId + `">ویرایش
                         <i class="material-icons">edit</i></a>

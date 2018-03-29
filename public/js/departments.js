@@ -1,32 +1,22 @@
 (function ($) {
 
-
+    // function replyToMsg(reply, callback) {
+    //     var formData=new FormData();
+    //     formData.append("_id",reply.msgId)
+    //     formData.append("text",reply.text)
+    //     formData.append("userId",reply.userId)
+    //     formData.append("file",document.getElementById("inputFile-"+reply.msgId).files[0])
+    //     post(
+    //       "/messages/reply/new",
+    //       {formData},
+    //       function (response) {
+    //         if (response.sentMessage) callback(true);
+    //         else callback(false);
+    //       }
+    //     );
+    //   }
+  
     
-    $("#btnAddDepartment").click(function () {
-        console.log('btnAddDepartment clicked...')
-        var title = $("#title").val();
-        var bot = $("#bot").val();
-        var port = $("#port").val();
-        var description = $("#description").val();
-
-        addDepartment({
-            title,
-            bot,
-            port,
-            description
-        });
-    });
-    var addDepartment = function (department) {
-        console.log('addDepartment.... hi...')
-        post('/departments/new', department, function (response) {
-            if (response.department == false) {
-                alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
-            } else {
-                alert("ثبت اطلاعات با موفقیت انجام شد")
-                document.getElementById("newDepartmentForm").reset()     
-            }
-        });
-    }
 
     //show a list of departments    
     var search_departments = function (query) {
@@ -74,8 +64,12 @@
 
                 <div class="card" unqueId=` + item._id + `>
                     <div class="card-content">
-                        <p>عنوان: ` + item.title + `</p>
-                        <p>توضیحات: ` + item.description + `</p>
+                        <p>
+                        <i class="material-icons prefix">title</i>                                                        
+                         ` + item.title + `</p>
+                        <p>
+                        <i class="material-icons prefix">description</i>                        
+                         ` + item.description + `</p>
                         <p>شماره پورت: ` + item.port + `</p>
                         <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_title="` + item.title + `" editItem_description="` + item.description + `">ویرایش
                         <i class="material-icons">edit</i></a>
@@ -103,15 +97,17 @@
                             <form>
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="title" type="text" class="validate" value="` + departmentEdit.title + `">
-                                    <label class="active" for="title">عنوان</label>
+                                <i class="material-icons prefix">title</i>                                                                
+                                    <input id="tbxTitle" type="text" class="validate" value="` + departmentEdit.title + `">
+                                    <label class="active" for="tbxTitle">عنوان</label>
                                 </div>
                                 </div>
                                 
                                 <div class="row">
                                 <div class="input-field col s12">
-                                    <textarea id="description" type="text" class="materialize-textarea">` + departmentEdit.description + `</textarea>
-                                    <label class="active" for="description">توضیحات</label>
+                                <i class="material-icons prefix">description</i>                                    
+                                <textarea id="tbxDescription" type="text" class="materialize-textarea">` + departmentEdit.description + `</textarea>
+                                    <label class="active" for="tbxDescription">توضیحات</label>
                                 </div>
                                 </div>
                                 
@@ -135,8 +131,8 @@
 
                 $('#btnUpdate').click(function (e) {
 
-                    departmentEdit.title = $('#title').val();
-                    departmentEdit.description = $('#description').val();
+                    departmentEdit.title = $('#tbxTitle').val();
+                    departmentEdit.description = $('#tbxDescription').val();
                    edit_departments(departmentEdit)
                      
                 })
@@ -162,7 +158,7 @@
                     alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
                 } else {
                     alert("ثبت اطلاعات با موفقیت انجام شد")
-                    window.location.replace("../index.html")
+                    window.location.replace("../departmentsList.html")
                 }
             })
         }
@@ -179,6 +175,41 @@
         }
         $(function(){
             $('.pNums').persiaNumber();
+
+              
+    $("#btnAddDepartment").click(function () {
+        var title = $("#tbxTitle").val();
+        var bot = $("#tbxBot").val();
+        var port = $("#tbxPort").val();
+        var description = $("#tbxDescription").val();
+
+
+        addDepartment({
+            title,
+            bot,
+            port,
+            description
+        });
+    });
+            
+            var addDepartment = function (department) {
+                var formData=new FormData();
+                formData.append("title",department.title)
+                formData.append("bot",department.bot)
+                formData.append("port",department.port)
+                formData.append("logo",document.getElementById("inputLogo").files[0])
+                post('/departments/new', {formData}, function (response) {
+                console.log('formData: ',formData)
+                     
+                    // post('/departments/new', department, function (response) {
+                    if (response.department == false) {
+                        alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
+                    } else {
+                        alert("ثبت اطلاعات با موفقیت انجام شد")
+                        document.getElementById("newDepartmentForm").reset()     
+                    }
+                });
+            }
 
         })
     })(jQuery);

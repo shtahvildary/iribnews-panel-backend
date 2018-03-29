@@ -89,7 +89,10 @@ router.post('/all/recover', auth,function (req, res) {
 
 //Search voteItems
 router.post('/search', auth,function (req, res) {
-  if(req.session.type!=0) return res.status(403).json({error:"You don't have access to this api."})  
+  if(req.session.type!=0){
+    var allowedPermissions=[122]
+    if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    }
   console.log('query', req.body.query)
   var { query } = req.body;
     if (!query) query = "";
@@ -110,7 +113,9 @@ router.post('/search', auth,function (req, res) {
       }
       ]}
       var data;
-        if (req.session.type < 2) data = dbQuery;
+        if (req.session.type < 2)
+        {data = dbQuery;
+        if(req.body.departmentId) data={ $and: [{ departmentId: req.body.departmentId }, dbQuery] };}
         else data = { $and: [{ departmentId: req.session.departmentId }, dbQuery] };
   voteItem_sc.find(data).sort('-date').exec(function (err, result) {
     if (!err) {

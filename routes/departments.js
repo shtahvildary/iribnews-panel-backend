@@ -4,6 +4,22 @@ var departments_sc = require("../Schema/departments");
 // var user_sc = require("../Schema/user");
 var auth = require("../tools/authentication");
 var {checkPermissions}=require("../tools/auth");
+var multer=require("multer");
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    var format=mime.getExtension(file.mimetype);
+    if(!format ||format==null) format=file.mimetype.substring(file.mimetype.lastIndexOf("/")+1);
+    cb(null,  Date.now() + '.' + format);
+    
+  }
+  });
+var upload = multer({ storage: storage });
+var upFileserver=require("../tools/upload")
+
+
 
 ////////////////add new department/////////////////
 /*example:
@@ -13,7 +29,7 @@ var {checkPermissions}=require("../tools/auth");
 	"status":0}
 */
 
-router.post("/new", auth, function(req, res) {
+router.post("/new", auth,upload.single('file'), function(req, res) {
   // var allowedPermissions=[106]
   // if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
   
@@ -24,16 +40,37 @@ router.post("/new", auth, function(req, res) {
     });
   
   else {
+    
     var department = new departments_sc(req.body);
-    department.save(function(err, result) {
-      if (!err) res.json({
-        department: result
-        });
-       else res.json({
-          error: err
-        });
-    });
+    if(req.file){
+
+      upFileserver("http://localhost:5010/logos/"+req.file.filename,function(err,body,response){
+      console.error(err)
+      if(err) return err
+      console.log('response: ',response)
+      department.logo=response.filePath
+        saveDepartment(department)
+      });
+    }
+    else{
+      saveDepartment(department)
+      
+    }
   }
+  function saveDepartment(department){
+        department.save(function(err, result) {
+          if (!err) res.json({
+            department: result
+            });
+           else res.json({
+              error: err
+            });
+        });
+
+
+  }
+
+  
 });
 
 ////////////////get all departments/////////////////

@@ -19,19 +19,16 @@
 
     <div class="container">
 
-        <!-- <div class="container" dir="rtl"> -->
         <div class="row">
 
             <form class="col s12 rtl" style="direction:rtl !important" id="newCompetitionsForm">
                 <div class="row">
                     <div class="input-field col s6">
-                        <!-- <i class="material-icons prefix">account_circle</i> -->
                         <input id="tbxTitle" type="text" class="validate">
                         <label for="tbxTitle">عنوان: </label>
                     </div>
-
                 </div>
-  
+
                 <div class="row">
                     <div class="input-field col s4">
                         <input id="tbxText" type="text" class="validate">
@@ -39,63 +36,60 @@
                     </div>
                 </div>
                 <label for="replys" style="direction:rtl"> پاسخ ها: </label>
-
                 <div class="row">
-                    
+
                     <div class="input-field col s4" id="replys">
                         <p>
-                            <input class="with-gap col s6" name="answers" type="radio"  id="rdbKeyboard1" value=1 />
-                            <label for="rdbKeyboard1">پاسخ صحیح</label>
-                            <input id="tbxKeyboard1" type="text" class="validate">
+                            <input id="tbxKeyboard1" type="text" class="validate pNums" placeholder="گزینه ۱">
                         </p>
                         <p>
-                            <input class="with-gap" name="answers" type="radio"  id="rdbKeyboard2" value=2 />
-                            <label for="rdbKeyboard2">پاسخ صحیح</label>
-                            <input id="tbxKeyboard2" type="text" class="validate">
+                            <input id="tbxKeyboard2" type="text" class="validate pNums" placeholder="گزینه ۲">
                         </p>
                     </div>
+
                     <a class="waves-effect waves-light btn left" id="btnAddTbxKeyboard">
                         <i class="material-icons">add</i>
                     </a>
-                    <!-- <a class="btn-floating btn-small btn waves-effect waves-light" type="submit" id="btnAddTbxKeyboard"> -->
-                        <!-- <a class="btn-small btn waves-effect waves-light" type="submit" id="btnAddTbxKeyboard">
-                        <i class="Large material-icons left">add</i>
-                    </a> -->
-                    
+
                 </div>
 
-                <div class="row">
-                    <div class="input-field col s12 ">
+                <div class="row ">
+                    <div class="input-field col s6 ">
 
-                        <select id="selectVoteItems">
-                        </select>
-                        <label for="selectVoteItems">این مسابقه مربوط به کدام کانال یا برنامه است؟</label>
-
+                        <input id="tbxCorrectAnswer" type="number" class="validate col s6" placeholder="پاسخ درست" min=1 max=2>
+                        <label for="tbxCorrectAnswer"> گزینه درست کدام است؟</label>
                     </div>
-                </div>
 
+                    <div class="row ">
+                        <div class="input-field col s12 ">
+
+                            <select id="selectVoteItems">
+                            </select>
+                            <label for="selectVoteItems">این مسابقه مربوط به کدام کانال یا برنامه است؟</label>
+
+                        </div>
+                    </div>
             </form>
-            
             <button class="btn waves-effect waves-light" type="submit" id="btnSave">ذخیره
                 <i class="material-icons right">save</i>
             </button>
+            </div>
+
         </div>
 
-    </div>
 
-
-    <!--  Scripts-->
-    <script src="../js/jquery-2.1.1.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> -->
-    <script src="../js/jquery.cookie.js"></script>
-    <script src="../js/api.js"></script>
-    <script src="../js/materialize.js"></script>
-    <script src="../js/init.js"></script>
-    <script src="../js/competitions.js"></script>
-    <script src="../js/isLoggedin.js"></script>    
-    <script src="../js/menus.js"></script>
-    <script src="../js/logout.js"></script>
-    <script src="../js/persianumber.js"></script>
+        <!--  Scripts-->
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> -->
+        <script src="../js/jquery.cookie.js"></script>
+        <script src="../js/api.js"></script>
+        <script src="../js/materialize.js"></script>
+        <script src="../js/init.js"></script>
+        <script src="../js/competitions.js"></script>
+        <script src="../js/isLoggedin.js"></script>
+        <script src="../js/menus.js"></script>
+        <script src="../js/logout.js"></script>
+        <script src="../js/persianumber.js"></script>
 
 
 

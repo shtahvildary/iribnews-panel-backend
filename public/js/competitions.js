@@ -3,20 +3,20 @@
     //new competition
     $("#btnSave").click(function () {
         var keyboard = [];
+        answer=$("#tbxCorrectAnswer").val()
         for (i = 1; i <= tbxKeyboardCount; i++) {
             var correctAnswer = false;
             if ($("#tbxKeyboard" + i).val()) {
-                if ($('#rdbKeyboard' + i).is(':checked'))
+                if(answer==i)
                     correctAnswer = true;
                 var key = {
                     text: $("#tbxKeyboard" + i).val(),
                     correctAnswer
                 }
-                console.log('key: ', key)
                 keyboard.push(key)
             }
         }
-        if ($("#tbxTitle").val() && $("#tbxText").val() && keyboard) {
+        if ($("#tbxTitle").val() && $("#tbxText").val() && keyboard&&$("#tbxCorrectAnswer").val()) {
             var newCompetition = {
                 title: $("#tbxTitle").val(),
                 question: $("#tbxText").val(),
@@ -41,12 +41,12 @@
     $("#btnAddTbxKeyboard").click(function () {
         tbxKeyboardCount++;
         $('#replys').append(`
-        <input class="with-gap" name="answers" type="radio"  id="rdbKeyboard`+ tbxKeyboardCount + `" value="` + tbxKeyboardCount + `" />
-            <label for="rdbKeyboard`+ tbxKeyboardCount + `">
-        <input id="tbxKeyboard`+ tbxKeyboardCount + `" type="text" class="validate">
+        <input id="tbxKeyboard`+ tbxKeyboardCount + `" type="text" class="validate pNums" placeholder="گزینه `+tbxKeyboardCount+`">
         </label>
 
         `)
+        
+        $("#tbxCorrectAnswer").attr("max",tbxKeyboardCount)
     })
     $(function () {
 
@@ -61,5 +61,7 @@
             })
             $('select').material_select();
         })
+        $('.pNums').persiaNumber();
     });
+    
 })(jQuery);
