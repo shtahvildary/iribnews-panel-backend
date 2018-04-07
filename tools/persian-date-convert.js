@@ -2,52 +2,53 @@ var persianDate={}
 function div(a, b) {
     return parseInt((a / b));
 }
-persianDate.gregorian_to_jalali=function gregorian_to_jalali(date) {
-    var g_y = date.getFullYear();
-    var g_m = date.getMonth();
-    var g_d = date.getDate();
-    var g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    var j_days_in_month = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
-    var jalali = [];
-    var gy = g_y - 1600;
-    var gm = g_m - 1;
-    var gd = g_d - 1;
+// function gregorian_to_jalali(date) {
+//     console.log('date: ',date)
+//     var g_y = date.getFullYear();
+//     var g_m = date.getMonth();
+//     var g_d = date.getDate();
+//     var g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+//     var j_days_in_month = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+//     var jalali = [];
+//     var gy = g_y - 1600;
+//     var gm = g_m - 1;
+//     var gd = g_d - 1;
 
-    var g_day_no = 365 * gy + div(gy + 3, 4) - div(gy + 99, 100) + div(gy + 399, 400);
+//     var g_day_no = 365 * gy + div(gy + 3, 4) - div(gy + 99, 100) + div(gy + 399, 400);
 
-    for (var i = 0; i < gm; ++i)
-        g_day_no += g_days_in_month[i];
-    if (gm > 1 && ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0)))
-        /* leap and after Feb */
-        g_day_no++;
-    g_day_no += gd;
+//     for (var i = 0; i < gm; ++i)
+//         g_day_no += g_days_in_month[i];
+//     if (gm > 1 && ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0)))
+//         /* leap and after Feb */
+//         g_day_no++;
+//     g_day_no += gd;
 
-    var j_day_no = g_day_no - 79;
+//     var j_day_no = g_day_no - 79;
 
-    var j_np = div(j_day_no, 12053);
-    /* 12053 = 365*33 + 32/4 */
-    j_day_no = j_day_no % 12053;
+//     var j_np = div(j_day_no, 12053);
+//     /* 12053 = 365*33 + 32/4 */
+//     j_day_no = j_day_no % 12053;
 
-    var jy = 979 + 33 * j_np + 4 * div(j_day_no, 1461);
-    /* 1461 = 365*4 + 4/4 */
+//     var jy = 979 + 33 * j_np + 4 * div(j_day_no, 1461);
+//     /* 1461 = 365*4 + 4/4 */
 
-    j_day_no %= 1461;
+//     j_day_no %= 1461;
 
-    if (j_day_no >= 366) {
-        jy += div(j_day_no - 1, 365);
-        j_day_no = (j_day_no - 1) % 365;
-    }
-    for (var i = 0; i < 11 && j_day_no >= j_days_in_month[i]; ++i)
-        j_day_no -= j_days_in_month[i];
-    var jm = i + 1;
-    var jd = j_day_no + 1;
-    jalali[0] = jy;
-    jalali[1] = jm;
-    jalali[2] = jd;
-    return jalali;
-    //return jalali[0] + "_" + jalali[1] + "_" + jalali[2];
-    //return jy + "/" + jm + "/" + jd;
-}
+//     if (j_day_no >= 366) {
+//         jy += div(j_day_no - 1, 365);
+//         j_day_no = (j_day_no - 1) % 365;
+//     }
+//     for (var i = 0; i < 11 && j_day_no >= j_days_in_month[i]; ++i)
+//         j_day_no -= j_days_in_month[i];
+//     var jm = i + 1;
+//     var jd = j_day_no + 1;
+//     jalali[0] = jy;
+//     jalali[1] = jm;
+//     jalali[2] = jd;
+//     return jalali;
+//     //return jalali[0] + "_" + jalali[1] + "_" + jalali[2];
+//     //return jy + "/" + jm + "/" + jd;
+// }
 function get_year_month_day(date) {
     var convertDate;
     var y = date.substr(0, 4);
@@ -148,29 +149,45 @@ License: GNU/LGPL _ Open Source & Free _ Version: 2.72 : [2017=1396]
 // (function ($) {
 //     $(function () {
 
-// function gregorian_to_jalali(gy,gm,gd){
-//     g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
-//     if(gy > 1600){
-//      jy=979;
-//      gy-=1600;
-//     }else{
-//      jy=0;
-//      gy-=621;
-//     }
-//     gy2=(gm > 2)?(gy+1):gy;
-//     days=(365*gy) +(parseInt((gy2+3)/4)) -(parseInt((gy2+99)/100)) +(parseInt((gy2+399)/400)) -80 +gd +g_d_m[gm-1];
-//     jy+=33*(parseInt(days/12053)); 
-//     days%=12053;
-//     jy+=4*(parseInt(days/1461));
-//     days%=1461;
-//     if(days > 365){
-//      jy+=parseInt((days-1)/365);
-//      days=(days-1)%365;
-//     }
-//     jm=(days < 186)?1+parseInt(days/31):7+parseInt((days-186)/30);
-//     jd=1+((days < 186)?(days%31):((days-186)%30));
-//     return [jy,jm,jd];
-//    }
+    persianDate.gregorian_to_jalali=function gregorian_to_jalali(date){
+    // function gregorian_to_jalali(gy,gm,gd){
+    console.log('date: ',date)
+    var gy = date.getFullYear();
+    console.log('gy: ',gy)
+    var gm = date.getMonth()+1;// Months start at 0
+    console.log('gm: ',gm)
+    var gd = date.getDate();
+    console.log('gd: ',gd)
+
+    g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
+    if(gy > 1600){
+     jy=979;
+     gy-=1600;
+    }else{
+     jy=0;
+     gy-=621;
+    }
+    gy2=(gm > 2)?(gy+1):gy;
+    days=(365*gy) +(parseInt((gy2+3)/4)) -(parseInt((gy2+99)/100)) +(parseInt((gy2+399)/400)) -80 +gd +g_d_m[gm-1];
+    jy+=33*(parseInt(days/12053)); 
+    days%=12053;
+    jy+=4*(parseInt(days/1461));
+    days%=1461;
+    if(days > 365){
+     jy+=parseInt((days-1)/365);
+     days=(days-1)%365;
+    }
+    console.log('days: ',days)
+    
+    jm=(days < 186)?1+parseInt(days/31):7+parseInt((days-186)/30);
+    jd=1+((days < 186)?(days%31):((days-186)%30));
+    var jalali=[];
+    jalali[0] = jy;
+    jalali[1] = jm;
+    jalali[2] = jd;
+    return jalali;
+    // return [jy,jm,jd];
+   }
 
 
 //    function jalali_to_gregorian(jy,jm,jd){
@@ -211,13 +228,13 @@ License: GNU/LGPL _ Open Source & Free _ Version: 2.72 : [2017=1396]
 
 
 /* time to jalali */
-persianDate.t2j=function t2j(date, f) {
-    var g = persianDate.t2g(date, false);
-    return persianDate.ginj(g.y, g.m, g.d, f);
+function t2j(date, f) {
+    var g = t2g(date, false);
+    return ginj(g.y, g.m, g.d, f);
 }
 
 /* gregorian to jalali */
-persianDate.ginj=function ginj(year, month, day, f) {
+function ginj(year, month, day, f) {
 
     var $g_days_in_month = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
     var $j_days_in_month = new Array(31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
@@ -271,7 +288,7 @@ persianDate.ginj=function ginj(year, month, day, f) {
 
 
 /* jalali to gregorian  */
-persianDate.jing=function jing(year, month, day, f) {
+function jing(year, month, day, f) {
     function div(x, y) {
         return Math.floor(x / y);
     }
@@ -332,7 +349,7 @@ persianDate.jing=function jing(year, month, day, f) {
 }
 
 /* time to gregorian  */
-persianDate.t2g=function t2g(date, f) {
+function t2g(date, f) {
 
     date = date * 1000;
     var d = new Date(date);
@@ -349,5 +366,5 @@ persianDate.t2g=function t2g(date, f) {
     else
         return year + '/' + month + '/' + day;
 }
-
 module.exports=persianDate
+

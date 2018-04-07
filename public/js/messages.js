@@ -183,13 +183,13 @@
                             <div class="col m6 ">
                                 <p>` +
       (item.type == "video"
-        ? item.caption + `<p><i class="material-icons">movie</i></p>`
+        ?  item.caption + `<p><i class="material-icons">movie</i></p>`
         : item.type == "video_note"
-          ? item.caption + `<p><i class="material-icons">movie</i></p>`
+          ?  item.caption + `<p><i class="material-icons">movie</i></p>`
           : item.type == "photo"
             ? item.caption + `<p><i class="material-icons">photo</i></p>`
             : item.type == "voice" || item.type == "audio"
-              ? item.audioTitle +
+              ?  item.audioTitle +
               `<p><i class="material-icons">audiotrack</i></p>`
               : item.type == "text"
                 ? item.message

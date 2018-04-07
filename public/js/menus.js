@@ -1,4 +1,5 @@
 (function ($) {
+  const fileserver = "http://localhost:9000";    
 
     $("#navbar").append(`
 
@@ -74,7 +75,7 @@
         $('#title').append(
             (department.logo?`
             <div class="col s2">
-        <img class="circle  right responsive-img"style="max-width:70% max-width:70%" src="../icons/`+department.logo+`" > `:'')+
+        <img class="circle  right responsive-img"style="max-width:70% max-width:70%" src="`+fileserver+department.logo+`" > `:'')+
         `          
           <a  class="right local-nav-title" >`+ department.title + `</a>
           <div>

@@ -138,6 +138,7 @@ function drawChart(element, data, options, type) {
       $("#fDay").val(),
       false
     );
+    console.log("firstday: ",firstday)
     var fDay = $("#fDay").val();
     var fMonth = $("#fMonth").val();
     var fYear = $("#fYear").val();

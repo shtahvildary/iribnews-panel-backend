@@ -62,9 +62,9 @@ var messageSchema = mongoose.Schema({
     filePath: String,
 
     //video,photo
-    caption: String,
+    caption: {type:String,default:""},
     //Audio
-    audioTitle: String,
+    audioTitle: {type:String,default:""},
 
     //photo
     //image:TYPE?????

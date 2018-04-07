@@ -25,6 +25,8 @@ var upFileserver=require("../tools/upload")
 const botServer = "http://localhost:9002";
 var { checkPermissions } = require("../tools/auth");
 var { gregorian_to_jalali } = require("../tools/persian-date-convert.js");
+// var { gregorian_to_jalali } = require("../public/js/persian-date-convert.js");
+// var { jing } = require("../tools/persian-date-convert.js");
 
 //select all sort by date
 router.post("/select/all/date", auth, function(req, res, next) {
@@ -259,62 +261,62 @@ router.post("/chart/daily", auth, function(req, res) {
       var stringDate;
 
       result.forEach(function(message) {
-        index = message._doc.date.getDate();
+        index = message._doc.date.getHours();
         switch (message._doc.type) {
           case "text": {
             textCount[index] += 1;
-            date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
-              (seprator = "/")
-            );
+            // date[index] = _.join(
+            //   gregorian_to_jalali(new Date(message._doc.date)),
+            //   (seprator = "/")
+            // );
 
             break;
           }
           case "audio" || "voice": {
             audioCount[index] += 1;
-            date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
-              (seprator = "/")
-            );
+            // date[index] = _.join(
+            //   gregorian_to_jalali(new Date(message._doc.date)),
+            //   (seprator = "/")
+            // );
 
             break;
           }
           case "video": {
             videoCount[index] += 1;
-            date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
-              (seprator = "/")
-            );
+            // date[index] = _.join(
+            //   gregorian_to_jalali(new Date(message._doc.date)),
+            //   (seprator = "/")
+            // );
 
             break;
           }
           case "photo": {
             photoCount[index] += 1;
-            date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
-              (seprator = "/")
-            );
+            // date[index] = _.join(
+            //   gregorian_to_jalali(new Date(message._doc.date)),
+            //   (seprator = "/")
+            // );
 
             break;
           }
           case "document": {
             documentCount[index] += 1;
-            date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
-              (seprator = "/")
-            );
+            // date[index] = _.join(
+            //   gregorian_to_jalali(new Date(message._doc.date)),
+            //   (seprator = "/")
+            // );
 
             break;
           }
           default: {
             othersCount[index] += 1;
-            date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
-              (seprator = "/")
-            );
+            // date[index] = _.join(
+            //   gregorian_to_jalali(new Date(message._doc.date)),
+            //   (seprator = "/")
+            // );
           }
         }
-        console.log('date: ',date)
+        // console.log('date: ',date)
         // msgCounts[message.date.getHours()] += 1;
       });
       res.status(200).json({
@@ -324,7 +326,7 @@ router.post("/chart/daily", auth, function(req, res) {
         image: photoCount,
         document: documentCount,
         others: othersCount,
-        date: date,
+        // date: date,
         // userId: req.body.token
         userId: req.session.userId
       });
@@ -348,15 +350,24 @@ router.post("/chart/weekly", auth, function(req, res) {
   if (dayOfWeek > 5) dayOfWeek -= 5;
   else dayOfWeek += 2;
 
-  var first = today.getDate() - dayOfWeek + 1; // First day is the day of the month - the day of the week
-  var last = first + 6; // last day is the first day + 6
 
-  var firstday = new Date(today.setDate(first));
-  var lastday = new Date(today.setDate(last));
-  // sat=new Date(today.getFullYear(),today.getMonth,)
-  // if(sat.getDay)
-  firstday.setHours(0, 0, 0, 0);
-  lastday.setHours(23, 59, 59, 999);
+
+// var first = today.getDate() - dayOfWeek + 1; // First day is the day of the month - the day of the week
+// var last = first + 6; // last day is the first day + 6
+
+// var firstday = new Date(today.setDate(first));
+// var lastday = new Date(today.setDate(last));
+var firstday = new Date();
+var lastday = new Date();
+firstday.setDate(today.getDate()-dayOfWeek+1)
+lastday.setDate(firstday.getDate()+6)
+
+// sat=new Date(today.getFullYear(),today.getMonth,)
+// if(sat.getDay)
+firstday.setHours(0, 0, 0, 0);
+lastday.setHours(23, 59, 59, 999);
+console.log("..........",firstday)
+console.log("..........",lastday)
 
   var data = {
     date: {
@@ -454,34 +465,39 @@ router.post("/chart/monthly", auth, function(req, res) {
   // var first = curr.getDate() - curr.getDay() - 1; // First day is the day of the month - the day of the week
   // var last = first + 5; // last day is the first day + 6
 
+  
+  
   var firstday = new Date(curr.setDate(1));
-  var lastday = new Date(curr.setDate(30));
+  var lastday = new Date(curr.setDate(31));
   // sat=new Date(today.getFullYear(),today.getMonth,)
   // if(sat.getDay)
   firstday.setHours(0, 0, 0, 0);
   lastday.setHours(23, 59, 59, 999);
+  // console.log("jalaliDate: ",gregorian_to_jalali(new Date()))
+  
 
   var data = {
     date: {
-      $gt: firstday,
-      $lt: lastday
+      $gte: firstday,
+      $lte: lastday
     }
   };
-  if (req.session.type > 1)
+  if (req.
+    session.type > 1)
     data = { $and: [{ departmentId: req.session.departmentId }, date] };
   message_sc.find(data).exec(function(err, result) {
     if (!err) {
-      var msgCounts = Array(30);
+      var msgCounts = Array(31);
       msgCounts.fill(0);
       // var msgType={text,image,video,voice}
 
-      var textCount = Array(30);
-      var audioCount = Array(30);
-      var videoCount = Array(30);
-      var photoCount = Array(30);
-      var documentCount = Array(30);
-      var othersCount = Array(30);
-      var date = Array(30);
+      var textCount = Array(31);
+      var audioCount = Array(31);
+      var videoCount = Array(31);
+      var photoCount = Array(31);
+      var documentCount = Array(31);
+      var othersCount = Array(31);
+      var date = Array(31);
 
       textCount.fill(0);
       audioCount.fill(0);
@@ -495,12 +511,12 @@ router.post("/chart/monthly", auth, function(req, res) {
 
       result.forEach(function(message) {
         //text,audio,voice,video,photo,document
-        index = gregorian_to_jalali(new Date(message._doc.date))[2];
-        switch (message._doc.type) {
+        index = gregorian_to_jalali(new Date(message.date))[2];
+        switch (message.type) {
           case "text": {
             textCount[index] += 1;
             date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
+              gregorian_to_jalali(new Date(message.date)),
               (seprator = "/")
             );
 
@@ -509,7 +525,7 @@ router.post("/chart/monthly", auth, function(req, res) {
           case "audio" || "voice": {
             audioCount[index] += 1;
             date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
+              gregorian_to_jalali(new Date(message.date)),
               (seprator = "/")
             );
 
@@ -518,7 +534,7 @@ router.post("/chart/monthly", auth, function(req, res) {
           case "video": {
             videoCount[index] += 1;
             date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
+              gregorian_to_jalali(new Date(message.date)),
               (seprator = "/")
             );
 
@@ -527,7 +543,7 @@ router.post("/chart/monthly", auth, function(req, res) {
           case "photo": {
             photoCount[index] += 1;
             date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
+              gregorian_to_jalali(new Date(message.date)),
               (seprator = "/")
             );
 
@@ -536,7 +552,7 @@ router.post("/chart/monthly", auth, function(req, res) {
           case "document": {
             documentCount[index] += 1;
             date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
+              gregorian_to_jalali(new Date(message.date)),
               (seprator = "/")
             );
 
@@ -545,7 +561,7 @@ router.post("/chart/monthly", auth, function(req, res) {
           default: {
             othersCount[index] += 1;
             date[index] = _.join(
-              gregorian_to_jalali(new Date(message._doc.date)),
+              gregorian_to_jalali(new Date(message.date)),
               (seprator = "/")
             );
           }
@@ -582,7 +598,7 @@ router.post("/chart/selectedDate", auth, function(req, res) {
   var firstday = new Date();
   var lastday = new Date();
   firstday.setYear(req.body.firstday.y);
-  firstday.setMonth(req.body.firstday.m);
+  firstday.setMonth(req.body.firstday.m-1);
   firstday.setDate(req.body.firstday.d);
 
   lastday.setYear(req.body.lastday.y);
@@ -593,11 +609,13 @@ router.post("/chart/selectedDate", auth, function(req, res) {
   // if(sat.getDay)
   firstday.setHours(0, 0, 0, 0);
   lastday.setHours(23, 59, 59, 999);
+  console.log(firstday)
+  console.log(lastday)
 
   var data = {
     date: {
-      $gt: firstday,
-      $lt: lastday
+      $gte: firstday,
+      $lte: lastday
     }
   };
   if (req.session.type > 1)
@@ -641,8 +659,6 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
-            console.log('message._doc.date: ',message._doc.date)
-            console.log('date[index]: ',date[index])
             // textCount[message._doc.date.getDate()] += 1;
             break;
           }
@@ -652,8 +668,6 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
-            console.log('message._doc.date: ',message._doc.date)
-            console.log('date[index]: ',date[index])
 
             break;
           }
@@ -663,8 +677,6 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
-            console.log('message._doc.date: ',message._doc.date)
-            console.log('date[index]: ',date[index])
 
             break;
           }
@@ -674,8 +686,6 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
-            console.log('message._doc.date: ',message._doc.date)
-            console.log('date[index]: ',date[index])
 
             break;
           }
@@ -685,8 +695,6 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
-            console.log('message._doc.date: ',message._doc.date)
-            console.log('date[index]: ',date[index])
 
             break;
           }
@@ -696,14 +704,11 @@ router.post("/chart/selectedDate", auth, function(req, res) {
               gregorian_to_jalali(new Date(message._doc.date)),
               (seprator = "/")
             );
-            console.log('message._doc.date: ',message._doc.date)
-            console.log('date[index]: ',date[index])
             
           }
         }
         // msgCounts[message._doc.date.getHours()] += 1;
       });
-     console.log('date: ',date)
       
       res.status(200).json({
         diffDays: diffDays,
@@ -730,7 +735,6 @@ router.post("/reply/new", auth,upload.single('file') ,function(req, res) {
     return res
       .status(403)
       .json({ error: "You don't have access to this api." });
-  console.log("OUR FILE",req.file)
   var reply={
     _id:req.body._id,
             text:req.body.text,
@@ -750,10 +754,9 @@ router.post("/reply/new", auth,upload.single('file') ,function(req, res) {
   }
   if(req.file){
 
-    upFileserver("http://localhost:5010/uploads/"+req.file.filename,function(err,body,response){
+    upFileserver("/uploads/"+req.file.filename,function(err,body,response){
     console.error(err)
     if(err) return err
-    console.log('response: ',response)
     reply.filePath=response.filePath
       sendReply(reply)
     });
