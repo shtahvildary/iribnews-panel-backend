@@ -1,21 +1,34 @@
 (function ($) {
 
-
     var permissionsList;
 
-
-    function fillPermissions(groupPermissions) {
-        console.log('groupPermissions: ', groupPermissions)
+    function fillPermissions(groupPermissions,edit) {
+        // console.log('groupPermissions: ', groupPermissions)
         post('/permissions/read', {}, (response) => {
             permissionsList = response.permissionsList;
         })
-        $(permissionsList).each(function (i, item) {
+        if(edit)
+       { 
+           $(permissionsList).each(function (i, item) {
+            // console.log(groupPermissions.indexOf(item.code))
+            // console.log(groupPermissions)
+            // console.log(item.code)
             $('.cbxPermissions-list').append(`<p>
             <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"` + (groupPermissions.indexOf(item.code)!=-1 ? 'checked="checked"' : '') + `/>
             <label for="cbxPermissions-` + i + `">` + item.description + `</label>
           </p>
         `)
-        })
+        })}
+        else
+            {
+                $(permissionsList).each(function (i, item) {
+                    // console.log(groupPermissions.indexOf(item.code))
+                    // console.log(groupPermissions)
+                    // console.log(item.code)
+                $('.showPermissions').append( 
+                    (groupPermissions.indexOf(`"`+item.code+`"`)!=-1?
+                 `<p>- `+item.description+`</p>`:''))
+        })}
 
     }
     function fillSelectDepartment(departmentId) {
@@ -120,7 +133,7 @@
 
     $(function () {
 
-        fillPermissions([]);
+        fillPermissions([],false);
         fillSelectDepartment("");
         fillGroupType()
 
@@ -165,6 +178,7 @@
 
         //show a list of groups   
         post('/groups/all', {}, function (response) {
+            var permissions=[]
             response.groupsArray.map(function (item) {
                 $('#groups-list').append(`
 
@@ -176,7 +190,8 @@
                         
                         <p>
                         <i class="material-icons prefix">description</i>                        
-                        توضیحات: ` + item.description + `</p>
+                        توضیحات: ` + item.description + `</p>   
+                        <div class="showPermissions rtl" id="permissions_`+item._id+`">دسترسی ها: </div>
                         `+(item.type>1?`
                         <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_title="` + item.title + `" editItem_type="` + item.type + `" editItem_permissions="` + item.permissions + `" editItem_description="` + item.description + `" editItem_department="` + item.departmentId + `">ویرایش
                         <i class="material-icons">edit</i></a>
@@ -185,6 +200,9 @@
                         
                     </div>   
                 </div>`);
+                permissions=item.permissions
+                console.log('item.permissions: ',permissions)
+                fillPermissions(permissions,false)
             });
 
 
@@ -253,7 +271,7 @@
                     </div>       
                 `);
                 fillSelectDepartment(department);
-                fillPermissions(permissions);
+                fillPermissions(permissions,true);
                 fillGroupType(type)
 
                 $('.edit').modal();

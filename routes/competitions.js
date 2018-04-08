@@ -142,7 +142,57 @@ router.post("/all/result", auth, function(req, res) {
     });
 })
 
-
+//Search competition
+router.post('/search', auth,function (req, res) {
+  if(req.session.type!=0){
+    var allowedPermissions=[121]
+    if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+    }
+  console.log('query', req.body.query)
+  var { query } = req.body;
+    if (!query) query = "";
+    var dbQuery = {
+      $or: [
+        {"title": {
+          $regex: query,
+          $options: 'i'
+        }},
+      {"question": {
+          $regex: query,
+          $options: 'i'
+        }},
+      {"keyboard": {
+          $regex: query,
+          $options: 'i'
+        }
+      }
+      ]}
+      var data;
+        if (req.session.type < 2)
+        {data = dbQuery;
+        if(req.body.departmentId) data={ $and: [{ departmentId: req.body.departmentId }, dbQuery] };}
+        else data = { $and: [{ departmentId: req.session.departmentId }, dbQuery] };
+        competition_sc
+        .find(data)
+        .sort("-date")
+        .exec(function(err, result) {
+          if (!err) {
+            if (result) {
+              res.json({
+                competitionsArray: result
+              });
+            } else {
+              res.json({
+                error: "There is no competition to select..."
+              });
+            }
+          } else {
+            res.status(500).json({
+              error: err
+            });
+          }
+        });
+})
 
 //  Select last 3 competitions sort by date
   router.post("/select/last/date", auth, function(req, res) {

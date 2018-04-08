@@ -48,8 +48,11 @@
         
         $("#tbxCorrectAnswer").attr("max",tbxKeyboardCount)
     })
-    $(function () {
 
+
+
+    $(function () {
+        
         post('/voteItems/all', {}, function (response) {
             $("#selectVoteItems").append(`
             <option value="" disabled selected>انتخاب کنید...</option>
@@ -62,6 +65,9 @@
             $('select').material_select();
         })
         $('.pNums').persiaNumber();
+
+
+        
     });
     
 })(jQuery);

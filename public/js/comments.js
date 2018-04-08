@@ -88,11 +88,7 @@
       }
     });
 
-    $("#btnSearchFilter").click(function() {
-      var department = $("#department").val();
-      var voteItem = $("#voteItems").val();
-      var filter = voteItem;
-    });
+  
 
     /////////////////////////////////////////////////////////////////////////////////
     post("/users/type", {}, function(response) {
