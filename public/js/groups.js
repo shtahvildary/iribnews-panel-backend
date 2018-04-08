@@ -3,16 +3,12 @@
     var permissionsList;
 
     function fillPermissions(groupPermissions,edit) {
-        // console.log('groupPermissions: ', groupPermissions)
         post('/permissions/read', {}, (response) => {
             permissionsList = response.permissionsList;
         })
         if(edit)
        { 
            $(permissionsList).each(function (i, item) {
-            // console.log(groupPermissions.indexOf(item.code))
-            // console.log(groupPermissions)
-            // console.log(item.code)
             $('.cbxPermissions-list').append(`<p>
             <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"` + (groupPermissions.indexOf(item.code)!=-1 ? 'checked="checked"' : '') + `/>
             <label for="cbxPermissions-` + i + `">` + item.description + `</label>
@@ -22,11 +18,8 @@
         else
             {
                 $(permissionsList).each(function (i, item) {
-                    // console.log(groupPermissions.indexOf(item.code))
-                    // console.log(groupPermissions)
-                    // console.log(item.code)
                 $('.showPermissions').append( 
-                    (groupPermissions.indexOf(`"`+item.code+`"`)!=-1?
+                    (groupPermissions.indexOf(String(item.code))!=-1?
                  `<p>- `+item.description+`</p>`:''))
         })}
 
@@ -200,9 +193,7 @@
                         
                     </div>   
                 </div>`);
-                permissions=item.permissions
-                console.log('item.permissions: ',permissions)
-                fillPermissions(permissions,false)
+                fillPermissions(item.permissions,false)
             });
 
 
