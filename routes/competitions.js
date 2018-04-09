@@ -161,11 +161,11 @@ router.post('/search', auth,function (req, res) {
           $regex: query,
           $options: 'i'
         }},
-      {"keyboard": {
-          $regex: query,
-          $options: 'i'
-        }
-      }
+      // {"keyboard": {
+      //     $regex: query,
+      //     $options: 'i'
+      //   }
+      // }
       ]}
       var data;
         if (req.session.type < 2)

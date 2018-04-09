@@ -1,39 +1,8 @@
 (function ($) {
-
     
-    // function fillPermissions(groupPermissions,edit) {
         function fillPermissions(callback) {
-        var permissionsList;
-        // console.log(groupPermissions)
-        
         post('/permissions/read', {}, (response) => {
-            permissionsList = response.permissionsList;
-            // console.log(response.permissionsList)
-            console.log(permissionsList)
             callback(response.permissionsList)
-        
-        
-        // if(edit==true)
-        // { 
-            $(permissionsList).each(function (i, item) {
-                
-                $('.cbxPermissions-list').append(`<p>
-                <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"` + (groupPermissions.indexOf(item.code)!=-1 ? 'checked="checked"' : '') + `/>
-                <label for="cbxPermissions-` + i + `">` + item.description + `</label>
-                </p>
-                `)
-            })
-        // }
-            // else
-            // {
-                // console.log("hiiiii")
-                // console.log(permissionsList)
-        //         $(permissionsList).each(function (i, item) {
-        //         $('.showPermissions').append( 
-        //             (groupPermissions.indexOf(String(item.code))!=-1?
-        //          `<p>- `+item.description+`</p>`:''))
-        // })
-    // }
     })
 
     }
@@ -100,10 +69,16 @@
                 alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
             else {
                 alert("ثبت اطلاعات با موفقیت انجام شد")
-                document.getElementById("newGroupForm").reset()
+                // document.getElementById("newGroupForm").reset()
+                window.location.replace("./groupsList.html")
+                
             }
         });
     });
+    $("#btnAddGroupCancel").click(function (e, user) {
+        window.location.replace("./groupsList.html")       
+
+    })
 
     // if ($.cookie("token")&&!$.cookie("id")) {
     //     window.location.replace("../login.html");
@@ -131,7 +106,7 @@
                 alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
             } else {
                 alert("ثبت اطلاعات با موفقیت انجام شد")
-                window.location.replace("../index.html")
+                window.location.replace("./groupsList.html")
             }
         })
     };
@@ -149,7 +124,6 @@
             post('/groups/all', {
                 query: query
             }, function (response) {
-                // console.log('search vote items', response)
                 $('#groups-list').empty();
                 response.groupsArray.map(function (item) {
                     $('#groups-list').append(`
@@ -184,14 +158,10 @@
         //show a list of groups   
         fillPermissions(function(permissionsList){
             
-        
-            console.log(permissionsList)
         post('/groups/all', {}, function (response) {
-            var permissions=[]
-            
+            // var permissions=[]
             response.groupsArray.map(function (item,callback) {
                 $('#groups-list').append(`
-
                 <div class="card" unqueId=` + item._id + `>
                     <div class="card-content">
                         <p>
@@ -206,14 +176,12 @@
                         <i class="material-icons">edit</i></a>
                         <a class="waves-effect waves-light btn delete" id="btnDelete" uniqueId="` + item._id + `" >حذف
                         <i class="material-icons">delete</i></a>`:'')+`
-                        
                     </div>   
                 </div>`);
-                // var permissionsList=fillPermissions(item.permissions,false)
-                $(permissionsList).each(function (i, item) {
+                $(permissionsList).each(function (i, permission) {
                     $('#permissions_'+item._id).append( 
-                        (item.permissions.indexOf(String(item.code))!=-1?
-                     `<p>- `+item.description+`</p>`:''))
+                        (item.permissions.indexOf(String(permission.code))!=-1?
+                     `<p>- `+permission.description+`</p>`:''))
             })
             });
 
@@ -242,7 +210,7 @@
                         <div id="editModal" class="modal modal-fixed-footer edit rtl">
                             <div class="modal-content">
                                 <h5>ویرایش</h5>
-                                    <form class="col s12" id="newGroupForm ">
+                                    <form class="col s12" id="editGroupForm ">
                                         <div class="row">
                                             <div class="input-field col s6">
                                                 <i class="material-icons prefix">account_circle</i>
@@ -282,8 +250,15 @@
                     </div>       
                 `);
                 fillSelectDepartment(department);
-                fillPermissions(permissions,true);
                 fillGroupType(type)
+
+                $(permissionsList).each(function (i, permission) {
+                    $('.cbxPermissions-list').append(`<p>
+                    <input type="checkbox" id="cbxPermissions-` + i + `" value="` + permission.code + `"` + (permissions.indexOf(permission.code)!=-1 ? 'checked="checked"' : '') + `/>
+                    <label for="cbxPermissions-` + i + `">` + permission.description + `</label>
+                    </p>
+                    `)
+                })
 
                 $('.edit').modal();
 
@@ -326,7 +301,6 @@
     });
 
         function edit_groups(groupEdit, callback) {
-            // console.log('groupEdit: ', groupEdit);
             post('/groups/update', groupEdit, function (response) {
                 callback(response);
             })
