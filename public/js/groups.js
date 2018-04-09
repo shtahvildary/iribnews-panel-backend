@@ -1,27 +1,40 @@
 (function ($) {
 
-    var permissionsList;
-
-    function fillPermissions(groupPermissions,edit) {
+    
+    // function fillPermissions(groupPermissions,edit) {
+        function fillPermissions(callback) {
+        var permissionsList;
+        // console.log(groupPermissions)
+        
         post('/permissions/read', {}, (response) => {
             permissionsList = response.permissionsList;
-        })
-        if(edit)
-       { 
-           $(permissionsList).each(function (i, item) {
-            $('.cbxPermissions-list').append(`<p>
-            <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"` + (groupPermissions.indexOf(item.code)!=-1 ? 'checked="checked"' : '') + `/>
-            <label for="cbxPermissions-` + i + `">` + item.description + `</label>
-          </p>
-        `)
-        })}
-        else
-            {
-                $(permissionsList).each(function (i, item) {
-                $('.showPermissions').append( 
-                    (groupPermissions.indexOf(String(item.code))!=-1?
-                 `<p>- `+item.description+`</p>`:''))
-        })}
+            // console.log(response.permissionsList)
+            console.log(permissionsList)
+            callback(response.permissionsList)
+        
+        
+        // if(edit==true)
+        // { 
+            $(permissionsList).each(function (i, item) {
+                
+                $('.cbxPermissions-list').append(`<p>
+                <input type="checkbox" id="cbxPermissions-` + i + `" value="` + item.code + `"` + (groupPermissions.indexOf(item.code)!=-1 ? 'checked="checked"' : '') + `/>
+                <label for="cbxPermissions-` + i + `">` + item.description + `</label>
+                </p>
+                `)
+            })
+        // }
+            // else
+            // {
+                // console.log("hiiiii")
+                // console.log(permissionsList)
+        //         $(permissionsList).each(function (i, item) {
+        //         $('.showPermissions').append( 
+        //             (groupPermissions.indexOf(String(item.code))!=-1?
+        //          `<p>- `+item.description+`</p>`:''))
+        // })
+    // }
+    })
 
     }
     function fillSelectDepartment(departmentId) {
@@ -57,7 +70,6 @@
             <option value="1" `+ (groupType == 1 ? 'selected' : '') + ` >مدیران رسانه های نوین</option>         
             `)
             $('select').material_select();
-
         })
     }
 
@@ -99,6 +111,7 @@
     // isLoggedin();
     $("#btnUpdateGroup").click(function () {
 
+
         var title = $("#groupTitle").val();
         var type = $("#type").val();
         var permissions;
@@ -126,10 +139,9 @@
 
     $(function () {
 
-        fillPermissions([],false);
+        
         fillSelectDepartment("");
         fillGroupType()
-
 
         //search in groups list   
         var search_groups = function (query) {
@@ -170,9 +182,14 @@
 
 
         //show a list of groups   
+        fillPermissions(function(permissionsList){
+            
+        
+            console.log(permissionsList)
         post('/groups/all', {}, function (response) {
             var permissions=[]
-            response.groupsArray.map(function (item) {
+            
+            response.groupsArray.map(function (item,callback) {
                 $('#groups-list').append(`
 
                 <div class="card" unqueId=` + item._id + `>
@@ -180,7 +197,6 @@
                         <p>
                         <i class="material-icons prefix">title</i>                                                        
                         عنوان: ` + item.title + `</p>
-                        
                         <p>
                         <i class="material-icons prefix">description</i>                        
                         توضیحات: ` + item.description + `</p>   
@@ -193,7 +209,12 @@
                         
                     </div>   
                 </div>`);
-                fillPermissions(item.permissions,false)
+                // var permissionsList=fillPermissions(item.permissions,false)
+                $(permissionsList).each(function (i, item) {
+                    $('#permissions_'+item._id).append( 
+                        (item.permissions.indexOf(String(item.code))!=-1?
+                     `<p>- `+item.description+`</p>`:''))
+            })
             });
 
 
@@ -205,7 +226,6 @@
                 var permissions = $(this).attr('editItem_permissions');
                 var description = $(this).attr('editItem_description');
                 var department = $(this).attr('editItem_department')
-
 
                 groupEdit = {
                     _id,
@@ -303,6 +323,7 @@
                 }
             })
         })
+    });
 
         function edit_groups(groupEdit, callback) {
             // console.log('groupEdit: ', groupEdit);
