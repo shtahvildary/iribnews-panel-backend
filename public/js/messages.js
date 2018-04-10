@@ -6,6 +6,7 @@
 
 
   var search_message = function (query, filters) {
+    console.log("q:...",query)
     post(
       "/messages/search",
       {

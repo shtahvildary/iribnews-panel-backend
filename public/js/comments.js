@@ -84,7 +84,7 @@
         if($("#drpVoteItems").val()!='all')            
             voteItemId = $("#drpVoteItems").val();
         search_comments(value, departmentId,voteItemId);
-        return false; //<---- Add this line
+        return false; 
       }
     });
 
@@ -142,6 +142,16 @@
     // $( '#drpVoteItems' ).change(function() {
     $("#drpDepartments").change(function() {
       fillSelectvoteItems($("#drpDepartments").val());
+    });
+    $("#drpVoteItems").change(function() {
+      var departmentId,voteItemId;
+      var value = $("#search").val();
+      if($("#drpDepartments").val()!='all')
+          departmentId = $("#drpDepartments").val();
+      if($("#drpVoteItems").val()!='all')            
+          voteItemId = $("#drpVoteItems").val();
+      search_comments(value, departmentId,voteItemId);
+      
     });
   });
 })(jQuery);

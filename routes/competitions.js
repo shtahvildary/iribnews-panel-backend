@@ -148,8 +148,12 @@ router.post('/search', auth,function (req, res) {
     var allowedPermissions=[121]
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
-  console.log('query', req.body.query)
-  var { query } = req.body;
+    var {
+      query,
+      departmentId,
+      voteItemId,
+  } = req.body;
+  // var { query } = req.body;
     if (!query) query = "";
     var dbQuery = {
       $or: [
@@ -161,28 +165,44 @@ router.post('/search', auth,function (req, res) {
           $regex: query,
           $options: 'i'
         }},
-      // {"keyboard": {
-      //     $regex: query,
-      //     $options: 'i'
-      //   }
-      // }
+      {"keyboard": {
+          $regex: query,
+          $options: 'i'
+        }
+      }
       ]}
+      // var data;
+      //   if (req.session.type < 2)
+      //   {
+      //     data = dbQuery;
+      //   if(req.body.departmentId) data={ $and: [{ departmentId: req.body.departmentId }, dbQuery] };
+      // }
       var data;
-        if (req.session.type < 2)
-        {data = dbQuery;
-        if(req.body.departmentId) data={ $and: [{ departmentId: req.body.departmentId }, dbQuery] };}
+      var $and=[]
+    
+      if (req.session.type < 2)
+            {
+              if(departmentId||voteItemId) 
+             {
+               data={ $and: [dbQuery] };
+              if(departmentId) $and.push({ departmentId }, dbQuery) ;
+              if(voteItemId) $and.push({ voteItemId }, dbQuery) ;
+            }
+            else data = dbQuery;
+          }
         else data = { $and: [{ departmentId: req.session.departmentId }, dbQuery] };
+        console.log(data)
         competition_sc
         .find(data)
         .sort("-date")
         .exec(function(err, result) {
           if (!err) {
             if (result) {
-              res.json({
+              res.status(200).json({
                 competitionsArray: result
               });
             } else {
-              res.json({
+              res.status(500).json({
                 error: "There is no competition to select..."
               });
             }

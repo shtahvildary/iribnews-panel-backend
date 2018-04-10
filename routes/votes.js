@@ -236,18 +236,11 @@ router.post('/search/comments', auth, function (req, res) {
         if(departmentId||voteItemId) 
          {
            data={ $and: [dbQuery] };
-           
           if(departmentId) $and.push({ departmentId }, dbQuery) ;
           if(voteItemId) $and.push({ voteItemId }, dbQuery) ;
-
         }
         else data = dbQuery;
-           
       }
-        
-
-
-  // if (req.session.type < 2) data = {};
   else  data = {$and:[{'departmentId':req.session.departmentId},dbQuery]};
   votes_sc.find(data).populate({
     path: 'comment.destinationId',
