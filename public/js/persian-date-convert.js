@@ -150,13 +150,9 @@ License: GNU/LGPL _ Open Source & Free _ Version: 2.72 : [2017=1396]
 
 function gregorian_to_jalali(date){
     // function gregorian_to_jalali(gy,gm,gd){
-    console.log('date: ',date)
     var gy = date.getFullYear();
-    console.log('gy: ',gy)
     var gm = date.getMonth()+1;// Months start at 0
-    console.log('gm: ',gm)
     var gd = date.getDate();
-    console.log('gd: ',gd)
 
     g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
     if(gy > 1600){
@@ -176,7 +172,6 @@ function gregorian_to_jalali(date){
      jy+=parseInt((days-1)/365);
      days=(days-1)%365;
     }
-    console.log('days: ',days)
     
     jm=(days < 186)?1+parseInt(days/31):7+parseInt((days-186)/30);
     jd=1+((days < 186)?(days%31):((days-186)%30));

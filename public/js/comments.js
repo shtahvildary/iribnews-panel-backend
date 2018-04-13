@@ -12,12 +12,13 @@
       },
       function(response) {
         $("#comments-list").empty();
-        if(response.votes.length==0){
+        if(response.votesArray.length==0){
         $("#comments-list").append(`نتیجه ای یافت نشد.`);
         }
-        else response.comments.map(function(item) {
-          cardsAppend(item);
-        });
+        // else response.comments.map(function(item) {
+        //   cardsAppend(item);
+        // });
+        else cardsAppend(response)
       }
     );
   };
@@ -70,6 +71,44 @@
       $("select").material_select();
     });
   }
+  function cardsAppend(response){
+    var commentsCount = 0;
+      response.votesArray.map(function(item) {
+        if (item.comment) {
+          commentsCount++;
+console.log(item.comment)
+          $("#comments-list").append(
+            `
+                        <div class="card rtl">
+                        <div class="card-content activator ">
+                            <p>پیام: ` +
+              item.comment.text +
+              `</p>
+                            <p>مربوط به: ` +
+              item.comment.destinationId.title +
+              ` از واحد ` +
+              // item.comment.destinationId.departmentId.title +
+              `.........................</p>
+                            <p> در تاریخ: ` +
+      gregorian_to_jalali(new Date(item.date)) +
+                            
+              // item.date +
+              `<p>ساعت :` +
+              new Date(item.date).getHours() +
+              `:` +
+              new Date(item.date).getMinutes() +
+              `:` +
+              new Date(item.date).getSeconds() +
+              `</p>
+              
+                        </div>   
+                    </div>`
+          );
+        }
+      });
+      if (commentsCount == 0)
+        $("#comments-list").append(`تا کنون هیچ دیدگاهی ثبت نشده است.`);
+  }
   $(function() {
     ///////////////////////////////////search filters///////////////////////////////////
 
@@ -110,33 +149,45 @@
     });
 
     post("/votes/all/comments", {}, function(response) {
-      var commentsCount = 0;
-      response.votesArray.map(function(item) {
-        if (item.comment) {
-          commentsCount++;
+      cardsAppend(response)
+      
+      // var commentsCount = 0;
+      // response.votesArray.map(function(item) {
+      //   cardsAppend(item)
+      //   if (item.comment) {
+      //     commentsCount++;
 
-          $("#comments-list").append(
-            `
-                        <div class="card rtl">
-                        <div class="card-content activator ">
-                            <p>پیام: ` +
-              item.comment.text +
-              `</p>
-                            <p>مربوط به: ` +
-              item.comment.destinationId.title +
-              ` از واحد ` +
-              item.comment.destinationId.departmentId.title +
-              `</p>
-                            <p> در تاریخ: ` +
-              item.date +
-              `</p>
-                        </div>   
-                    </div>`
-          );
-        }
-      });
-      if (commentsCount == 0)
-        $("#comments-list").append(`تا کنون هیچ دیدگاهی ثبت نشده است.`);
+      //     $("#comments-list").append(
+      //       `
+      //                   <div class="card rtl">
+      //                   <div class="card-content activator ">
+      //                       <p>پیام: ` +
+      //         item.comment.text +
+      //         `</p>
+      //                       <p>مربوط به: ` +
+      //         item.comment.destinationId.title +
+      //         ` از واحد ` +
+      //         // item.comment.destinationId.departmentId.title +
+      //         `.........................</p>
+      //                       <p> در تاریخ: ` +
+      // gregorian_to_jalali(new Date(item.date)) +
+                            
+      //         // item.date +
+      //         `<p>ساعت :` +
+      //         new Date(item.date).getHours() +
+      //         `:` +
+      //         new Date(item.date).getMinutes() +
+      //         `:` +
+      //         new Date(item.date).getSeconds() +
+      //         `</p>
+              
+      //                   </div>   
+      //               </div>`
+      //     );
+      //   }
+      // });
+      // if (commentsCount == 0)
+      //   $("#comments-list").append(`تا کنون هیچ دیدگاهی ثبت نشده است.`);
     });
     $(".pNums").persiaNumber();
     // $( '#drpVoteItems' ).change(function() {

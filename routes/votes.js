@@ -167,66 +167,36 @@ router.post('/search/comments', auth, function (req, res) {
   if (!query) query = "";
   var dbQuery = {
       $or: [{
-          "message": {
+          "comment.text": {
               // $regex: "",
               $regex: query,
               $options: 'i'
           }
-      }, {
-          "caption": {
-              // $regex: "",
-              $regex: query,
-              $options: 'i'
-          }
-      }, {
-          "audioTitle": {
-              // $regex: "",
-              $regex: query,
-              $options: 'i'
-          }
-      }, {
-          "fileName": {
-              // $regex: "",
-              $regex: query,
-              $options: 'i'
-          }
-      }, {
-          "filePath": {
-              // $regex: "",
-              $regex: query,
-              $options: 'i'
-          }
-      },
-      {
-          "replys.text": {
-              // $regex: "",
-              $regex: query,
-              $options: 'i'
-          }
+      
       }
       ]
   };
-  var filterTypes = [];
-  if (filters) {
-      if (filters.messages == 1) {
-          filterTypes.push("text");
-      }
-      if (filters.photos == 1) {
-          filterTypes.push("photo");
-      }
-      if (filters.movies == 1) {
-          filterTypes.push("video");
-      }
-      if (filters.voices == 1) {
-          filterTypes.push("voice", "audio");
-      }
-      if (filters.files == 1) {
-          filterTypes.push("document");
-      }
-      if (filterTypes.length > 0) dbQuery.type = {
-          $in: filterTypes
-      }
-  }
+  // var filterTypes = [];
+  // if (filters) {
+  //     if (filters.messages == 1) {
+  //         filterTypes.push("text");
+  //     }
+  //     if (filters.photos == 1) {
+  //         filterTypes.push("photo");
+  //     }
+  //     if (filters.movies == 1) {
+  //         filterTypes.push("video");
+  //     }
+  //     if (filters.voices == 1) {
+  //         filterTypes.push("voice", "audio");
+  //     }
+  //     if (filters.files == 1) {
+  //         filterTypes.push("document");
+  //     }
+  //     if (filterTypes.length > 0) dbQuery.type = {
+  //         $in: filterTypes
+  //     }
+  // }
   
   var data;
   var $and=[]
@@ -254,7 +224,7 @@ router.post('/search/comments', auth, function (req, res) {
   }).sort('-date').exec(function (err, result) {
       if (!err) {
           res.status(200).json({
-              votes: result,
+              votesArray: result,
               // userId: req.body.token
               userId: req.session.userId
           });
@@ -277,15 +247,18 @@ router.post('/all/comments', auth, function (req, res) {
     if (req.session.type < 2) data = {"comment.destinationId":{$exists: true}};
     else  data = {$and:[{'departmentId':req.session.departmentId},{"comment.destinationId":{$exists: true}}]};
   votes_sc.find(data).populate({
-    path: 'comment.destinationId',
+    path: 'comment.destinationId',//Id of voteItem
     select:{ title:'title'},
       
       populate:{
         path:'departmentId',
         select:'title'
+    // select:{ title:'title'},
+        
       
     }
   }).sort('-date').exec( function (err, result) {
+    console.log('comments: ',result)
     if (!err) {
       if (result) {
         res.json({

@@ -6,7 +6,6 @@
 
 
   var search_message = function (query, filters) {
-    console.log("q:...",query)
     post(
       "/messages/search",
       {
@@ -15,6 +14,12 @@
       },
       function (response) {
         $("#messages-list").empty();
+        if(response.messages.length==0)
+        $("#messages-list").append(`<div class="rtl">
+        نتیجه ای یافت نشد.
+        </div>`);
+        else
+        
         response.messages.map(function (item) {
           cardsAppend(item);
         });

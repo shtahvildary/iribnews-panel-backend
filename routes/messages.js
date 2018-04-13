@@ -366,8 +366,6 @@ lastday.setDate(firstday.getDate()+6)
 // if(sat.getDay)
 firstday.setHours(0, 0, 0, 0);
 lastday.setHours(23, 59, 59, 999);
-console.log("..........",firstday)
-console.log("..........",lastday)
 
   var data = {
     date: {
