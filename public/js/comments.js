@@ -2,7 +2,7 @@
   const fileserver = "http://localhost:9000";
   // const fileserver = "http://172.16.17.149:9000";
 
-  var search_comments = function(query,departmentId,voteItemId) {
+  var search_comments = function(query, departmentId, voteItemId) {
     post(
       "/votes/search/comments",
       {
@@ -12,13 +12,14 @@
       },
       function(response) {
         $("#comments-list").empty();
-        if(response.votesArray.length==0){
-        $("#comments-list").append(`نتیجه ای یافت نشد.`);
-        }
-        // else response.comments.map(function(item) {
-        //   cardsAppend(item);
-        // });
-        else cardsAppend(response)
+        if (response.votesArray.length == 0) {
+          $("#comments-list").append(`نتیجه ای یافت نشد.`);
+        } else
+          // else response.comments.map(function(item) {
+          //   cardsAppend(item);
+          // });
+          console.log(response)
+          cardsAppend(response);
       }
     );
   };
@@ -71,43 +72,41 @@
       $("select").material_select();
     });
   }
-  function cardsAppend(response){
+  function cardsAppend(response) {
     var commentsCount = 0;
-      response.votesArray.map(function(item) {
-        if (item.comment) {
-          commentsCount++;
-console.log(item.comment)
-          $("#comments-list").append(
-            `
-                        <div class="card rtl">
-                        <div class="card-content activator ">
-                            <p>پیام: ` +
-              item.comment.text +
-              `</p>
-                            <p>مربوط به: ` +
-              item.comment.destinationId.title +
-              ` از واحد ` +
-              // item.comment.destinationId.departmentId.title +
-              `.........................</p>
-                            <p> در تاریخ: ` +
-      gregorian_to_jalali(new Date(item.date)) +
-                            
-              // item.date +
-              `<p>ساعت :` +
-              new Date(item.date).getHours() +
-              `:` +
-              new Date(item.date).getMinutes() +
-              `:` +
-              new Date(item.date).getSeconds() +
-              `</p>
+    response.votesArray.map(function(item) {
+      if (item.comment) {
+        commentsCount++;
+        $("#comments-list").append(
+          `
+            <div class="card rtl">
+            <div class="card-content ">
+            <p>پیام: ` +
+            item.comment.text +
+            `</p>
+            <p>مربوط به: ` +
+            item.comment.destinationId.title +
+            ` از واحد ` +
+            item.comment.departmentId.title +
+            `</p>
+            <p> در تاریخ: ` +
+            gregorian_to_jalali(new Date(item.date)) +
+            // item.date +
+            `<p>ساعت :` +
+            new Date(item.date).getHours() +
+            `:` +
+            new Date(item.date).getMinutes() +
+            `:` +
+            new Date(item.date).getSeconds() +
+            `</p>
               
                         </div>   
                     </div>`
-          );
-        }
-      });
-      if (commentsCount == 0)
-        $("#comments-list").append(`تا کنون هیچ دیدگاهی ثبت نشده است.`);
+        );
+      }
+    });
+    if (commentsCount == 0)
+      $("#comments-list").append(`تا کنون هیچ دیدگاهی ثبت نشده است.`);
   }
   $(function() {
     ///////////////////////////////////search filters///////////////////////////////////
@@ -116,18 +115,17 @@ console.log(item.comment)
 
     $("#search").keypress(function(e) {
       if (e.which == 13) {
-          var departmentId,voteItemId;
+        var departmentId, voteItemId;
         var value = $("#search").val();
-        if($("#drpDepartment").val()!='all')
-            departmentId = $("#drpDepartment").val();
-        if($("#drpVoteItems").val()!='all')            
-            voteItemId = $("#drpVoteItems").val();
-        search_comments(value, departmentId,voteItemId);
-        return false; 
+        if ($("#drpDepartments").val() != "all")
+          departmentId = $("#drpDepartments").val();
+        if ($("#drpVoteItems").val() != "all")
+          voteItemId = $("#drpVoteItems").val();
+          console.log(value, departmentId, voteItemId)
+        search_comments(value, departmentId, voteItemId);
+        return false;
       }
     });
-
-  
 
     /////////////////////////////////////////////////////////////////////////////////
     post("/users/type", {}, function(response) {
@@ -149,8 +147,8 @@ console.log(item.comment)
     });
 
     post("/votes/all/comments", {}, function(response) {
-      cardsAppend(response)
-      
+      cardsAppend(response);
+
       // var commentsCount = 0;
       // response.votesArray.map(function(item) {
       //   cardsAppend(item)
@@ -171,7 +169,7 @@ console.log(item.comment)
       //         `.........................</p>
       //                       <p> در تاریخ: ` +
       // gregorian_to_jalali(new Date(item.date)) +
-                            
+
       //         // item.date +
       //         `<p>ساعت :` +
       //         new Date(item.date).getHours() +
@@ -180,8 +178,8 @@ console.log(item.comment)
       //         `:` +
       //         new Date(item.date).getSeconds() +
       //         `</p>
-              
-      //                   </div>   
+
+      //                   </div>
       //               </div>`
       //     );
       //   }
@@ -195,14 +193,13 @@ console.log(item.comment)
       fillSelectvoteItems($("#drpDepartments").val());
     });
     $("#drpVoteItems").change(function() {
-      var departmentId,voteItemId;
+      var departmentId, voteItemId;
       var value = $("#search").val();
-      if($("#drpDepartments").val()!='all')
-          departmentId = $("#drpDepartments").val();
-      if($("#drpVoteItems").val()!='all')            
-          voteItemId = $("#drpVoteItems").val();
-      search_comments(value, departmentId,voteItemId);
-      
+      if ($("#drpDepartments").val() != "all")
+        departmentId = $("#drpDepartments").val();
+      if ($("#drpVoteItems").val() != "all")
+        voteItemId = $("#drpVoteItems").val();
+      search_comments(value, departmentId, voteItemId);
     });
   });
 })(jQuery);
