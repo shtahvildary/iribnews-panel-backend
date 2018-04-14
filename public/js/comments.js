@@ -120,7 +120,6 @@
           departmentId = $("#drpDepartments").val();
         if ($("#drpVoteItems").val() != "all")
           voteItemId = $("#drpVoteItems").val();
-          console.log(value, departmentId, voteItemId)
         search_comments(value, departmentId, voteItemId);
         return false;
       }
@@ -147,47 +146,8 @@
 
     post("/votes/all/comments", {}, function(response) {
       cardsAppend(response);
-
-      // var commentsCount = 0;
-      // response.votesArray.map(function(item) {
-      //   cardsAppend(item)
-      //   if (item.comment) {
-      //     commentsCount++;
-
-      //     $("#comments-list").append(
-      //       `
-      //                   <div class="card rtl">
-      //                   <div class="card-content activator ">
-      //                       <p>پیام: ` +
-      //         item.comment.text +
-      //         `</p>
-      //                       <p>مربوط به: ` +
-      //         item.comment.destinationId.title +
-      //         ` از واحد ` +
-      //         // item.comment.destinationId.departmentId.title +
-      //         `.........................</p>
-      //                       <p> در تاریخ: ` +
-      // gregorian_to_jalali(new Date(item.date)) +
-
-      //         // item.date +
-      //         `<p>ساعت :` +
-      //         new Date(item.date).getHours() +
-      //         `:` +
-      //         new Date(item.date).getMinutes() +
-      //         `:` +
-      //         new Date(item.date).getSeconds() +
-      //         `</p>
-
-      //                   </div>
-      //               </div>`
-      //     );
-      //   }
-      // });
-      // if (commentsCount == 0)
-      //   $("#comments-list").append(`تا کنون هیچ دیدگاهی ثبت نشده است.`);
     });
     $(".pNums").persiaNumber();
-    // $( '#drpVoteItems' ).change(function() {
     $("#drpDepartments").change(function() {
       fillSelectvoteItems($("#drpDepartments").val());
     });

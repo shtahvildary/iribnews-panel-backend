@@ -3,7 +3,7 @@ var router = express.Router();
 var groups_sc = require("../Schema/groups");
 // var user_sc = require("../Schema/user");
 var auth = require("../tools/authentication");
-var {checkPermissions}=require("../tools/auth");
+var { checkPermissions } = require("../tools/auth");
 
 ////////////////add new group/////////////////
 /*example:
@@ -13,9 +13,12 @@ var {checkPermissions}=require("../tools/auth");
 */
 
 router.post("/new", auth, function(req, res) {
-  if(req.session.type!=0){
-  var allowedPermissions=[105]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+  if (req.session.type != 0) {
+    var allowedPermissions = [105];
+    if (!checkPermissions(allowedPermissions, req.session.permissions))
+      return res
+        .status(403)
+        .json({ error: "You don't have access to this api." });
   }
   var userType = req.session.type;
   if (userType > 1)
@@ -29,10 +32,12 @@ router.post("/new", auth, function(req, res) {
   else {
     var group = new groups_sc(req.body);
     group.save(function(err, result) {
-      if (!err) res.json({
+      if (!err)
+        res.json({
           group: result
         });
-       else res.json({
+      else
+        res.json({
           error: err
         });
     });
@@ -41,14 +46,68 @@ router.post("/new", auth, function(req, res) {
 
 ////////////////get all groups except builtins/////////////////
 router.post("/all", auth, function(req, res) {
-    
   var data;
   if (req.userType == 0) data = {};
   else if (req.session.type == 1) data = { readOnly: 0 };
-  else if (req.session.type > 1) data = {$and:[{ readOnly: 0 },{departmentId:req.session.departmentId}]};
-  
+  else if (req.session.type > 1)
+    data = {
+      $and: [{ readOnly: 0 }, { departmentId: req.session.departmentId }]
+    };
+
   groups_sc
-    .find(data)
+  .find(data).populate({path:"departmentId",select:"title"})    
+    .sort("-date")
+    .exec(function(err, result) {
+      if (!err) {
+        if (result) {
+          res.json({
+            groupsArray: result
+          });
+        } else {
+          res.json({
+            error: "There is no group to select..."
+          });
+        }
+      } else {
+        res.status(500).json({
+          error: err
+        });
+      }
+    });
+});
+
+router.post("/search", auth, function(req, res) {
+  var { query, departmentId } = req.body;
+  if (!query) query = "";
+  var data = {
+    $or: [
+      {
+        title: {
+          // $regex: "",
+          $regex: query,
+          $options: "i"
+        }
+      },
+      {
+        description: {
+          // $regex: "",
+          $regex: query,
+          $options: "i"
+        }
+      }
+    ]
+  };
+  if(departmentId)
+  data.departmentId=departmentId;
+  if (req.userType != 0)
+    if (req.session.type == 1) data.readOnly = 0;
+    else if (req.session.type > 1) {
+      data.readOnly = 0;
+      data.departmentId = req.session.departmentId;
+    }
+
+  groups_sc
+    .find(data).populate({path:"departmentId",select:"title"})
     .sort("-date")
     .exec(function(err, result) {
       if (!err) {
@@ -78,10 +137,14 @@ router.post("/all", auth, function(req, res) {
 }
  */
 router.post("/update", auth, function(req, res) {
-  if(req.session.type!=0){
-  var allowedPermissions=[106]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-  console.log("query:", req.body);}
+  if (req.session.type != 0) {
+    var allowedPermissions = [106];
+    if (!checkPermissions(allowedPermissions, req.session.permissions))
+      return res
+        .status(403)
+        .json({ error: "You don't have access to this api." });
+    console.log("query:", req.body);
+  }
   groups_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {
       var group = result._doc;
@@ -105,7 +168,7 @@ router.post("/update", auth, function(req, res) {
 router.post("/delete", auth, function(req, res) {
   // var allowedPermissions=[]
   // if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-  
+
   console.log("query", req.body);
   groups_sc.findByIdAndRemove(req.body._id).exec(function(err, result) {
     if (!err) {
@@ -123,11 +186,14 @@ router.post("/delete", auth, function(req, res) {
 //URL: localhost:5010/groups/status
 
 router.post("/status", auth, function(req, res) {
-  if(req.session.type!=0){
-  var allowedPermissions=[106]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+  if (req.session.type != 0) {
+    var allowedPermissions = [106];
+    if (!checkPermissions(allowedPermissions, req.session.permissions))
+      return res
+        .status(403)
+        .json({ error: "You don't have access to this api." });
   }
- 
+
   group_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {
       console.log("group:", result);
