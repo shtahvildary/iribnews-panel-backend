@@ -182,37 +182,15 @@ router.post("/search/comments", auth, function(req, res) {
       }
     ]
   };
-  // var filterTypes = [];
-  // if (filters) {
-  //     if (filters.messages == 1) {
-  //         filterTypes.push("text");
-  //     }
-  //     if (filters.photos == 1) {
-  //         filterTypes.push("photo");
-  //     }
-  //     if (filters.movies == 1) {
-  //         filterTypes.push("video");
-  //     }
-  //     if (filters.voices == 1) {
-  //         filterTypes.push("voice", "audio");
-  //     }
-  //     if (filters.files == 1) {
-  //         filterTypes.push("document");
-  //     }
-  //     if (filterTypes.length > 0) dbQuery.type = {
-  //         $in: filterTypes
-  //     }
-  // }
 
-  var data;
+  var data={};
   var $and = [];
 
   if (req.session.type < 2) {
-    data = { "comment.destinationId": { $exists: true } }; 
-    console.log(data)   
+    // data = { "comment.destinationId": { $exists: true } }; 
+    data.$and=[{ "comment.destinationId": { $exists: true } },dbQuery];
     if (departmentId || voteItemId) {
       // data = { $and: [dbQuery] };
-      data.$and=[dbQuery];
       if (departmentId)
         data.$and.push({ "comment.departmentId": departmentId });
       if (voteItemId) data.$and.push({ "comment.destinationId": voteItemId });

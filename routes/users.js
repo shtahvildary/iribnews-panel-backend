@@ -85,61 +85,61 @@ router.post("/update/profile", auth, function(req, res) {
 router.post("/update", auth, function(req, res) {
   // var allowedPermissions=[102]
   // var allowedPermissions=[104]
-  groups_sc.findById(req.body.group,{_id:0,"type":1 }).exec(function(err, result) {
-    if (err) {
-      return res.status(500).json({
-        error: err
-      });
-    }
-  var groupType=result.type;
-    
-  var userType = req.session.type;
-  if (userType != 0 && userType >=groupType)
-    return res.status(403).json({ error: "Forbidden: permission error" });
-  else {
-    var user = ({
-      firstName,
-      lastName,
-      personelNumber,
-      group,
-      email,
-      mobileNumber,
-      phoneNumber,
-      status,
-      permitedChannelsId
-    } = req.body);
-    if (req.body.password) {
-      var hash = bcrypt.hash(req.body.password, 10, function(err, hash) {
-        console.log("hash: ", hash);
-        if (err) {
-          return err;
-        }
-        user.password = hash;
-        userUpdate(req.body._id, user);
-      });
-    } else userUpdate(req.body._id, user);
+  groups_sc
+    .findById(req.body.group, { _id: 0, type: 1 })
+    .exec(function(err, result) {
+      if (err) {
+        return res.status(500).json({
+          error: err
+        });
+      }
+      var groupType = result.type;
 
-    // }
-    //save updated user
-    function userUpdate(_id, user) {
-      user_sc.update({ _id: req.body._id }, user, function(err, result) {
-        console.log(err);
-        if (err) {
-          return res.status(500).json({
-            error: err
+      var userType = req.session.type;
+      if (userType != 0 && userType >= groupType)
+        return res.status(403).json({ error: "Forbidden: permission error" });
+      else {
+        var user = ({
+          firstName,
+          lastName,
+          personelNumber,
+          group,
+          email,
+          mobileNumber,
+          phoneNumber,
+          status,
+          permitedChannelsId
+        } = req.body);
+        if (req.body.password) {
+          var hash = bcrypt.hash(req.body.password, 10, function(err, hash) {
+            console.log("hash: ", hash);
+            if (err) {
+              return err;
+            }
+            user.password = hash;
+            userUpdate(req.body._id, user);
+          });
+        } else userUpdate(req.body._id, user);
+
+        // }
+        //save updated user
+        function userUpdate(_id, user) {
+          user_sc.update({ _id: req.body._id }, user, function(err, result) {
+            console.log(err);
+            if (err) {
+              return res.status(500).json({
+                error: err
+              });
+            }
+            // else
+            return res.status(200).json({
+              user: result
+            });
           });
         }
-        // else
-        return res.status(200).json({
-          user: result
-        });
-      });
-    }
-  }
-})
-  
+      }
+    });
 });
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateUser(userId, userInfo, type) {
@@ -250,11 +250,14 @@ router.post("/login", function(req, res) {
 //Get all users
 router.post("/all", auth, function(req, res) {
   var data;
-  if (req.session.type < 2) data = {status:0};
+  if (req.session.type < 2) data = { status: 0 };
   else {
     var group;
     groups_sc
-      .find({$and:[{ departmentId: req.session.departmentId },{status:0}]}, { _id: 1 })
+      .find(
+        { $and: [{ departmentId: req.session.departmentId }, { status: 0 }] },
+        { _id: 1 }
+      )
       .exec(function(err, group) {
         if (!err) {
           if (group) {
@@ -273,24 +276,128 @@ router.post("/all", auth, function(req, res) {
     // data = {'group': group};
   }
 
-  user_sc.find(data)
-  .populate({path:"group",select:"title",populate:{path:"departmentId",select:"title"}}).exec(function(err, result) {
-    if (!err) {
-      if (result) {
-        res.json({
-          usersArray: result
-        });
+  user_sc
+    .find(data)
+    .populate({
+      path: "group",
+      select: "title",
+      populate: { path: "departmentId", select: "title" }
+    })
+    .exec(function(err, result) {
+      if (!err) {
+        if (result) {
+          res.json({
+            usersArray: result
+          });
+        } else {
+          res.json({
+            error: "There is no user to select..."
+          });
+        }
       } else {
-        res.json({
-          error: "There is no user to select..."
+        res.status(500).json({
+          error: err
         });
       }
-    } else {
-      res.status(500).json({
-        error: err
+    });
+});
+
+router.post("/search", auth, function(req, res) {
+  var { query, departmentId } = req.body;
+  if (!query) query = "";
+  var dbQuery = {
+    $or: [
+      {
+        username: {
+          // $regex: "",
+          $regex: query,
+          $options: "i"
+        }
+      },
+      {
+        firstName: {
+          // $regex: "",
+          $regex: query,
+          $options: "i"
+        }
+      },
+      {
+        lastName: {
+          // $regex: "",
+          $regex: query,
+          $options: "i"
+        }
+      },
+      {
+        email: {
+          // $regex: "",
+          $regex: query,
+          $options: "i"
+        }
+      }
+    ]
+  };
+
+  if (req.session.type < 2) {
+    dbQuery.status = 0;
+
+    if (departmentId) {
+      findGroup(departmentId, function(error, groups) {
+        if (error) return res.status(500).json({ error });
+        dbQuery.group = { $in: groups };
+        findUsers(dbQuery, function(error, users) {
+          if (error) return res.status(500).json({ error });
+          return res.status(200).json({ usersArray: users });
+        });
       });
     }
-  });
+    else findUsers(dbQuery, function(error, users) {
+      if (error) return res.status(500).json({ error });
+      return res.status(200).json({ usersArray: users });
+    });
+  } else
+    findGroup(req.session.departmentId, function(error, groups) {
+      if (error) return res.status(500).json({ error });
+      dbQuery.group=groups[0]
+      findUsers(dbQuery, function(error, users) {
+        if (error) return res.status(500).json({ error });
+        return res.status(200).json({ usersArray: users });
+      });
+    });
+  // console.log("user search data: ", data);
+
+  function findGroup(departmentId, callback) {
+    groups_sc
+      .find({ departmentId, status: 0 }, { _id: 1 })
+      .exec(function(err, groups) {
+        if (!err) {
+          if (groups) {
+            groups = groups.map(g => g._id);
+            return callback(null, groups);
+            // return groups;
+          } else {
+            return callback("There is no group with this _id...");
+          }
+        } else {
+          return callback(err);
+        }
+      });
+  }
+  function findUsers(data, callback) {
+    user_sc
+      .find(data)
+      .populate({
+        path: "group",
+        select: "title",
+        populate: { path: "departmentId", select: "title" }
+      })
+      .exec(function(err, users) {
+        if (!err) {
+          if (users) return callback(null, users);
+          else return callback("There is no user to select...");
+        } else return callback(err);
+      });
+  }
 });
 
 // GET /logout

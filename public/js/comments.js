@@ -18,7 +18,6 @@
           // else response.comments.map(function(item) {
           //   cardsAppend(item);
           // });
-          console.log(response)
           cardsAppend(response);
       }
     );

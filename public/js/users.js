@@ -18,6 +18,27 @@
         })
     }
 
+    function fillSelectDepartment() {
+        post("/departments/all", {}, function(response) {
+          $("#drpDepartments").append(`
+                <option value=""  selected>همه</option>
+                `);
+          $(response.departmentsArray).each(function(i, department) {
+            $("#drpDepartments").append(
+              `
+                <option value="` +
+                department._id +
+                `" >` +
+                department.title +
+                `</option>
+                `
+            );
+          });
+          $("select").material_select();
+        });
+      }
+    
+
 
 
 
@@ -132,28 +153,50 @@
             }
         })
     };
+    function cardsAppend(response){
+        response.usersArray.map(function (item) {
+            $('#users-list').append(`
+
+            <div class="card" unqueId=` + item._id + `>
+                <div class="card-content">
+                    <p>` + item.firstName + ` ` + item.lastName + `</p>
+                    <p موبایل:` + item.mobileNumber + `</p>
+                    <p> شماره داخلی:` + item.phoneNumber + `</p>
+                    <p>` + item.email + `</p>
+                    <p> واحد:` + item.group.departmentId.title +
+                     `</p>
+                    <p>گروه کاربری:` + item.group.title + 
+                    `</p>
+                    <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_un="` + item.username + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `" editItem_group="` + item.group + `">ویرایش
+                    <i class="material-icons">edit</i></a>
+                    <a class="waves-effect waves-light btn delete" id="btnDelete" username="` + item.username + `" uniqueId="` + item._id + `" >حذف
+                    <i class="material-icons">delete</i></a>
+                </div>   
+            </div>`);
+        });
+
+    }
 
 
     $(function () {
 
         $('select').material_select();
-
-        fillSelectGroup()
+        fillSelectDepartment();
+        fillSelectGroup();
         //search in users list   
-        var search_users = function (query) {
+        var search_users = function (query,departmentId) {
+console.log(query)
+console.log(departmentId)
 
-            post('/users/all', {
-                query: query
+            post('/users/search', {
+                query,departmentId:departmentId
             }, function (response) {
                 $('#users-list').empty();
-                response.usersArray.map(function (item) {
-                    $('#users-list').append(`
-                    <div class="card">
-                    <div class="card-content">     
-                    <p>` + item.firstName + ` ` + item.lastName + `</p>
-                    </div>
-                  </div>`);
-                });
+        if (response.usersArray.length == 0) 
+          $("#users-list").append(`<div class="rtl">نتیجه ای یافت نشد.</div>`);
+            
+        else
+        cardsAppend(response)
             })
         }
 
@@ -161,40 +204,21 @@
         //     window.location.replace("../login.html");
         // }
         ////////////////////////////////////
-        //TODO: search should be completed 
-        ////////////////////////////////////
 
         $('#search').keypress(function (e) {
+            var departmentId
             if (e.which == 13) {
                 var value = $('#search').val();
-                //     text: value
-                // })
-                search_users(value);
+                // if ($("#drpDepartments").val() != "all")
+          departmentId = $("#drpDepartments").val();
+                search_users(value,departmentId);
                 return false;
             }
         });
 
         //show a list of users   
         post('/users/all', {}, function (response) {
-
-            response.usersArray.map(function (item) {
-                $('#users-list').append(`
-
-                <div class="card" unqueId=` + item._id + `>
-                    <div class="card-content">
-                        <p>` + item.firstName + ` ` + item.lastName + `</p>
-                        <p موبایل:` + item.mobileNumber + `</p>
-                        <p> شماره داخلی:` + item.phoneNumber + `</p>
-                        <p>` + item.email + `</p>
-                        <p> واحد:` + item.group.departmentId.title + `</p>
-                        <p>گروه کاربری:` + item.group.title + `</p>
-                        <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_un="` + item.username + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `" editItem_group="` + item.group + `">ویرایش
-                        <i class="material-icons">edit</i></a>
-                        <a class="waves-effect waves-light btn delete" id="btnDelete" username="` + item.username + `" uniqueId="` + item._id + `" >حذف
-                        <i class="material-icons">delete</i></a>
-                    </div>   
-                </div>`);
-            });
+            cardsAppend(response)
 
             $('.edit').click(function (e) {
 
@@ -342,7 +366,6 @@
                     })
                 })
                 $('.pNums').persiaNumber();
-                
             })
 
             $('.delete').click(function (e) {
@@ -353,7 +376,6 @@
                     delete_users(userId);
                     alert("«" + $(this).attr('username') + "» با موفقیت پاک شد.");
                 }
-
             })
         })
 
@@ -384,6 +406,15 @@
             })
         }
         $('.pNums').persiaNumber();
+
+
+        $("#drpDepartments").change(function() {
+            var departmentId;
+            var value = $("#search").val();
+            // if ($("#drpDepartments").val() != "all")
+              departmentId = $("#drpDepartments").val();
+            search_users(value, departmentId);
+          });
     });
 
 })(jQuery);
