@@ -86,7 +86,7 @@ router.post("/search", auth, function(req, res) {
         .status(403)
         .json({ error: "You don't have access to this api." });
   }
-  var { filters, query } = req.body;
+  var { filters, query,departmentId } = req.body;
   if (!query) query = "";
   var dbQuery = {
     $or: [
@@ -156,25 +156,39 @@ router.post("/search", auth, function(req, res) {
         $in: filterTypes
       };
   }
-  var data;
-  if (req.session.type < 2) data = dbQuery;
-  else data = { $and: [{ departmentId: req.session.departmentId }, dbQuery] };
+  if (req.session.type < 2) {
+    if(departmentId)  dbQuery.departmentId=departmentId;}
+  else  dbQuery.departmentId= req.session.departmentId ;
+
   message_sc
-    .find(data)
-    .sort("-date")
-    .exec(function(err, result) {
-      if (!err) {
-        res.status(200).json({
-          messages: result,
-          // userId: req.body.token
-          userId: req.session.userId
-        });
-      } else {
-        res.status(500).json({
-          error: err
-        });
-      }
-    });
+  .find(dbQuery)
+  .populate({
+    path: "replys.userId",
+    select: "username"
+  })
+  .populate({
+    path: "isSeen.userId",
+    select: "username"
+  })
+  .populate({
+    path: "departmentId",
+    select: "title"
+  })
+  .sort("-date")
+  .exec(function(err, result) {
+    //pagination should be handled
+    if (!err) {
+      res.status(200).json({
+        messages: result,
+        // userId: req.body.token
+        userId: req.session.userId
+      });
+    } else {
+      res.status(500).json({
+        error: err
+      });
+    }
+  });
 });
 
 //Select last 5 messages sort by date

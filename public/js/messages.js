@@ -5,10 +5,11 @@
 
 
 
-  var search_message = function (query, filters) {
+  var search_message = function (query, filters,departmentId) {
     post(
       "/messages/search",
       {
+        departmentId,
         filters: filters,
         query: query
       },
@@ -21,30 +22,48 @@
         else
         
         response.messages.map(function (item) {
-          cardsAppend(item);
+          cardsAppend(item,response.userId);
         });
       }
     );
   };
 
+  function fillSelectDepartment() {
+    post("/departments/all", {}, function(response) {
+      $("#drpDepartments").append(`
+            <option value=""  selected>همه</option>
+            `);
+      $(response.departmentsArray).each(function(i, department) {
+        $("#drpDepartments").append(
+          `
+            <option value="` +
+            department._id +
+            `" >` +
+            department.title +
+            `</option>
+            `
+        );
+      });
+      $("select").material_select();
+    });
+  }
 
-
+  var filters = {
+    messages: 1,
+    // replys: 1,
+    photos: 1,
+    movies: 1,
+    voices: 1,
+    documents: 1
+  };
   $(function () {
 
     ///////////////////////////////////search filters///////////////////////////////////
-    var filters = {
-      messages: 1,
-      // replys: 1,
-      photos: 1,
-      movies: 1,
-      voices: 1,
-      documents: 1
-    };
 
     $("#cbxMessages").change(function () {
       if ($("#cbxMessages").is(":checked")) filters.messages = 1;
       else filters.messages = 0;
-      search_message($("#search").val(), filters);
+      search_message($("#search").val(), filters,$("#drpDepartments").val());
     });
 
     // $('#cbxReplys').change(function () {
@@ -60,7 +79,7 @@
       if ($("#cbxPhotos").is(":checked")) filters.photos = 1;
       else filters.photos = 0;
 
-      search_message($("#search").val(), filters);
+      search_message($("#search").val(), filters,$("#drpDepartments").val());
     });
 
     $("#cbxMovies").change(function () {
@@ -68,31 +87,52 @@
       if ($("#cbxMovies").is(":checked")) filters.movies = 1;
       else filters.movies = 0;
 
-      search_message($("#search").val(), filters);
+      search_message($("#search").val(), filters,$("#drpDepartments").val());
     });
 
     $("#cbxVoices").change(function () {
       if ($("#cbxVoices").is(":checked")) filters.voices = 1;
       else filters.voices = 0;
-      search_message($("#search").val(), filters);
+      search_message($("#search").val(), filters,$("#drpDepartments").val());
     });
     $("#cbxDocs").change(function () {
       if ($("#cbxDocs").is(":checked")) filters.documents = 1;
       else filters.documents = 0;
-      search_message($("#search").val(), filters);
+      search_message($("#search").val(), filters,$("#drpDepartments").val());
     });
     ///////////////////////////////////search///////////////////////////////////
 
     $("#search").keypress(function (e) {
       if (e.which == 13) {
-        var value = $("#search").val();
-        search_message(value, filters);
-        return false; //<---- Add this line
+        var departmentId;
+      var value = $("#search").val();
+      // if($("#drpDepartments").val()!='all')
+          departmentId = $("#drpDepartments").val();
+      // if($("#drpVoteItems").val()!='all')            
+      search_message(value,filters, departmentId);
+      return false; 
+    }
+    });
+
+    post("/users/type", {}, function(response) {
+      var userType = response.type;
+      var departments;
+      if (userType < 2) {
+        $("#drpDepartments").prop("disabled", false);
+        deparments = "";
+        // deparments = "all";
+      } else {
+        post("/departments/select/one", {}, function(response) {
+          departments = response.department;
+          $("#drpDepartments").val(departments.departmentId);
+        });
       }
+
+      fillSelectDepartment();
     });
 
     post("/messages/select/all/date", {}, function (response) {
-      var reply;
+      // var reply;
       response.messages.map(function (item) {
         cardsAppend(item, response.userId);
       });
@@ -527,14 +567,16 @@
     });
 
     function selectedUsers(checkbox) { }
+
   }
-  //     $(document).ready(function(){
-  //     $('body').on('click', '.pin', function () {
-  //         console.log('PIN...')
-  //         $('#pinModal').modal('open');
-
-  //     })
-  // })
-
+      $("#drpDepartments").change(function() {
+        var departmentId;
+        var value = $("#search").val();
+        // if ($("#drpDepartments").val() != "all")
+          departmentId = $("#drpDepartments").val();
+          console.log("filters: ",filters)
+        search_message(value,filters, departmentId);
+      });
+  
 
 })(jQuery);
