@@ -16,7 +16,9 @@ var voteSchema = mongoose.Schema({
         score: { //0<=score<=5
             type: Number,
             default: 0
-        }
+        },
+        departmentId:{ type:mongoose.SchemaTypes.ObjectId, ref:"departments"}, //channelId or programId
+        
     },
     comment:{
         destinationId:{ type:mongoose.SchemaTypes.ObjectId, ref:"voteItems"}, //channelId or programId

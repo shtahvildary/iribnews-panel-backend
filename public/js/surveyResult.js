@@ -8,11 +8,9 @@
         surveys.map(item => {
             result.push(item)
         })
-        console.log(result)
     })
 
     function revealAppend(surveyId) {
-        console.log(surveyId)
         var answers = {}
         for (var i = 0; i < result.length; i++) {
             if (result[i].surveyId == surveyId) {
@@ -27,8 +25,6 @@
     $(function () { })
     post('/surveys/all', {}, function (response) {
         response.surveysArray.map(function (item) {
-            console.log('item: ', item)
-
             $('#surveysResult-list').append(`
                 <div class="card rtl">
                     <div class="card-content activator ">

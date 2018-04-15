@@ -134,14 +134,88 @@ router.post("/all/result", auth, function(req, res) {
           totalCount: value.total
         });
       });
-
-      // return console.ok(final)
-
       return res.status(200).json({
         surveys: final
       });
     });
-}) //Select last 3 surveys sort by date
+})
+
+router.post("/search/result", auth, function(req, res) {
+  var allowedPermissions=[123]
+
+  var {query,departmentId,voteItemId}=req.body;
+  var dbQuery={$or:[
+    {
+      "title": {
+          // $regex: "",
+          $regex: query,
+          $options: 'i'
+      }
+  }, {
+      "text": {
+          // $regex: "",
+          $regex: query,
+          $options: 'i'
+      }
+  }
+  ]}
+
+  if(voteItemId) dbQuery.voteItemId=voteItemId;
+  if (req.session.type < 2)  {if(departmentId)dbQuery.departmentId=departmentId}
+  else dbQuery.departmentId= req.session.departmentId;
+  
+  surveyResults_sc
+    .find(dbQuery)
+    .populate({
+      path: "surveyId",
+      select: {
+        text: "text",
+        keyboard: "keyboard",
+        _id: "_id"
+      }
+    })
+    .sort("-date")
+    .exec(function(error, result) {
+      if (error)
+        return res.status(500).json({
+          error
+        });
+      var x = {};
+      result.map(sresult => {
+        var id = sresult.surveyId._id;
+        var text = sresult.text;
+        if (!x[id])
+          x[id] = {
+            total: 0,
+            votes: {}
+          };
+        if (!x[id]["votes"][text]) x[id]["votes"][text] = 0;
+        x[id]["votes"][text]++;
+        x[id].total++;
+      });
+      var final = [];
+      _.mapKeys(x, (value, key) => {
+        var answers = [];
+        _.mapKeys(value.votes, (v, k) => {
+          answers.push({
+            text: k,
+            count: v,
+            percent: Math.round(v * 100 / value.total)
+          });
+        });
+        final.push({
+          surveyId: key,
+          answers,
+          totalCount: value.total
+        });
+      });
+      return res.status(200).json({
+        surveys: final
+      });
+    });
+})
+
+//Select last 3 surveys sort by date
   router.post("/select/last/date", auth, function(req, res) {
 
     var data;
