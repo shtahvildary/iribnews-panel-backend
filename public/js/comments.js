@@ -75,6 +75,7 @@
     var commentsCount = 0;
     response.votesArray.map(function(item) {
       if (item.comment) {
+        console.log(item)
         commentsCount++;
         $("#comments-list").append(
           `
@@ -98,7 +99,6 @@
             `:` +
             new Date(item.date).getSeconds() +
             `</p>
-              
                         </div>   
                     </div>`
         );

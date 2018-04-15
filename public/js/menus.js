@@ -90,13 +90,16 @@
             ` + (userType != 3 ? (`
             <li>
                 <a href="usersList.html">مدیریت کاربران</a>
-                <a href="groupsList.html">مدیریت گروه ها</a>
-                <a href="departmentsList.html">مدیریت واحدها</a>
+                <a href="groupsList.html">مدیریت گروه ها</a>`+
+                (userType<2?`
+                <a href="departmentsList.html">مدیریت واحدها</a>`
+                :"" ) +`
+
             </li>`) : '') + `
             ` + (userType != 0 ? (
                 `
             <li>
-                <a href="ConnectAdmin.html">ارتباط با ادمین</a>
+                <a href="connectAdmin.html">ارتباط با ادمین</a>
             </li>`) : '') + `
             ` + (userType == 0 ? (
                 `

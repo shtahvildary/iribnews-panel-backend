@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="../css/materialize-rtl.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link rel="shortcut icon" href="../icons/favicon.ico">
-    <title>رسانه های نوین - مدیریت گروه های کاربری</title>
+    <title>رسانه های نوین - تغییر وضعیت کاربران</title>
 
     <!-- CSS  -->
     <link href="/css/materialIcons.css" rel="stylesheet">
@@ -18,34 +18,23 @@
     <div id="navbar"></div>
     <div class="container pNums">
         <div class="rtl">
-            مدیریت گروه ها
+            تغییر وضعیت کاربران
         </div>
         <div class="row">
-            <a class="waves-effect waves-light btn" href="newGroup.html">افزودن گروه جدید
-                <i class="material-icons">group_add</i>
-            </a>
-
-
+            
             <input placeholder="جستجو" id="search" type="text">
-            <div id="filters" class="rtl">
+            <div id="filters" class=rtl>
                 <p>
                     <div class="input-field col s6 offset-s6">
-                        <select id="drpDepartments" disabled>
+                        <select id="drpDepartments" >
                         </select>
                         <label for="drpDepartments">واحد:</label>
                     </div>
-                    <!-- <div class="input-field col s6 ">
-                        <select id="drpDepartments" disabled>
-                        </select>
-                        <label for="drpGroupType">نوع گروه:</label>
-                    </div> -->
-
                 </p>
             </div>
-
         </div>
-        <div id="groups-list">
-        </div>
+            <div id="users-list">
+            </div>
     </div>
 
 
@@ -53,12 +42,12 @@
     <!--  Scripts-->
     <script src="../js/jquery-2.1.1.min.js"></script>
     <script src="../js/jquery.cookie.js"></script>
+    <script src="../js/logout.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/materialize.js"></script>
     <script src="../js/init.js"></script>
-    <script src="../js/groups.js"></script>
+    <script src="../js/usersStatus.js"></script>
     <script src="../js/menus.js"></script>
-    <script src="../js/logout.js"></script>
     <script src="../js/persianumber.js"></script>
 
 

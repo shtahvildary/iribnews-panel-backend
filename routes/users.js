@@ -16,7 +16,6 @@ router.get("/", function(req, res, next) {
 //Add new user
 router.post("/register", auth, function(req, res) {
   // var allowedPermissions=[103]
-
   var userType = req.session.type;
   if (userType != 0 && userType >= req.body.type)
     return res.status(403).json({ error: "Forbidden: permission error" });
@@ -302,6 +301,8 @@ router.post("/all", auth, function(req, res) {
     });
 });
 
+
+
 router.post("/search", auth, function(req, res) {
   var { query, departmentId } = req.body;
   if (!query) query = "";
@@ -420,7 +421,7 @@ router.post("/logout", function(req, res, next) {
 //URL: localhost:5010/users/status
 //INPUT:{"_id":"5a1e711ed411741d84d10a29"}
 
-router.post("/status", auth, function(req, res) {
+router.post("/update/status", auth, function(req, res) {
   var userType = req.session.type;
   if (userType != 0)
     return res.status(403).json({ error: "Forbidden: permission error" });
@@ -445,6 +446,35 @@ router.post("/status", auth, function(req, res) {
       });
     }
   });
+});
+
+router.post("/all/status", auth, function(req, res) {
+  if (req.session.type !=0) return res.status(403).json({ error: "Forbidden: permission error" });
+
+  user_sc
+    .find()
+    .populate({
+      path: "group",
+      select: "title",
+      populate: { path: "departmentId", select: "title" }
+    })
+    .exec(function(err, result) {
+      if (!err) {
+        if (result) {
+          res.json({
+            usersArray: result
+          });
+        } else {
+          res.json({
+            error: "There is no user to select..."
+          });
+        }
+      } else {
+        res.status(500).json({
+          error: err
+        });
+      }
+    });
 });
 
 router.post("/findeUser", auth, function(req, res) {

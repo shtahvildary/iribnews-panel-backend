@@ -50,7 +50,6 @@
 
         } else {
             var password = $("#password1").val();
-            console.log('btnAddUser is clicked...');
             var firstName = $("#firstName").val();
             var lastName = $("#lastName").val();
             if($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
@@ -167,7 +166,7 @@
                      `</p>
                     <p>گروه کاربری:` + item.group.title + 
                     `</p>
-                    <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_un="` + item.username + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `" editItem_group="` + item.group + `">ویرایش
+                    <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_un="` + item.username + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `" editItem_group="` + item.group._id + `">ویرایش
                     <i class="material-icons">edit</i></a>
                     <a class="waves-effect waves-light btn delete" id="btnDelete" username="` + item.username + `" uniqueId="` + item._id + `" >حذف
                     <i class="material-icons">delete</i></a>
@@ -185,8 +184,6 @@
         fillSelectGroup();
         //search in users list   
         var search_users = function (query,departmentId) {
-console.log(query)
-console.log(departmentId)
 
             post('/users/search', {
                 query,departmentId:departmentId

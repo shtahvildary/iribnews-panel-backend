@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="../icons/favicon.ico">
+    <title>رسانه های نوین - افزودن مدیر جدید</title>
+
+    <!-- CSS  -->
+    <link href="/css/materialIcons.css" rel="stylesheet">
+    <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/materialize-rtl.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <div class="container">
+            <div class="rtl">
+                    افزودن مدیر جدید
+                </div>
+        <!-- <div class="container" dir="rtl"> -->
+        <div class="row">
+
+            <form class="col s12 rtl" style="direction:rtl !important" id="newUserForm">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input id="firstName" type="text" class="validate">
+                        <label for="firstName">نام: </label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="lastName" type="text" class="validate">
+                        <label for="lastName">نام خانوادگی:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="personelNumber" type="number" class="validate">
+                        <label for="personelNumber">شماره کارمندی :</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input id="username" type="text" class="validate">
+                        <label for="username">شناسه کاربر: </label>
+                    </div>
+                    <div class="input-field col s4">
+
+                        <input id="password1" type="password">
+                        <!-- <input disabled id="password1" type="password" class="validate"> -->
+                        <label for="password1">کلمه عبور: </label>
+                    </div>
+                    <div class="input-field col s4">
+
+                        <input id="password2" type="password">
+                        <label for="password2">تکرار کلمه عبور: </label>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">email</i>
+                        <input id="email" type="email" class="validate">
+                        <label for="email">ایمیل: </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">phone_android</i>
+                        <input id="mobile" type="tel" class="validate">
+                        <label for="mobile">شماره همراه: </label>
+                    </div>
+                
+                
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">phone</i>
+                        <input id="phone" type="tel" class="validate">
+                        <label for="phone">شماره داخلی: </label>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <p>
+                        <input type="checkbox" id="permitedChannels" />
+                        <label for="permitedChannels">permitedChannels</label>
+                    </p>
+                </div> -->
+                <div class="row">
+                    <div class="input-field col s12 ">
+                        <select id="userGroup">
+                        </select>
+                        <label for="userGroup">گروه کاربری</label>
+                    </div>
+                </div>
+            </form>
+            <button class="btn waves-effect waves-light" type="submit" id="btnAddUser">ذخیره
+                <i class="material-icons right">save</i>
+            </button>
+        </div>
+
+    </div>
+
+
+    <!--  Scripts-->
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> -->
+    <script src="../js/materialize.min.js"></script>    
+    <script src="../js/jquery.cookie.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/materialize.js"></script>
+    <script src="../js/init.js"></script>
+    <script src="../js/voteItems.js"></script>
+    <script src="../js/users.js"></script>
+    <script src="../js/menus.js"></script>
+    <script src="../js/logout.js"></script>
+    <script src="../js/persianumber.js"></script>
+
+
+
+</body>
+
+</html>

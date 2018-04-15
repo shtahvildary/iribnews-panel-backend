@@ -5,7 +5,6 @@
     });
   }
   function fillSelectDepartment(departmentId, edit) {
-      console.log(departmentId)
       var drpDepartmentsList;
     post("/departments/all", {}, function(response) {
       if (edit) {
@@ -35,8 +34,13 @@
   }
 
   function fillGroupType(groupType) {
+    // function fillGroupType(groupType,edit) {
+    // var drpGroupTypeList;
     post("/users/type", {}, function(response) {
       var userType = response.type;
+      // if(!edit){
+      //   drpGroupTypeList="#drpGroupType"
+      // }
       if (userType < 2)
         $("#groupTypeSelect").append(
           `
