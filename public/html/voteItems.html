@@ -29,9 +29,26 @@
             
 
             <input placeholder="جستجو" id="search" type="text">
-
-            <div id="voteItems-list">
+            <div id="filters" class=rtl>
+                <p>
+                    <div class="input-field col s6 ">
+                        <select id="drpDepartments" >
+                        </select>
+                        <label for="drpDepartments">واحد:</label>
+                    </div>
+                    <div class="input-field col s6 ">
+                        <select id="drpVoteItemType" >
+                            <option value="" >همه</option>
+                            <option value="0" >کانال</option>
+                            <option value="1">برنامه</option>
+                        </select>
+                        <label for="drpVoteItemType">نوع:</label>
+                    </div>
+                </p>
             </div>
+
+        </div>
+            <div id="voteItems-list">
 
         </div>
     </div>
