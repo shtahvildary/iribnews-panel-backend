@@ -5,7 +5,7 @@ var surveyResults_sc = require("../Schema/surveyResults");
 var chat_sc = require("../Schema/chats");
 var auth = require("../tools/authentication");
 var request = require("request");
-var {checkPermissions}=require("../tools/auth");
+var { checkPermissions } = require("../tools/auth");
 
 
 // const botServer = "http://172.16.17.149:9002";
@@ -22,19 +22,19 @@ var _ = require("lodash");
 //   "keyboard":["fine","not bad"]
 // }
 ////////////////////////////////////////
-router.post("/new", auth, function(req, res) {
-  var allowedPermissions=[121]
-  
-  console.log("Now U can save a new survey ...",req.body);
-  var {title,voteItemId,text,keyboard}=req.body;
+router.post("/new", auth, function (req, res) {
+  var allowedPermissions = [121]
 
-  var survey = new survey_sc({title,voteItemId,text,keyboard});
+  console.log("Now U can save a new survey ...", req.body);
+  var { title, voteItemId, text, keyboard } = req.body;
+
+  var survey = new survey_sc({ title, voteItemId, text, keyboard });
   survey.userId = req.session.userId;
-  survey.departmentId=req.session.departmentId;
+  survey.departmentId = req.session.departmentId;
 
-  survey.save(function(err, savedSurvey) {
-    if(err)return res.status(500).json({error:err})
-    res.status(200).json({message:"survey has been saved successfully and will be send to all users soon."})
+  survey.save(function (err, savedSurvey) {
+    if (err) return res.status(500).json({ error: err })
+    res.status(200).json({ message: "survey has been saved successfully and will be send to all users soon." })
     request.post(
       {
         url: botServer + "/surveys/new",
@@ -42,27 +42,27 @@ router.post("/new", auth, function(req, res) {
           surveyId: savedSurvey._id
         }
       },
-      function(err, response) {
-        if (err)return console.log("err: ", err);
+      function (err, response) {
+        if (err) return console.log("err: ", err);
 
       }
     );
   });
-  
+
 });
 
 //Get all surveys
-router.post("/all", auth, function(req, res) {
-  var allowedPermissions=[121]
-  
+router.post("/all", auth, function (req, res) {
+  var allowedPermissions = [121]
+
   var data;
   if (req.session.type < 2) data = {};
-  else  data = {'departmentId': req.session.departmentId};
-  
+  else data = { 'departmentId': req.session.departmentId };
+
   survey_sc
     .find(data)
     .sort("-date")
-    .exec(function(err, result) {
+    .exec(function (err, result) {
       if (!err) {
         if (result) {
           res.json({
@@ -81,14 +81,64 @@ router.post("/all", auth, function(req, res) {
     });
 });
 
-router.post("/all/result", auth, function(req, res) {
-  var allowedPermissions=[123]
+router.post("/search", auth, function (req, res) {
+  var allowedPermissions = [121]
+
+  var { query, departmentId, voteItemId } = req.body;
+  if (!query) query = "";
+  var dbQuery = {
+    $or: [
+      {
+        "title": {
+          // $regex: "",
+          $regex: query,
+          $options: 'i'
+        }
+      }, {
+        "text": {
+          // $regex: "",
+          $regex: query,
+          $options: 'i'
+        }
+      }
+    ]
+  }
+
+  if (voteItemId) dbQuery.voteItemId = voteItemId;
+  if (req.session.type < 2) { if (departmentId) dbQuery.departmentId = departmentId }
+  else dbQuery.departmentId = req.session.departmentId;
+
+
+  survey_sc
+    .find(dbQuery)
+    .sort("-date")
+    .exec(function (err, result) {
+      if (!err) {
+        if (result) {
+          res.json({
+            surveysArray: result
+          });
+        } else {
+          res.json({
+            error: "There is no survey to select..."
+          });
+        }
+      } else {
+        res.status(500).json({
+          error: err
+        });
+      }
+    });
+});
+
+router.post("/all/result", auth, function (req, res) {
+  var allowedPermissions = [123]
 
   var data;
   if (req.session.type < 2) data = {};
-  else  data = {'departmentId': req.session.departmentId};
-  
-  
+  else data = { 'departmentId': req.session.departmentId };
+
+
   surveyResults_sc
     .find(data)
     .populate({
@@ -100,7 +150,7 @@ router.post("/all/result", auth, function(req, res) {
       }
     })
     .sort("-date")
-    .exec(function(error, result) {
+    .exec(function (error, result) {
       if (error)
         return res.status(500).json({
           error
@@ -140,30 +190,33 @@ router.post("/all/result", auth, function(req, res) {
     });
 })
 
-router.post("/search/result", auth, function(req, res) {
-  var allowedPermissions=[123]
+router.post("/search/result", auth, function (req, res) {
+  var allowedPermissions = [123]
 
-  var {query,departmentId,voteItemId}=req.body;
-  var dbQuery={$or:[
-    {
-      "title": {
+  var { query, departmentId, voteItemId } = req.body;
+  if (!query) query = "";
+  var dbQuery = {
+    $or: [
+      {
+        "title": {
           // $regex: "",
           $regex: query,
           $options: 'i'
-      }
-  }, {
-      "text": {
+        }
+      }, {
+        "text": {
           // $regex: "",
           $regex: query,
           $options: 'i'
+        }
       }
+    ]
   }
-  ]}
 
-  if(voteItemId) dbQuery.voteItemId=voteItemId;
-  if (req.session.type < 2)  {if(departmentId)dbQuery.departmentId=departmentId}
-  else dbQuery.departmentId= req.session.departmentId;
-  
+  if (voteItemId) dbQuery.voteItemId = voteItemId;
+  if (req.session.type < 2) { if (departmentId) dbQuery.departmentId = departmentId }
+  else dbQuery.departmentId = req.session.departmentId;
+
   surveyResults_sc
     .find(dbQuery)
     .populate({
@@ -175,7 +228,7 @@ router.post("/search/result", auth, function(req, res) {
       }
     })
     .sort("-date")
-    .exec(function(error, result) {
+    .exec(function (error, result) {
       if (error)
         return res.status(500).json({
           error
@@ -216,35 +269,35 @@ router.post("/search/result", auth, function(req, res) {
 })
 
 //Select last 3 surveys sort by date
-  router.post("/select/last/date", auth, function(req, res) {
+router.post("/select/last/date", auth, function (req, res) {
 
-    var data;
-    if (req.session.type < 2) data = {};
-    else  data = {'departmentId': req.session.departmentId};
-    
-    survey_sc
-      .find(data)
-      .sort("-date")
-      .limit(3)
-      .exec(function(err, result) {
-        //pagination should be handled
-        if (!err) {
-          res.status(200).json({
-            surveys: result,
-            // userId: req.body.token
-            userId: req.session.userId
-          });
-        } else {
-          res.status(500).json({
-            error: err
-          });
-        }
-      });
-  });
+  var data;
+  if (req.session.type < 2) data = {};
+  else data = { 'departmentId': req.session.departmentId };
 
-router.post("/select/one/result", auth, function(req, res) {
-  var allowedPermissions=[123]
-  
+  survey_sc
+    .find(data)
+    .sort("-date")
+    .limit(3)
+    .exec(function (err, result) {
+      //pagination should be handled
+      if (!err) {
+        res.status(200).json({
+          surveys: result,
+          // userId: req.body.token
+          userId: req.session.userId
+        });
+      } else {
+        res.status(500).json({
+          error: err
+        });
+      }
+    });
+});
+
+router.post("/select/one/result", auth, function (req, res) {
+  var allowedPermissions = [123]
+
   surveyResults_sc
     .find(
       {
@@ -262,7 +315,7 @@ router.post("/select/one/result", auth, function(req, res) {
         text: "text"
       }
     })
-    .exec(function(error, result) {
+    .exec(function (error, result) {
       if (error)
         return res.status(500).json({
           error

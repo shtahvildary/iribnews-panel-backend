@@ -135,11 +135,31 @@ router.post("/search/scores", auth, function(req, res) {
         .json({ error: "You don't have access to this api." });
   }
 var {departmentId,destinationId}=req.body;
-var dbQuery={}
 
-if(voteItemId) dbQuery.voteItemId=voteItemId;
-if (req.session.type < 2)  {if(departmentId) dbQuery.departmentId=departmentId}
-else dbQuery.departmentId= req.session.departmentId;
+var dbQuery={}
+var vote={}
+
+if(destinationId) vote.destinationId=destinationId;
+if (req.session.type < 2)  {if(departmentId) vote.departmentId=departmentId}
+else vote.departmentId= req.session.departmentId;
+
+// var data={};
+// var $and = [];
+
+// if (req.session.type < 2) {
+//   // data = { "comment.destinationId": { $exists: true } }; 
+//   if (departmentId || destinationId) {
+//     // data = { $and: [dbQuery] };
+//     if (departmentId){
+//     data.$and=[{ "vote.destinationId": { $exists: true } }];
+//       data.$and.push({ "vote.departmentId": departmentId });}
+//     if (destinationId) data.$and.push({ "vote.destinationId": destinationId });
+//   } //else data = dbQuery;
+// } else data = { $and: [
+//   { "vote.destinationId": { $exists: true } },
+//   { departmentId: req.session.departmentId }] };
+dbQuery.vote=vote;
+console.log(dbQuery)
   
   votes_sc
     .find(
@@ -159,10 +179,6 @@ else dbQuery.departmentId= req.session.departmentId;
     .exec(function(err, result) {
       if (!err) {
         if (result) {
-          // console.log(result[0]._doc.vote)
-          // res.json({
-          //   votesArray: result
-          // });
           var votes = {};
           result.map(vote => {
             var vote = vote.vote;
@@ -178,15 +194,8 @@ else dbQuery.departmentId= req.session.departmentId;
               votes[vote.destinationId._id].count++;
             }
           });
-
-          // console.log(votes.length)
-          // for(var i=0;i<votes.length;i++){
-          //   votes[i].percent=Math.round((votes[i].score*100)/(votes[i].count*5))
-          // }
-          console.plain(votes);
           var scores = [];
           _.mapKeys(votes, function(value, key) {
-            console.log(key, value);
             var {
               score,
               title,
@@ -201,7 +210,6 @@ else dbQuery.departmentId= req.session.departmentId;
               // percent
             });
           });
-          console.plain("scores: ", scores);
           res.status(200).json({
             votesArray: scores
           });

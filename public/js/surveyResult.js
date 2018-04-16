@@ -21,9 +21,7 @@
         return 0;
     }
 
-
-    $(function () { })
-    post('/surveys/all', {}, function (response) {
+    function cardsAppend(response) {
         response.surveysArray.map(function (item) {
             $('#surveysResult-list').append(`
                 <div class="card rtl">
@@ -51,7 +49,47 @@
                  `);
             });
         })
-    })
+    }
 
+    var search_surveys = function (query, departmentId, voteItemId) {
+
+        post('/surveys/search', {
+            query, departmentId, voteItemId
+        }, function (response) {
+            $('#surveysResult-list').empty();
+            if (response.surveysArray.length == 0)
+                $("#surveysResult-list").append(`<div class="rtl">نتیجه ای یافت نشد.</div>`);
+
+            else
+                cardsAppend(response)
+        })
+    }
+    $(function () {
+        //search in surveys list   
+        $('#search').keypress(function (e) {
+            var departmentId, voteItemId
+            if (e.which == 13) {
+                var value = $('#search').val();
+                // if ($("#drpDepartments").val() != "all")
+                departmentId = $("#drpDepartments").val();
+                voteItemId = $("#drpVoteItems").val();
+                search_surveys(value, departmentId, voteItemId);
+                return false;
+            }
+        });
+    })
+    post('/surveys/all', {}, function (response) {
+        cardsAppend(response)
+    })
+    
+    $("#drpVoteItems").change(function () {
+        var departmentId, voteItemId;
+        var value = $("#search").val();
+        if ($("#drpDepartments").val() != "all")
+            departmentId = $("#drpDepartments").val();
+        if ($("#drpVoteItems").val() != "all")
+            voteItemId = $("#drpVoteItems").val();
+        search_surveys(value, departmentId, voteItemId);
+    });
 })
     (jQuery);
