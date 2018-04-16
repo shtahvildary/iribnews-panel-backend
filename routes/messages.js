@@ -477,10 +477,13 @@ router.post("/chart/monthly", auth, function(req, res) {
   // var first = curr.getDate() - curr.getDay() - 1; // First day is the day of the month - the day of the week
   // var last = first + 5; // last day is the first day + 6
 
-  
+  // var lastday=today;
+  // var firstday=new Date();
+  // firstday.setDate(today.getDate()-30)
   
   var firstday = new Date(curr.setDate(1));
   var lastday = new Date(curr.setDate(31));
+
   // sat=new Date(today.getFullYear(),today.getMonth,)
   // if(sat.getDay)
   firstday.setHours(0, 0, 0, 0);
@@ -523,7 +526,7 @@ router.post("/chart/monthly", auth, function(req, res) {
 
       result.forEach(function(message) {
         //text,audio,voice,video,photo,document
-        index = gregorian_to_jalali(new Date(message.date))[2];
+        index = gregorian_to_jalali(new Date(message.date))[2]-1; //-1 is because it shoud starts from 0
         switch (message.type) {
           case "text": {
             textCount[index] += 1;
