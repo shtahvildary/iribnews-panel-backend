@@ -66,7 +66,6 @@
 
     $(function () {
         $('select').material_select();
-        // fillSelectDepartment();
 
         //search in votingResults list   
         var search_votingResult = function (departmentId, destinationId) {
@@ -96,6 +95,7 @@
             if (userType < 2) {
                 $("#drpDepartments").prop("disabled", false);
                 deparments = "all";
+                fillSelectDepartment();
             } else {
                 post("/departments/select/one", {}, function (response) {
                     departments = response.department;
@@ -103,7 +103,6 @@
                 });
             }
             fillSelectvoteItems(departments);
-            fillSelectDepartment();
         });
 
 

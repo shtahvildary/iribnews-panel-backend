@@ -32,9 +32,6 @@
   $("#search").keypress(function(e) {
     if (e.which == 13) {
       var value = $("#search").val();
-      // console.log('query', {
-      //     text: value
-      // })
       search_departments(value);
       return false;
     }
@@ -194,8 +191,6 @@ function fillCards(departmentsArray){
   }
 
   function delete_departments(departmentId) {
-    // console.log('departmentId: ', departmentId);
-
     post(
       "/departments/disable",
       {

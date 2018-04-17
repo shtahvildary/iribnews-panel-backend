@@ -48,8 +48,7 @@
           description: $(this).attr("editItem_description")
         };
         $("#voteItems-list").after(
-          `
-            
+          ` 
             <!-- Modal Trigger -->
             <div id="editModal" class="modal edit rtl">
                 <div class="modal-content">
@@ -211,13 +210,13 @@
           $("#drpDepartments").prop("disabled", false);
           deparments = "";
           // deparments = "all";
+          fillSelectDepartment();
         } else {
           post("/departments/select/one", {}, function(response) {
             departments = response.department;
             $("#drpDepartments").val(departments.departmentId);
           });
         }
-        fillSelectDepartment();
       });
 
     post("/voteItems/all", {}, function(response) {

@@ -113,6 +113,7 @@
         $("#drpDepartments").prop("disabled", false);
         deparments = "";
         // deparments = "all";
+      fillSelectDepartment();        
       } else {
         post("/departments/select/one", {}, function(response) {
           departments = response.department;
@@ -120,7 +121,6 @@
         });
       }
 
-      fillSelectDepartment();
     });
 
     post("/messages/select/all/date", {}, function(response) {
@@ -205,7 +205,7 @@
                         <div class="row">
                             <div class="col m6  ">                           
                             <p >` +
-        (item.type == "video"
+        (item.type == "video"|| item.mime=="video/mp4"
           ? '<video class="responsive-video" style="max-width:50%" ><source src="' +
             fileserver +
             `/` +
@@ -235,7 +235,7 @@
     
                             <div class="col m6 ">
                                 <p>` +
-        (item.type == "video"
+        (item.type == "video"|| item.mime=="video/mp4"
           ? item.caption + `<p><i class="material-icons">movie</i></p>`
           : item.type == "video_note"
             ? item.caption + `<p><i class="material-icons">movie</i></p>`
@@ -410,7 +410,7 @@
                         <form>
                         <div class="col m6">
                         <p>` +
-        (item.type == "video"
+        (item.type == "video"|| item.mime=="video/mp4"
           ? '<video class="responsive-video" style="max-width:100%" controls><source src="' +
             fileserver +
             `/` +
@@ -448,7 +448,7 @@
 
                         <div class="col m6">
                         <p>` +
-        (item.type == "video"
+        (item.type == "video"|| item.mime=="video/mp4"
           ? item.caption + `<p><i class="material-icons">movie</i></p>`
           : item.type == "video_note"
             ? item.caption + `<p><i class="material-icons">movie</i></p>`

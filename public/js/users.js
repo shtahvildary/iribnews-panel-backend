@@ -3,44 +3,40 @@
 
     function fillSelectGroup(groupId) {
         post('/groups/all', {}, function (response) {
-    
+
             $("#userGroup").append(`
             <option value="" disabled selected>انتخاب کنید...</option>
             `)
-            $(response.groupsArray).each(function(i,group){
+            $(response.groupsArray).each(function (i, group) {
                 $("#userGroup").append(`
-            <option value="`+group._id+`"`+(group._id==groupId?'selected':'')+`>`+group.title+`</option>
+            <option value="`+ group._id + `"` + (group._id == groupId ? 'selected' : '') + `>` + group.title + `</option>
             `)
-                
+
             })
-        $('select').material_select();
-            
+            $('select').material_select();
+
         })
     }
 
     function fillSelectDepartment() {
-        post("/departments/all", {}, function(response) {
-          $("#drpDepartments").append(`
+        post("/departments/all", {}, function (response) {
+            $("#drpDepartments").append(`
                 <option value=""  selected>همه</option>
                 `);
-          $(response.departmentsArray).each(function(i, department) {
-            $("#drpDepartments").append(
-              `
+            $(response.departmentsArray).each(function (i, department) {
+                $("#drpDepartments").append(
+                    `
                 <option value="` +
-                department._id +
-                `" >` +
-                department.title +
-                `</option>
+                    department._id +
+                    `" >` +
+                    department.title +
+                    `</option>
                 `
-            );
-          });
-          $("select").material_select();
+                );
+            });
+            $("select").material_select();
         });
-      }
-    
-
-
-
+    }
 
     //add user 
     $("#btnAddUser").click(function () {
@@ -52,14 +48,14 @@
             var password = $("#password1").val();
             var firstName = $("#firstName").val();
             var lastName = $("#lastName").val();
-            if($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
+            if ($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
             var username = $("#username").val().toLowerCase();
             var email = $("#email").val().toLowerCase();
             var mobileNumber = $("#mobile").val();
             var phoneNumber = $("#phone").val();
             // var permitedChannels = $("#permitedChannels").val();
             // var type = $("#type").val();
-            var group=$("#userGroup").val()
+            var group = $("#userGroup").val()
 
             var user = {
                 firstName,
@@ -99,7 +95,7 @@
         // if($("#phone").val())var phoneNumber = $("#phone").val();
 
         // updateUser({
-            
+
         //     firstName: firstName,
         //     lastName: lastName,
         //     email: email,
@@ -113,19 +109,19 @@
             alert("کلمه عبور و تکرار آن مشابه نیستند!")
 
         } else {
-            if($("#password1").val())var password = $("#password1").val();
-            
-            if($("#firstName").val())var firstName = $("#firstName").val();
-            if($("#lastName").val())var lastName = $("#lastName").val();
-            if($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
-            if($("#personelNumber").val())var personelNumber = $("#personelNumber").val();
-            if($("#email").val())var email = $("#email").val().toLowerCase();
-            if( $("#mobile").val())var mobileNumber = $("#mobile").val();
-            if($("#phone").val())var phoneNumber = $("#phone").val();
+            if ($("#password1").val()) var password = $("#password1").val();
+
+            if ($("#firstName").val()) var firstName = $("#firstName").val();
+            if ($("#lastName").val()) var lastName = $("#lastName").val();
+            if ($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
+            if ($("#personelNumber").val()) var personelNumber = $("#personelNumber").val();
+            if ($("#email").val()) var email = $("#email").val().toLowerCase();
+            if ($("#mobile").val()) var mobileNumber = $("#mobile").val();
+            if ($("#phone").val()) var phoneNumber = $("#phone").val();
             // var permitedChannels = $("#permitedChannels").val();
             // var type = $("#type").val();
-            var group=$("#userGroup").val();
-        
+            var group = $("#userGroup").val();
+
             var user = {
                 firstName: firstName,
                 lastName: lastName,
@@ -136,7 +132,7 @@
                 phoneNumber: phoneNumber,
                 // permitedChannels: permitedChannels,
                 // type: type
-            group:group                
+                group: group
             };
             updateUser(user)
         }
@@ -148,11 +144,11 @@
                 alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید")
             } else {
                 alert("ثبت اطلاعات با موفقیت انجام شد")
-                window.location.replace("../index.html")
+                window.location.replace("../html/usersList.html")
             }
         })
     };
-    function cardsAppend(response){
+    function cardsAppend(response) {
         response.usersArray.map(function (item) {
             $('#users-list').append(`
 
@@ -163,9 +159,9 @@
                     <p> شماره داخلی:` + item.phoneNumber + `</p>
                     <p>` + item.email + `</p>
                     <p> واحد:` + item.group.departmentId.title +
-                     `</p>
-                    <p>گروه کاربری:` + item.group.title + 
-                    `</p>
+                `</p>
+                    <p>گروه کاربری:` + item.group.title +
+                `</p>
                     <a class="waves-effect waves-light btn modal-trigger edit" id="btnEdit-` + item._id + `" href="#editModal" editItem_id="` + item._id + `" editItem_un="` + item.username + `" editItem_firstName="` + item.firstName + `" editItem_lastName="` + item.lastName + `" editItem_mobileNumber="` + item.mobileNumber + `" editItem_phoneNumber="` + item.phoneNumber + `" editItem_personelNumber="` + item.personelNumber + `" editItem_email="` + item.email + `" editItem_group="` + item.group._id + `">ویرایش
                     <i class="material-icons">edit</i></a>
                     <a class="waves-effect waves-light btn delete" id="btnDelete" username="` + item.username + `" uniqueId="` + item._id + `" >حذف
@@ -178,24 +174,41 @@
 
 
     $(function () {
+       
+
 
         $('select').material_select();
-        fillSelectDepartment();
+        // fillSelectDepartment();
         fillSelectGroup();
         //search in users list   
-        var search_users = function (query,departmentId) {
+        var search_users = function (query, departmentId) {
 
             post('/users/search', {
-                query,departmentId:departmentId
+                query, departmentId: departmentId
             }, function (response) {
                 $('#users-list').empty();
-        if (response.usersArray.length == 0) 
-          $("#users-list").append(`<div class="rtl">نتیجه ای یافت نشد.</div>`);
-            
-        else
-        cardsAppend(response)
+                if (response.usersArray.length == 0)
+                    $("#users-list").append(`<div class="rtl">نتیجه ای یافت نشد.</div>`);
+
+                else
+                    cardsAppend(response)
             })
         }
+
+        post("/users/type", {}, function (response) {
+            var userType = response.type;
+            var departments;
+            if (userType < 2) {
+                $("#drpDepartments").prop("disabled", false);
+                // deparments = "all";
+                fillSelectDepartment();
+            } else {
+                post("/departments/select/one", {}, function (response) {
+                    departments = response.department;
+                    $("#drpDepartments").val(departments.departmentId);
+                });
+            }
+        });
 
         // if ($.cookie("token")&&!$.cookie("id")) {
         //     window.location.replace("../login.html");
@@ -207,14 +220,30 @@
             if (e.which == 13) {
                 var value = $('#search').val();
                 // if ($("#drpDepartments").val() != "all")
-          departmentId = $("#drpDepartments").val();
-                search_users(value,departmentId);
+                departmentId = $("#drpDepartments").val();
+                search_users(value, departmentId);
                 return false;
+            }
+        });
+
+        post("/users/type", {}, function (response) {
+            var userType = response.type;
+            var departments;
+            if (userType < 2) {
+                $("#drpDepartments").prop("disabled", false);
+                // deparments = "all";
+                fillSelectDepartment();
+            } else {
+                post("/departments/select/one", {}, function (response) {
+                    departments = response.department;
+                    $("#drpDepartments").val(departments.departmentId);
+                });
             }
         });
 
         //show a list of users   
         post('/users/all', {}, function (response) {
+            console.log("response: ",response)
             cardsAppend(response)
 
             $('.edit').click(function (e) {
@@ -248,7 +277,7 @@
                                 <h5>ویرایش</h5>
                                     <form class="col s12 " id="newUserForm">
                                         <div class="row">
-                                        <p>نام کاربری: ` + username  + `</p>
+                                        <p>نام کاربری: ` + username + `</p>
                                             <div class="input-field col s6">
                                             
                                                 <i class="material-icons prefix">account_circle</i>
@@ -323,7 +352,7 @@
                         </div>
                     </div>       
                 `);
-                
+
                 fillSelectGroup(group);
 
                 $('#cbxChangePassword').change(function () {
@@ -363,6 +392,9 @@
                     })
                 })
                 $('.pNums').persiaNumber();
+            })
+            $("#btnCancel").click(function (e) {
+                window.location.replace("../html/usersList.html");
             })
 
             $('.delete').click(function (e) {
@@ -405,13 +437,13 @@
         $('.pNums').persiaNumber();
 
 
-        $("#drpDepartments").change(function() {
+        $("#drpDepartments").change(function () {
             var departmentId;
             var value = $("#search").val();
             // if ($("#drpDepartments").val() != "all")
-              departmentId = $("#drpDepartments").val();
+            departmentId = $("#drpDepartments").val();
             search_users(value, departmentId);
-          });
+        });
     });
 
 })(jQuery);

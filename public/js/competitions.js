@@ -37,6 +37,7 @@
             alert("لطفا تمامی موارد را وارد کنید!")
 
     })
+    
     var tbxKeyboardCount = 2
     $("#btnAddTbxKeyboard").click(function () {
         tbxKeyboardCount++;
@@ -49,7 +50,9 @@
         $("#tbxCorrectAnswer").attr("max",tbxKeyboardCount)
     })
 
-
+    $("#btnCancel").click(function (e) {
+        window.location.replace("../html/competitions.html");
+    })
 
     $(function () {
         
@@ -65,8 +68,6 @@
             $('select').material_select();
         })
         $('.pNums').persiaNumber();
-
-
         
     });
     

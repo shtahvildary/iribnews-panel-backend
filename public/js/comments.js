@@ -132,6 +132,7 @@
       if (userType < 2) {
         $("#drpDepartments").prop("disabled", false);
         deparments = "all";
+        fillSelectDepartment();
       } else {
         post("/departments/select/one", {}, function(response) {
           departments = response.department;
@@ -141,7 +142,6 @@
 
       fillSelectvoteItems(departments);
 
-      fillSelectDepartment();
     });
 
     post("/votes/all/comments", {}, function(response) {

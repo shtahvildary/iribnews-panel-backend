@@ -72,7 +72,17 @@
 
   function cardsAppend(response, permissionsList) {
     response.groupsArray.map(function(item, callback) {
-        console.log(item)
+      var groupType;
+        switch(item.type){
+          case 0: groupType="ادمین";
+            break;
+            case 1: groupType="مدیران رسانه های نوین";
+            break;
+            case 2: groupType="مدیران واحدها";
+            break;
+            case 3: groupType="کاربران واحدها"
+            break;
+        }
       $("#groups-list").append(
         `
         <div class="card" unqueId=` +
@@ -87,6 +97,10 @@
           واحد:` +
     item.departmentId.title +
     `</p>
+    <p>
+                نوع گروه: ` +
+                groupType +
+          `</p>  
                 <p>
                 توضیحات:` +
           item.description +
@@ -196,7 +210,6 @@
   };
 
   $(function() {
-    // fillSelectDepartment("", false);
     fillGroupType();
 
     //search in groups list
@@ -263,7 +276,6 @@
           var permissions = $(this).attr("editItem_permissions");
           var description = $(this).attr("editItem_description");
           var department = $(this).attr("editItem_department");
-          console.log(description)
 
           groupEdit = {
             _id,

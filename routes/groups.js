@@ -48,7 +48,7 @@ router.post("/new", auth, function(req, res) {
 router.post("/all", auth, function(req, res) {
   var data;
   if (req.userType == 0) data = {};
-  else if (req.session.type == 1) data = { readOnly: 0 };
+  else if (req.session.type == 1) data = {$and:[ {readOnly: 0},{type:{$ne:0}}] };
   else if (req.session.type > 1)
     data = {
       $and: [{ readOnly: 0 }, { departmentId: req.session.departmentId }]
