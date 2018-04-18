@@ -13,7 +13,6 @@
         }
       else {
         drpDepartmentsList="#drpDepartments";
-        $(drpDepartmentsList).append(`<option value=""  selected>همه</option>`);
     }
 
       $(response.departmentsArray).each(function(i, department) {

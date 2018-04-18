@@ -195,21 +195,6 @@
             })
         }
 
-        post("/users/type", {}, function (response) {
-            var userType = response.type;
-            var departments;
-            if (userType < 2) {
-                $("#drpDepartments").prop("disabled", false);
-                // deparments = "all";
-                fillSelectDepartment();
-            } else {
-                post("/departments/select/one", {}, function (response) {
-                    departments = response.department;
-                    $("#drpDepartments").val(departments.departmentId);
-                });
-            }
-        });
-
         // if ($.cookie("token")&&!$.cookie("id")) {
         //     window.location.replace("../login.html");
         // }

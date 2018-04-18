@@ -8,6 +8,9 @@
       <li>
           <a href="userProfile.html">حساب کاربری</a>
       </li>
+      <li id="nav-account" class="local-nav-items-large">
+                  <a href="">راهنما</a>
+              </li>
       <li>
           <a href="#" class="logout">خروج</a>
       </li>
@@ -33,6 +36,9 @@
               </li>
               <li id="nav-account" class="local-nav-items-large">
                   <a href="userProfile.html">حساب کاربری</a>
+              </li>
+              <li id="nav-account" class="local-nav-items-large">
+                  <a href="">راهنما</a>
               </li>
 
               <li class="local-nav-items-small">

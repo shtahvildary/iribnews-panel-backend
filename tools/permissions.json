@@ -49,5 +49,15 @@
         "code": 131,
         "title": "view charts",
         "description": "مشاهده نمودارها"
+    },
+    {
+        "code": 141,
+        "title": "add new competition",
+        "description": " افزودن مسابقه جدید"
+    },
+    {
+        "code": 142,
+        "title": "view competitions",
+        "description": "مشاهده مسابقات "
     }
 ]

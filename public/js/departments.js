@@ -217,6 +217,10 @@ function fillCards(departmentsArray){
       });
     });
 
+    $("#btnCancel").click(function (e) {
+      window.location.replace("../html/management.html");
+  })
+
     // var addDepartment = function(department) {
     //   var formData = new FormData();
     //   formData.append("title", department.title);
