@@ -186,7 +186,8 @@ router.post("/delete", auth, function(req, res) {
 //URL: localhost:5010/groups/status
 
 router.post("/status", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
+    // if (req.session.type != 0) {
     var allowedPermissions = [106];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -194,10 +195,17 @@ router.post("/status", auth, function(req, res) {
         .json({ error: "You don't have access to this api." });
   }
 
-  group_sc.findById(req.body._id).exec(function(err, result) {
+  groups_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {
       console.log("group:", result);
       result.status = req.body.status;
+
+      if(result.type<=req.session.type){
+        return res
+        .status(403)
+        .json({ error: "You don't have access to this api." });
+      }
+
       result.save(function(err, result) {
         if (!err) {
           res.status(200).send(result);

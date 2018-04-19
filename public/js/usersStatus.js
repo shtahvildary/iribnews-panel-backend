@@ -234,14 +234,11 @@
 
         $("#btnUpdateUser").click(function(e) {
           userEdit.status = $("input[type=radio]:checked").val();
-          console.log(userEdit);
           edit_users(userEdit, function(response) {
             if (response) {
-              console.log(response);
               $("#editModal").modal("close");
               alert("به روز رسانی با موفقیت انجام شد.");
             } else {
-              console.log("nooooo");
               alert(
                 "در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. کدخطا: "
               );

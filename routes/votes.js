@@ -8,7 +8,7 @@ var { checkPermissions } = require("../tools/auth");
 
 //Get all votes
 router.post("/all", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
     var allowedPermissions = [123];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -44,17 +44,20 @@ router.post("/all", auth, function(req, res) {
 });
 
 router.post("/all/scores", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
     var allowedPermissions = [123];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
         .status(403)
         .json({ error: "You don't have access to this api." });
   }
+  var data;
+  if (req.session.type < 2) data = {};
+  else data = { departmentId: req.session.departmentId };
 
   votes_sc
     .find(
-      {},
+      {data},
       {
         vote: 1,
         _id: 0
@@ -127,7 +130,7 @@ router.post("/all/scores", auth, function(req, res) {
 });
 
 router.post("/search/scores", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
     var allowedPermissions = [123];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -262,7 +265,7 @@ console.log(dbQuery)
 // })
 
 router.post("/search/comments", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
     var allowedPermissions = [123];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -320,7 +323,7 @@ router.post("/search/comments", auth, function(req, res) {
 });
 
 router.post("/all/comments", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
     var allowedPermissions = [123];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res

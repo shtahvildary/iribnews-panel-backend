@@ -8,7 +8,8 @@ var {checkPermissions}=require("../tools/auth");
 
 //Add new program or channel
 router.post('/new', auth,function (req, res) {
-  if(req.session.type!=0){
+  if(req.session.type>2){
+    // if(req.session.type!=0){
     var allowedPermissions=[122]
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
@@ -36,7 +37,8 @@ router.post('/new', auth,function (req, res) {
 
 //Get all programs and channels (voteItems) which are enable (not deleted)
 router.post('/all', auth,function (req, res) {
-  if(req.session.type!=0){
+  if(req.session.type>2){
+    // if(req.session.type!=0){
     var allowedPermissions=[122]
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
@@ -89,7 +91,8 @@ router.post('/all/recover', auth,function (req, res) {
 
 //Search voteItems
 router.post('/search', auth,function (req, res) {
-  if(req.session.type!=0){
+  if(req.session.type>2){
+    // if(req.session.type!=0){
     var allowedPermissions=[122]
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
@@ -131,7 +134,8 @@ router.post('/search', auth,function (req, res) {
     
 //update voteItems (by id)
 router.post('/update',auth,function(req,res){
-  if(req.session.type!=0){
+  if(req.session.type>2){
+    // if(req.session.type!=0){
     var allowedPermissions=[122]
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
@@ -170,7 +174,8 @@ router.post('/update',auth,function(req,res){
 //INPUT:{"_id":"5a1e711ed411741d84d10a29"}
 
 router.post('/disable',auth, function (req, res) {
-  if(req.session.type!=0){  
+  if(req.session.type>2){  
+    // if(req.session.type!=0){  
   var allowedPermissions=[122]
   if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
   }

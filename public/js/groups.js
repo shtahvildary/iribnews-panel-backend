@@ -71,6 +71,7 @@
 
   function cardsAppend(response, permissionsList) {
     response.groupsArray.map(function(item, callback) {
+      console.log(item)
       var groupType;
         switch(item.type){
           case 0: groupType="ادمین";
@@ -128,7 +129,7 @@
                 <i class="material-icons">edit</i></a>
                 <a class="waves-effect waves-light btn delete" id="btnDelete" uniqueId="` +
               item._id +
-              `" >حذف
+              `"  title="`+item.title+`">حذف
                 <i class="material-icons">delete</i></a>`
             : "") +
           `
@@ -394,8 +395,17 @@
           if (del == true) {
             var groupId = $(this).attr("uniqueId");
             $(".card[uniqueId=" + groupId + "]").fadeOut();
-            delete_groups(groupId);
-            alert("«" + $(this).attr("title") + "» با موفقیت پاک شد.");
+            delete_groups(groupId,function(response){
+              if(response){
+                alert("«" + $(this).attr("title") + "» با موفقیت پاک شد.");
+                window.location.replace("groupsList.html");
+              }
+              else{
+                alert(
+                  "خطایی رخ داده، لطفا دوباره اقدام نمایید. "
+                );
+              }
+            });
           }
         });
       });
@@ -407,14 +417,16 @@
       });
     }
 
-    function delete_groups(groupId) {
+    function delete_groups(groupId,callback) {
       post(
         "/groups/status",
         {
           _id: groupId,
           status: -1
         },
-        function(response) {}
+        function(response) {
+          callback(response)
+        }
       );
     }
     $(".pNums").persiaNumber();

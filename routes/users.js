@@ -199,7 +199,6 @@ router.post("/login", function (req, res) {
       path: "group"
     })
     .exec(function (err, result) {
-      console.plain(err, result);
       if (!err) {
         if (result) {
           bcrypt.compare(req.body.password, result.password, function (
@@ -263,7 +262,7 @@ router.post("/all", auth, function (req, res) {
         if (!err) {
           if (group) {
             data = { group: group };
-            findUsers(data)
+            findeUsers(data)
           } else {
             return res.json({
               error: "There is no group with this _id..."

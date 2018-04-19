@@ -30,7 +30,8 @@ var { gregorian_to_jalali } = require("../tools/persian-date-convert.js");
 
 //select all sort by date
 router.post("/select/all/date", auth, function(req, res, next) {
-  if (req.session.type != 0) {
+  if (req.session.type > 2) {
+    // if (req.session.type != 0) {
     var allowedPermissions = [111];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -79,7 +80,8 @@ router.post("/select/all/date", auth, function(req, res, next) {
 
 //search
 router.post("/search", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
+    // if (req.session.type != 0) {
     var allowedPermissions = [111];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -193,7 +195,8 @@ router.post("/search", auth, function(req, res) {
 
 //Select last 5 messages sort by date
 router.post("/select/last/date", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
+    // if (req.session.type != 0) {
     var allowedPermissions = [111];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -225,7 +228,8 @@ router.post("/select/last/date", auth, function(req, res) {
 
 //date.gethours
 router.post("/chart/daily", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
+    // if (req.session.type != 0) {
     var allowedPermissions = [131];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -352,7 +356,8 @@ router.post("/chart/daily", auth, function(req, res) {
   });
 });
 router.post("/chart/weekly", auth, function(req, res) {
-  if (req.session.type != 0) {
+  // if (req.session.type != 0) {
+    if (req.session.type >2) {
     var allowedPermissions = [131];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -388,7 +393,8 @@ lastday.setHours(23, 59, 59, 999);
     }
   };
   if (req.session.type > 1)
-    data = { $and: [{ departmentId: req.session.departmentId }, date] };
+    data . departmentId= req.session.departmentId ;
+    // data = { $and: [{ departmentId: req.session.departmentId }, date] };
   message_sc.find(data).exec(function(err, result) {
     //pagination should be handled
     if (!err) {
@@ -462,7 +468,8 @@ lastday.setHours(23, 59, 59, 999);
   });
 });
 router.post("/chart/monthly", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
+    // if (req.session.type != 0) {
     var allowedPermissions = [131];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -497,9 +504,8 @@ router.post("/chart/monthly", auth, function(req, res) {
       $lte: lastday
     }
   };
-  if (req.
-    session.type > 1)
-    data = { $and: [{ departmentId: req.session.departmentId }, date] };
+  if (req.session.type > 1)
+    data . departmentId=req.session.departmentId;
   message_sc.find(data).exec(function(err, result) {
     if (!err) {
       var msgCounts = Array(31);
@@ -602,7 +608,8 @@ router.post("/chart/monthly", auth, function(req, res) {
 });
 
 router.post("/chart/selectedDate", auth, function(req, res) {
-  if (req.session.type != 0) {
+  if (req.session.type >2) {
+    // if (req.session.type != 0) {
     var allowedPermissions = [131];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
@@ -634,7 +641,7 @@ router.post("/chart/selectedDate", auth, function(req, res) {
     }
   };
   if (req.session.type > 1)
-    data = { $and: [{ departmentId: req.session.departmentId }, date] };
+    data .departmentId= req.session.departmentId ;
   message_sc.find(data).exec(function(err, result) {
     if (!err) {
       var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
@@ -745,11 +752,14 @@ router.post("/chart/selectedDate", auth, function(req, res) {
 
 //save reply for a message
 router.post("/reply/new", auth,upload.single('file') ,function(req, res) {
-  var allowedPermissions = [112];
+  if (req.session.type != 2) 
+  {
+    var allowedPermissions = [112];
   if (!checkPermissions(allowedPermissions, req.session.permissions))
     return res
       .status(403)
       .json({ error: "You don't have access to this api." });
+    }
   var reply={
     _id:req.body._id,
             text:req.body.text,
@@ -783,11 +793,14 @@ router.post("/reply/new", auth,upload.single('file') ,function(req, res) {
 
 //edit reply for a message
 router.post("/reply/edit", auth, function(req, res) {
+  if (req.session.type != 2) {
+  
   var allowedPermissions = [113];
   if (!checkPermissions(allowedPermissions, req.session.permissions))
     return res
       .status(403)
       .json({ error: "You don't have access to this api." });
+  }
 
   var reply = {
     _id: req.body._id,
@@ -807,37 +820,45 @@ router.post("/reply/edit", auth, function(req, res) {
   );
 });
 
-router.post("/view", auth, function(req, res) {
-  var allowedPermissions = [111];
-  if (!checkPermissions(allowedPermissions, req.session.permissions))
-    return res
-      .status(403)
-      .json({ error: "You don't have access to this api." });
+// router.post("/view", auth, function(req, res) {
+//   var allowedPermissions = [111];
+//   if (!checkPermissions(allowedPermissions, req.session.permissions))
+//     return res
+//       .status(403)
+//       .json({ error: "You don't have access to this api." });
 
-  message_sc.findById(req.body._id).exec(function(err, result) {
-    if (!err) {
-      if (!err) {
-        res.status(200).json({
-          messages: result,
-          // userId: req.body.token
-          userId: req.session.userId
-        });
-      } else {
-        res.status(500).json({
-          error: err
-        });
-      }
-    }
-  });
-});
+//   message_sc.findById(req.body._id).exec(function(err, result) {
+//     if (!err) {
+//       if (!err) {
+//         res.status(200).json({
+//           messages: result,
+//           // userId: req.body.token
+//           userId: req.session.userId
+//         });
+//       } else {
+//         res.status(500).json({
+//           error: err
+//         });
+//       }
+//     }
+//   });
+// });
 
 router.post("/isSeen", auth, function(req, res) {
+  if (req.session.type <2) {
+    return res.status(200).json({
+      message: "you don't need this option..."
+    });
+  }
+  
+  if (req.session.type >2) {
+  
   var allowedPermissions = [111];
   if (!checkPermissions(allowedPermissions, req.session.permissions))
     return res
       .status(403)
       .json({ error: "You don't have access to this api." });
-
+  }
 
   message_sc
     .findOne({
@@ -884,11 +905,19 @@ router.post("/isSeen", auth, function(req, res) {
 });
 
 router.post("/pin", auth, function(req, res) {
+  if (req.session.type <2) {
+    return res
+      .status(403)
+      .json({ error: "You don't have access to this api." });
+  }
+  if (req.session.type >2) {
+  
   var allowedPermissions = [111];
   if (!checkPermissions(allowedPermissions, req.session.permissions))
     return res
       .status(403)
       .json({ error: "You don't have access to this api." });
+  }
       message_sc.findOne({
         _id: req.body._id
     }).exec(function (err, msg) {

@@ -1,24 +1,25 @@
-(function ($) {
+(function($) {
   function fillPermissions(callback) {
     post("/permissions/read", {}, response => {
       callback(response.permissionsList);
     });
   }
+  var permissionsList=[]
   function fillSelectDepartment(departmentId) {
-    post("/departments/all", {}, function (response) {
-
-
-      $("#drpDepartments").append(`<option value="" disabled selected>انتخاب کنید...</option>`);
-      $(response.departmentsArray).each(function (i, department) {
+    post("/departments/all", {}, function(response) {
+      $("#drpDepartments").append(
+        `<option value="" disabled selected>انتخاب کنید...</option>`
+      );
+      $(response.departmentsArray).each(function(i, department) {
         $("#drpDepartments").append(
           `
             <option value="` +
-          department._id +
-          `"  ` +
-          (departmentId == department._id ? "selected" : "") +
-          `>` +
-          department.title +
-          `</option>
+            department._id +
+            `"  ` +
+            (departmentId == department._id ? "selected" : "") +
+            `>` +
+            department.title +
+            `</option>
             `
         );
       });
@@ -29,7 +30,7 @@
   function fillGroupType() {
     // function fillGroupType(groupType,edit) {
     // var drpGroupTypeList;
-    post("/users/type", {}, function (response) {
+    post("/users/type", {}, function(response) {
       var userType = response.type;
       // if(!edit){
       //   drpGroupTypeList="#drpGroupType"
@@ -37,16 +38,16 @@
       if (userType < 2)
         $("#groupTypeSelect").append(
           `
-                <select id="groupType"  class="validate">
+                <select id="drpGroupType"  class="validate">
                     <option value="" disabled selected >انتخاب کنید...</option>
                     <option value="3" >کاربران واحدها</option>
                     <option value="2" >مدیران واحدها</option>         
                 </select>
-                <label for="groupType">نوع گروه:</label>
+                <label for="drpGroupType">نوع گروه:</label>
                         `
         );
       if (userType == 0)
-        $("#groupType").append(
+        $("#drpGroupType").append(
           `
             <option value="1" >مدیران رسانه های نوین</option>         
             `
@@ -55,19 +56,19 @@
     });
   }
 
-
   //add group
-  $("#btnAddGroup").click(function () {
+  $("#btnAddGroup").click(function() {
     var title = $("#groupTitle").val();
-    var type = $("#groupType").val();
+    var type = $("#drpGroupType").val();
     var permissions = [];
+    if(type==3){
     for (var i = 0; i < permissionsList.length; i++) {
       if ($("#cbxPermissions-" + i).is(":checked"))
         permissions.push($("#cbxPermissions-" + i).val());
-    }
+    }}
 
     var description = $("#description").val();
-    var departmentId = $("#department").val();
+    var departmentId = $("#drpDepartments").val();
     var group = {
       title,
       type,
@@ -77,17 +78,16 @@
     };
 
     //  var newGroup=function (group) {
-    post("/groups/new", group, function (response) {
+    post("/groups/new", group, function(response) {
       if (response.error)
         alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید");
       else {
         alert("ثبت اطلاعات با موفقیت انجام شد");
-        // document.getElementById("newGroupForm").reset()
         window.location.replace("./groupsList.html");
       }
     });
   });
-  $("#btnAddGroupCancel").click(function (e, user) {
+  $("#btnAddGroupCancel").click(function(e, user) {
     window.location.replace("./groupsList.html");
   });
 
@@ -96,7 +96,7 @@
   // }
   // isLoggedin();
 
-  $(function () {
+  $(function() {
     fillGroupType();
 
     // if ($.cookie("token")&&!$.cookie("id")) {
@@ -104,52 +104,45 @@
     // }
     ////////////////////////////////////
 
-    post("/users/type", {}, function (response) {
+    post("/users/type", {}, function(response) {
       var userType = response.type;
       var departments;
       if (userType < 2) {
         $("#drpDepartments").prop("disabled", false);
         deparments = "";
       } else {
-        post("/departments/select/one", {}, function (response) {
+        post("/departments/select/one", {}, function(response) {
           departments = response.department;
           $("#drpDepartments").val(departments.departmentId);
         });
       }
       fillSelectDepartment(departments, false);
     });
-
-    //show a list of groups
-    fillPermissions(function (permissionsList) {
-      post("/groups/all", {}, function (response) {
-        // var permissions=[]
-
-        // fillSelectDepartment(department);
-        // fillGroupType(type);
-
-        $(permissionsList).each(function (i, permission) {
-          $(".cbxPermissions-list").append(
-            `<p>
-                    <input type="checkbox" id="cbxPermissions-` +
-            i +
-            `" value="` +
-            permission.code +
-            `"` +
-            (permissions.indexOf(permission.code) != -1
-              ? 'checked="checked"'
-              : "") +
-            `/>
-                    <label for="cbxPermissions-` +
-            i +
-            `">` +
-            permission.description +
-            `</label>
-                    </p>
-                    `
-          );
-        });
-      });
-    });
+   
     $(".pNums").persiaNumber();
+    $("#groupTypeSelect").change(function() {
+      $(".cbxPermissions-list").empty();
+      if ($("#drpGroupType").val() == 3)
+        fillPermissions(function(result) {
+          permissionsList=result
+          $(permissionsList).each(function(i, permission) {
+            $(".cbxPermissions-list").append(
+              `<p>
+                      <input type="checkbox" id="cbxPermissions-` +
+                i +
+                `" value="` +
+                permission.code +
+                `"/>
+                      <label for="cbxPermissions-` +
+                i +
+                `">` +
+                permission.description +
+                `</label>
+                      </p>
+                      `
+            );
+          });
+        });
+    });
   });
 })(jQuery);

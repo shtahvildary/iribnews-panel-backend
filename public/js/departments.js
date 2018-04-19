@@ -153,6 +153,8 @@ function fillCards(departmentsArray){
         $(".card[uniqueId=" + departmentId + "]").fadeOut();
         delete_departments(departmentId);
         alert("«" + $(this).attr("title") + "» با موفقیت پاک شد.");
+        window.location.replace("./departmentsList.html");
+        
       }
     });
   });
@@ -192,9 +194,10 @@ function fillCards(departmentsArray){
 
   function delete_departments(departmentId) {
     post(
-      "/departments/disable",
+      "/departments/update/status",
       {
-        _id: departmentId
+        _id: departmentId,
+        status: -1        
       },
       function(response) {
       }

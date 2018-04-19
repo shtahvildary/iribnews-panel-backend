@@ -75,8 +75,9 @@ router.post("/all", auth, function(req, res) {
   if(req.session.type>=2)
     return res.status(403).json({error:"You don't have access to this api."})
     
-  var data={}
-  if(req.session.type!=0) data={status:0}
+  // var data={}
+  var data={status:0}
+  // if(req.session.type!=0) data={status:0}
   departments_sc
     .find(data)
     .exec(function(err, result) {
@@ -180,16 +181,43 @@ router.post("/update", auth, upload.single('logo'),function(req, res) {
   }
 });
 
-
+router.post("/all/status", auth, function(req, res) {
+  if(req.session.type!=0)
+    return res.status(403).json({error:"You don't have access to this api."})
+    
+  // var data={}
+  var data={}
+  // if(req.session.type!=0) data={status:0}
+  departments_sc
+    .find(data)
+    .exec(function(err, result) {
+      if (!err) {
+        if (result) {
+          res.status(200).json({
+            departmentsArray: result
+          });
+        } else {
+          res.status(500).json({
+            error: "There is no department to select..."
+          });
+        }
+      } else {
+        res.status(500).json({
+          error: err
+        });
+      }
+    });
+});
 ////////////////change status of a department (by id): 0:active - -1:deleted/////////////////
-//URL: localhost:5010/groups/status
+//URL: localhost:5010/departments/update/status
 
-router.post("/status", auth, function(req, res) {
-  if(req.session.type!=0){
-  var allowedPermissions=[108]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+router.post("/update/status", auth, function(req, res) {
+  if(req.session.type!=0)
+  return res.status(403).json({error:"You don't have access to this api."})
   
-  console.log("query", req.body);}
+  // var allowedPermissions=[108]
+  // if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
+  
   departments_sc.findById(req.body._id).exec(function(err, result) {
     if (!err) {
       console.log("department:", result);
