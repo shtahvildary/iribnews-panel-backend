@@ -485,11 +485,11 @@
           ? `<div id="replys-` +
             item._id +
             `"></div>` +
-            (item.reply.filePath
+            (item.replys.filePath
               ? '<a href="' +
                 fileserver +
                 `/` +
-                item.reply.filePath +
+                item.replys.filePath +
                 '" alt="" download> دانلود</a>'
               : "")
           : `تاکنون هیچ پاسخی ارسال نشده است.`) +

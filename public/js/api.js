@@ -6,7 +6,7 @@
 })(jQuery); // end of jQuery name space
 
 var post = function (endpoint, data, callback) {
-    console.log(data)
+    // console.log(data)
     var request = {
         method: "POST",
 

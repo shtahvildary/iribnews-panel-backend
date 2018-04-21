@@ -773,7 +773,7 @@ router.post("/reply/new", auth,upload.single('file') ,function(req, res) {
     request.post(
       {
         url: botServer + "/sendMessage/reply/new",
-       reply
+       json:reply
       },
       function(err, response) {
         if (err) return res.status(500).json({ error: err });

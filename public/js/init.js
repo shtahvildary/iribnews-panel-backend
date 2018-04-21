@@ -1,5 +1,5 @@
+// global.CronJob = require("./tools/cron.js"); 
 (function($){
-
 
   //console.log("token",$.cookie("token"))
    if(!$.cookie("token")){
