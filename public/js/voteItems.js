@@ -39,8 +39,104 @@
             </div>`
       );
     });
+  }
 
-    $(".edit").click(function(e) {
+  $(function() {
+    var search_voteItems = function(query, departmentId, type) {
+      post(
+        "/voteItems/search",
+        {
+          query,
+          departmentId,
+          type
+        },
+        function(response) {
+          $("#voteItems-list").empty();
+          if (response.voteItemsArray.length == 0)
+            $("#voteItems-list").append(`<div class="rtl">
+              نتیجه ای یافت نشد.
+              </div>`);
+          else cardsAppend(response.voteItemsArray);
+        }
+      );
+    };
+
+    $("#btnVoteItemsAdd").click(function() {
+      var voteItemTitle = $("#voteItemTitle").val();
+      var type = $("input[name=voteItemType]:checked").val();
+      var description = $("#description").val();
+
+      addVoteItem({
+        title: voteItemTitle,
+        type: type,
+        description
+      });
+    });
+    var addVoteItem = function(voteItem) {
+      post("/voteItems/new", voteItem, function(response) {
+        if (response.voteItem == false) {
+          alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید");
+        } else {
+          alert("ثبت اطلاعات با موفقیت انجام شد");
+          document.getElementById("newVoteItemForm").reset();
+        }
+      });
+    };
+
+    function fillSelectDepartment() {
+      post("/departments/all", {}, function(response) {
+        $("#drpDepartments").append(`
+                <option value=""  selected>همه</option>
+                `);
+        $(response.departmentsArray).each(function(i, department) {
+          $("#drpDepartments").append(
+            `
+                <option value="` +
+              department._id +
+              `" >` +
+              department.title +
+              `</option>
+                `
+          );
+        });
+        $("select").material_select();
+      });
+    }
+
+    // if ($.cookie("token")&&!$.cookie("id")) {
+    //     window.location.replace("../login.html");
+    // }
+    ////////////////////////////////////
+
+    $("#search").keypress(function(e) {
+      if (e.which == 13) {
+        var departmentId;
+        var value = $("#search").val();
+        departmentId = $("#drpDepartments").val();
+        search_voteItems(value, departmentId, $("#drpVoteItemType").val());
+        return false;
+      }
+    });
+
+    post("/users/type", {}, function(response) {
+      var userType = response.type;
+      var departments;
+      if (userType < 2) {
+        $("#drpDepartments").prop("disabled", false);
+        deparments = "";
+        // deparments = "all";
+        fillSelectDepartment();
+      } else {
+        post("/departments/select/one", {}, function(response) {
+          departments = response.department;
+          $("#drpDepartments").val(departments.departmentId);
+        });
+      }
+    });
+
+    post("/voteItems/all", {}, function(response) {
+      cardsAppend(response.voteItemsArray);
+      $(".edit").click(function(e) {
         voteItemEdit = {
           id: $(this).attr("editItem_id"),
           title: $(this).attr("editItem_title"),
@@ -120,108 +216,14 @@
         if (del == true) {
           var voteItemId = $(this).attr("uniqueId");
           $(".card[uniqueId=" + voteItemId + "]").fadeOut();
-          delete_voteItems(voteItemId);
-          alert("«" + $(this).attr("title") + "» با موفقیت پاک شد.");
-        }
-      });
-  }
-
-  $(function() {
-    var search_voteItems = function(query, departmentId, type) {
-        post(
-          "/voteItems/search",
-          {
-            query,
-            departmentId,
-            type
-          },
-          function(response) {
-            $("#voteItems-list").empty();
-            if (response.voteItemsArray.length == 0)
-              $("#voteItems-list").append(`<div class="rtl">
-              نتیجه ای یافت نشد.
-              </div>`);
-            else cardsAppend(response.voteItemsArray);
-          }
-        );
-      };
-
-    $("#btnVoteItemsAdd").click(function() {
-      var voteItemTitle = $("#voteItemTitle").val();
-      var type = $("input[name=voteItemType]:checked").val();
-      var description = $("#description").val();
-
-      addVoteItem({
-        title: voteItemTitle,
-        type: type,
-        description
-      });
-    });
-    var addVoteItem = function(voteItem) {
-      post("/voteItems/new", voteItem, function(response) {
-        if (response.voteItem == false) {
-          alert("ثبت اطلاعات با موفقیت همراه نبود. لطفا دوباره سعی کنید");
-        } else {
-          alert("ثبت اطلاعات با موفقیت انجام شد");
-          document.getElementById("newVoteItemForm").reset();
-        }
-      });
-    };
-
-    function fillSelectDepartment() {
-      post("/departments/all", {}, function(response) {
-        $("#drpDepartments").append(`
-                <option value=""  selected>همه</option>
-                `);
-        $(response.departmentsArray).each(function(i, department) {
-          $("#drpDepartments").append(
-            `
-                <option value="` +
-              department._id +
-              `" >` +
-              department.title +
-              `</option>
-                `
-          );
-        });
-        $("select").material_select();
-      });
-    }
-
-    // if ($.cookie("token")&&!$.cookie("id")) {
-    //     window.location.replace("../login.html");
-    // }
-    ////////////////////////////////////
-
-    $("#search").keypress(function(e) {
-      if (e.which == 13) {
-        var departmentId;
-        var value = $("#search").val();
-        departmentId = $("#drpDepartments").val();
-        search_voteItems(value, departmentId, $("#drpVoteItemType").val());
-        return false;
-      }
-    });
-
-    post("/users/type", {}, function(response) {
-        var userType = response.type;
-        var departments;
-        if (userType < 2) {
-          $("#drpDepartments").prop("disabled", false);
-          deparments = "";
-          // deparments = "all";
-          fillSelectDepartment();
-        } else {
-          post("/departments/select/one", {}, function(response) {
-            departments = response.department;
-            $("#drpDepartments").val(departments.departmentId);
+          delete_voteItems(voteItemId, function(response) {
+            if (response) {
+              alert("«" + $(this).attr("title") + "» با موفقیت پاک شد.");
+              location.reload();
+            } else alert("خطایی رخ داده! لطفا دوباره اقدام نمایید.");
           });
         }
       });
-
-    post("/voteItems/all", {}, function(response) {
-      cardsAppend(response.voteItemsArray);
-
     });
 
     function edit_voteItems(voteItemEdit) {
@@ -245,13 +247,16 @@
       );
     }
 
-    function delete_voteItems(voteItemId) {
+    function delete_voteItems(voteItemId, callback) {
       post(
-        "/voteItems/disable",
+        "/voteItems/update/status",
         {
-          _id: voteItemId
+          _id: voteItemId,
+          status: -1
         },
-        function(response) {}
+        function(response) {
+          callback(response);
+        }
       );
     }
     $(".pNums").persiaNumber();

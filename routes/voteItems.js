@@ -35,8 +35,9 @@ router.post('/new', auth,function (req, res) {
   });
 });
 
-//Get all programs and channels (voteItems) which are enable (not deleted)
+//Get all programs and channels (voteItems) which has status=1 (not deleted)
 router.post('/all', auth,function (req, res) {
+  var data;
   if(req.session.type>2){
     // if(req.session.type!=0){
     var allowedPermissions=[122]
@@ -44,10 +45,31 @@ router.post('/all', auth,function (req, res) {
     }
   
   var data;
-  if (req.session.type < 2) data = {};
-  else data = {$and:[{'departmentId': req.session.departmentId},{enable:1}]};
+  if (req.session.type < 2) data = {status:0};
+  else data = {$and:[{'departmentId': req.session.departmentId},{status:1}]};
   
   voteItem_sc.find(data).populate({path:"departmentId",select:"title"}).exec(function (err, result) {
+    if (!err) {
+      if (result) {
+        res.json({
+          voteItemsArray: result
+        });
+      } else {
+        res.json({
+          error: 'There is no channel or program to select...'
+        });
+      }
+    } else {
+      res.status(500).json({
+        error: err
+      })
+    }
+  })
+})
+router.post('/all/status', auth,function (req, res) {
+  if (req.session.type != 0) return res.status(403).json({ error: "Forbidden: permission error" });
+  
+  voteItem_sc.find({}).populate({path:"departmentId",select:"title"}).exec(function (err, result) {
     if (!err) {
       if (result) {
         res.json({
@@ -97,8 +119,9 @@ router.post('/search', auth,function (req, res) {
     if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
     }
   console.log('query', req.body.query)
-  var { query,departmentId,type } = req.body;
+  var { query,departmentId,type ,status} = req.body;
     if (!query) query = "";
+    if(!status) status=0;
     var dbQuery = {
       $or: [
         {"title": {
@@ -115,6 +138,7 @@ router.post('/search', auth,function (req, res) {
         }
       }
       ]}
+      dbQuery.status=status;
       if(type)
         dbQuery.type=type;
       if (req.session.type < 2) {if(departmentId) dbQuery.departmentId=departmentId}
@@ -169,53 +193,21 @@ router.post('/update',auth,function(req,res){
   })
 })
 
-//disable a voteItem (by id)
-//URL: localhost:5010/voteItems/disable
-//INPUT:{"_id":"5a1e711ed411741d84d10a29"}
 
-router.post('/disable',auth, function (req, res) {
-  if(req.session.type>2){  
-    // if(req.session.type!=0){  
-  var allowedPermissions=[122]
-  if(!checkPermissions(allowedPermissions,req.session.permissions))return res.status(403).json({error:"You don't have access to this api."})
-  }
-  
-  console.log('query', req.body)
-    voteItem_sc.findById(req.body._id).exec(function (err, result) {
-    if (!err) {
-      console.log("voteItem:",result) 
-      result.enable=0;  
-      result.save(function(err,result){
-        if(!err){
-          res.status(200).send(result);
-        }
-        else{
-          res.status(500).send(err)
-        }
-      })   
-      res.status(200);
-      console.log('selected voteItem is disabled!!!!');
-    } else {
-      res.status(500).json({
-        error: err
-      });
-    }
-  })
-})
 
 
 //recover a voteItem (by id)
 //URL: localhost:5010/voteItems/recover
 //INPUT:{"_id":"5a1e711ed411741d84d10a29"}
 
-router.post('/recover', auth,function (req, res) {
+router.post('/update/status', auth,function (req, res) {
   if(req.session.type!=0)  
     return res.status(403).json({error:"You don't have access to this api."})
     
     voteItem_sc.findById(req.body._id).exec(function (err, result) {
     if (!err) {
        
-      result.enable=1;  
+      result.status=req.body.status;  
       result.save(function(err,result){
         if(!err){
           res.status(200).send(result);

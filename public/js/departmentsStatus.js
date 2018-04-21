@@ -2,13 +2,14 @@
   const fileserver = "http://localhost:9000";
 
   //show a list of departments
-  var search_departments = function(query) {
+  var search_departments = function(query,status) {
       post(
           "/departments/search",
           {
-              query: query
+              query: query,
+            status
             },
-            function(response) {
+            function(response) {   
         $("#departments-list").empty();
         if(response.departmentsArray.length==0)
             $("#departments-list").append(`<div class="rtl">
@@ -29,8 +30,7 @@
 
   $("#search").keypress(function(e) {
     if (e.which == 13) {
-      var value = $("#search").val();
-      search_departments(value);
+      search_departments($("#search").val(),$("#drpStatus").val());
       return false;
     }
   });
@@ -169,6 +169,8 @@ function fillCards(departmentsArray){
     $("#btnCancel").click(function (e) {
       window.location.replace("../html/management.html");
   })
-
+  $("#drpStatus").change(function() {
+    search_departments($("#search").val(),$("#drpStatus").val());      
+  })
   });
 })(jQuery);

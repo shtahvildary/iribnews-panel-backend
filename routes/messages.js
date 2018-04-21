@@ -158,6 +158,10 @@ router.post("/search", auth, function(req, res) {
         $in: filterTypes
       };
   }
+  
+
+  // dbQuery.pin = { status: filters.pin };
+  
   if (req.session.type < 2) {
     if(departmentId)  dbQuery.departmentId=departmentId;}
   else  dbQuery.departmentId= req.session.departmentId ;
@@ -930,7 +934,7 @@ router.post("/pin", auth, function(req, res) {
         // .status(403)
         // .json({ error: "You don't have access to this api." });
 
-   msg.pin = { status: req.body.pin, userId: req.session.userId };
+   msg.pin = { status: req.body.pin, userId: req.session.userId ,date:Date.now()};
   message_sc
     .update(
       {

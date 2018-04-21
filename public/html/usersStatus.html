@@ -21,20 +21,30 @@
             تغییر وضعیت کاربران
         </div>
         <div class="row">
-            
+
             <input placeholder="جستجو" id="search" type="text">
             <div id="filters" class=rtl>
                 <p>
-                    <div class="input-field col s6 offset-s6">
-                        <select id="drpDepartments" >
+                    <div class="input-field col s6 ">
+                        <select id="drpDepartments">
                         </select>
                         <label for="drpDepartments">واحد:</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <select id="drpStatus">
+                            <option value="">همه</option>
+                            <option value=-1>حذف شده</option>
+                            <option value=0>فعال</option>
+                            <option value=1>غیرفعال</option>
+                            <option value=2>محدود شده</option>
+                        </select>
+                        <label for="drpStatus">وضعیت:</label>
                     </div>
                 </p>
             </div>
         </div>
-            <div id="users-list">
-            </div>
+        <div id="users-list">
+        </div>
     </div>
 
 

@@ -4,7 +4,7 @@
         post('/messages/select/last/date', { token: $.cookie("token") }, function (response) {
             response.messages.map(function (item) {
                 $('#last-messages').append(`<li class="collection-item">
-            <p class="truncate ">`+ (item.isSeen.length == 0 ? `<b>` : "") + (item.type == 'video' ? '<i class="material-icons">movie</i>'+ (item.caption?item.caption:"فیلم") :
+            <p class="truncate ">`+ (item.isSeen.length == 0 ? `<b>` : "") + (item.type == 'video'||'video_note' ? '<i class="material-icons">movie</i>'+ (item.caption?item.caption:"فیلم") :
                         (item.type == 'photo' ? '<i class="material-icons">photo</i>'+(item.caption? item.caption:"عکس ")  :
                             (item.type == 'voice' || item.type == 'audio' ? '<i class="material-icons">audiotrack</i>'+(item.audioTitle?item.audioTitle:"صدا") :
                                 (item.type == 'text' ? item.message :

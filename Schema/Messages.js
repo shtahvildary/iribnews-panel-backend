@@ -19,7 +19,8 @@ var messageSchema = mongoose.Schema({
         word: String,
         count: Number
     }],
-    pin: [{
+    pin: {
+        // pin: [{
         status: {
             type: Number, //0:unPin     1:pin
              default: 0,
@@ -32,7 +33,8 @@ var messageSchema = mongoose.Schema({
             type: Date,
             default: Date.now
         }
-    }],
+    },
+// }],
     isSeen: [{
         userId: {
             type: mongoose.SchemaTypes.ObjectId,

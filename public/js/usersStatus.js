@@ -25,18 +25,22 @@
   // isLoggedin();
 
   function cardsAppend(response) {
-      response.usersArray.map(function(item) {
-        var statusTitle;
-        switch(item.status){
-            case -1: statusTitle="حذف شده"
-            break;
-            case 0: statusTitle="فعال"
-            break;
-            case 1: statusTitle="غیرفعال";
-            break;
-            case 3: statusTitle="محدود شده"
-            break;
-        }
+    response.usersArray.map(function(item) {
+      var statusTitle;
+      switch (item.status) {
+        case -1:
+          statusTitle = "حذف شده";
+          break;
+        case 0:
+          statusTitle = "فعال";
+          break;
+        case 1:
+          statusTitle = "غیرفعال";
+          break;
+        case 3:
+          statusTitle = "محدود شده";
+          break;
+      }
       $("#users-list").append(
         `
 
@@ -102,12 +106,13 @@
     fillSelectDepartment();
 
     //search in users list
-    var search_users = function(query, departmentId) {
+    var search_users = function(query, departmentId, status) {
       post(
         "/users/search",
         {
           query,
-          departmentId: departmentId
+          departmentId: departmentId,
+          status
         },
         function(response) {
           $("#users-list").empty();
@@ -128,10 +133,11 @@
     $("#search").keypress(function(e) {
       var departmentId;
       if (e.which == 13) {
-        var value = $("#search").val();
-        // if ($("#drpDepartments").val() != "all")
-        departmentId = $("#drpDepartments").val();
-        search_users(value, departmentId);
+        search_users(
+          $("#search").val(),
+          $("#drpDepartments").val(),
+          $("#drpStatus").val()
+        );
         return false;
       }
     });
@@ -240,7 +246,7 @@
               alert("به روز رسانی با موفقیت انجام شد.");
             } else {
               alert(
-                "در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. کدخطا: "
+                "در به روز رسانی اطلاعات خطایی رخ داده، لطفا دوباره اقدام نمایید. "
               );
             }
           });
@@ -262,9 +268,18 @@
     }
     $(".pNums").persiaNumber();
     $("#drpDepartments").change(function() {
-      var departmentId = $("#drpDepartments").val();
-      var value = $("#search").val();
-      search_users(value, departmentId);
+      search_users(
+        $("#search").val(),
+        $("#drpDepartments").val(),
+        $("#drpStatus").val()
+      );
+    });
+    $("#drpStatus").change(function() {
+      search_users(
+        $("#search").val(),
+        $("#drpDepartments").val(),
+        $("#drpStatus").val()
+      );
     });
   });
 })(jQuery);

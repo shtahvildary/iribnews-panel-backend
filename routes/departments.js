@@ -248,8 +248,10 @@ router.post('/search', auth, function (req, res) {
     
   var {
       query,
+      status
   } = req.body;
   if (!query) query = "";
+  if (!status) status = 0;
   var dbQuery = {
       $or: [{
           "title": {
@@ -265,9 +267,10 @@ router.post('/search', auth, function (req, res) {
           }
       }]
   };
+  dbQuery.status=status
   var data=dbQuery;
   if(req.session.type!=0)
-      data={$and:[{ departmentId: req.session.departmentId },{status:0},dbQuery]}
+      data={$and:[{ departmentId: req.session.departmentId },dbQuery]}
 
   departments_sc
     .find(data)

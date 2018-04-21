@@ -4,28 +4,43 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="../css/materialize-rtl.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link rel="shortcut icon" href="../icons/favicon.ico">
-    <title>رسانه های نوین - بازیابی واحدها</title>
+    <title>رسانه های نوین - برنامه ها و کانالها</title>
 
     <!-- CSS  -->
     <link href="/css/materialIcons.css" rel="stylesheet">
     <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/materialize-rtl.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="../css/materialize-rtl.css" type="text/css" rel="stylesheet" media="screen,projection" />
+
 </head>
 
 <body>
     <div id="navbar"></div>
     <div class="container pNums">
         <div class="rtl">
-            بازیابی واحدها
+            برنامه ها و کانالها
         </div>
         <div class="row">
 
             <input placeholder="جستجو" id="search" type="text">
             <div id="filters" class=rtl>
-                <div class="row">
-                    <div class="input-field col s6">
+                <p>
+                    <div class="input-field col s4 ">
+                        <select id="drpDepartments" disabled>
+                        </select>
+                        <label for="drpDepartments">واحد:</label>
+                    </div>
+                    <div class="input-field col s4 ">
+                        <select id="drpVoteItemType">
+                            <option value="">همه</option>
+                            <option value="0">کانال</option>
+                            <option value="1">برنامه</option>
+                        </select>
+                        <label for="drpVoteItemType">نوع:</label>
+                    </div>
+                    <div class="input-field col s4 ">
                         <select id="drpStatus">
                             <option value="">همه</option>
                             <option value=-1>حذف شده</option>
@@ -35,16 +50,14 @@
                         </select>
                         <label for="drpStatus">وضعیت:</label>
                     </div>
-                </div>
+                </p>
             </div>
 
+        </div>
+        <div id="voteItems-list">
 
-            <div id="departments-list">
-            </div>
         </div>
     </div>
-
-
 
     <!--  Scripts-->
     <script src="../js/jquery-2.1.1.min.js"></script>
@@ -52,7 +65,7 @@
     <script src="../js/api.js"></script>
     <script src="../js/materialize.js"></script>
     <script src="../js/init.js"></script>
-    <script src="../js/departmentsStatus.js"></script>
+    <script src="../js/voteItemsStatus.js"></script>
     <script src="../js/menus.js"></script>
     <script src="../js/logout.js"></script>
     <script src="../js/persianumber.js"></script>

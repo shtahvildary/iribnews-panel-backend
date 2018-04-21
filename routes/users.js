@@ -307,8 +307,9 @@ router.post("/all", auth, function (req, res) {
 
 
 router.post("/search", auth, function (req, res) {
-  var { query, departmentId } = req.body;
+  var { query, departmentId,status } = req.body;
   if (!query) query = "";
+  if (!status) status=0;
   var dbQuery = {
     $or: [
       {
@@ -341,9 +342,10 @@ router.post("/search", auth, function (req, res) {
       }
     ]
   };
+  dbQuery.status=status
 
   if (req.session.type < 2) {
-    dbQuery.status = 0;
+    //dbQuery.status = 0;
 
     if (departmentId) {
       findGroup(departmentId, function (error, groups) {

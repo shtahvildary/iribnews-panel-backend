@@ -6,6 +6,7 @@
 })(jQuery); // end of jQuery name space
 
 var post = function (endpoint, data, callback) {
+    console.log(data)
     var request = {
         method: "POST",
 
@@ -45,7 +46,7 @@ var post = function (endpoint, data, callback) {
     }
     $.ajax(request)
         .done(function (msg) {
-            // console.log('api msg: ',msg)
+            console.log('api msg: ',msg)
             callback(msg)
         });
 }

@@ -51,7 +51,8 @@
     photos: 1,
     movies: 1,
     voices: 1,
-    documents: 1
+    documents: 1,
+    pin:1
   };
   $(function() {
     ///////////////////////////////////search filters///////////////////////////////////
@@ -92,6 +93,12 @@
     $("#cbxDocs").change(function() {
       if ($("#cbxDocs").is(":checked")) filters.documents = 1;
       else filters.documents = 0;
+      search_message($("#search").val(), filters, $("#drpDepartments").val());
+    });
+    $("#cbxPin").change(function() {
+      if ($("#cbxPin").is(":checked")) filters.pin = 1;
+      else filters.pin = 0;
+
       search_message($("#search").val(), filters, $("#drpDepartments").val());
     });
     ///////////////////////////////////search///////////////////////////////////
@@ -185,7 +192,7 @@
   }
 
   function cardsAppend(item, userId) {
-    if (!item.pin[0]) item.pin[0] = {};
+    if (!item.pin) item.pin = {};
     var alarmBorder;
     var today = new Date();
     if (
@@ -291,7 +298,7 @@
                       <a id="icnPin-` +
         item._id +
         `" class="modal-trigger " href="#pinModal"><img class="msg-icons pin"   ` +
-        (item.pin[0].status == 1
+        (item.pin.status == 1
           ? ` src="../icons/pin-blue.png" >`
           : `src="../icons/pin-gray.png" >`) +
         `</a>
@@ -350,12 +357,10 @@
       // // $("#pinModal").modal();
       // $("#pinModal").modal();
 
-      if (item.pin[0].status == 1) var newStatus = 0;
+      if (item.pin.status == 1) var newStatus = 0;
       else var newStatus = 1;
 
-      post("/messages/pin", { _id: item._id, pin: newStatus }, function(
-        response
-      ) {
+      post("/messages/pin", { _id: item._id, pin: newStatus }, function(response) {
         if (response.error) return alert("خطا! لطفا دوباره اقدام نمایید.");
         else location.reload();
       });
@@ -388,8 +393,8 @@
         replyToMsg(reply, function(sentMessage) {
           if (sentMessage == true) {
             $("#viewModal").modal("close");
-            location.reload();
             return alert("ارسال پیام با موفقیت انجام شد.");
+            location.reload();
           }
           return alert("پیام شما ارسال نشد. لطفا دوباره اقدام نمایید. ");
         });
@@ -403,7 +408,7 @@
       `
         
         <!-- Modal Trigger -->
-        <div id="viewModal" class="modal view modal-fixed-footer">
+        <div id="viewModal" class="modal view modal-fixed-footer rtl">
             <div class="modal-content">
                 <h5>پیام</h5>
                 <p>
