@@ -153,6 +153,9 @@ router.post("/search", auth, function(req, res) {
     if (filters.files == 1) {
       filterTypes.push("document");
     }
+    if(filters.pin==1){
+      dbQuery["pin.status"]=1
+    }
     if (filterTypes.length > 0)
       dbQuery.type = {
         $in: filterTypes
@@ -503,7 +506,7 @@ router.post("/chart/monthly", auth, function(req, res) {
   };
   if (req.session.type > 1)
     data . departmentId=req.session.departmentId;
-  message_sc.find(data).exec(function(err, result) {
+  message_sc.find(data).sort("date").exec(function(err, result) {
     if (!err) {
       var msgCounts = Array(31);
       msgCounts.fill(0);
@@ -523,11 +526,37 @@ router.post("/chart/monthly", auth, function(req, res) {
       photoCount.fill(0);
       documentCount.fill(0);
       othersCount.fill(0);
-      date.fill("");
-      var index;
+      // date.fill("");
+      var index=0;
       var stringDate;
 
+      result=result.map(m=>{
+        m.date = _.join(
+          gregorian_to_jalali(new Date(m.date)),
+          (seprator = "/")
+        );
+        return m;
+      })
+
+      var classed={}
+      result.map(m=>{
+        if(!classed[m.date]) classed[m.date]={}
+      })
+
+
+
+
+
+
+
+
+
+
+
       result.forEach(function(message) {
+        
+
+
         //text,audio,voice,video,photo,document
         index = gregorian_to_jalali(new Date(message.date))[2]-1; //-1 is because it shoud starts from 0
         switch (message.type) {

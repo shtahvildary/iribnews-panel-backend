@@ -82,7 +82,7 @@
         $('#title').append(
             (department.logo?`
             <div class="col s2">
-        <img class="circle  right responsive-img"style="max-width:70% max-width:70%" src="`+fileserver+department.logo+`" > `:'')+
+        <img class="  right responsive-img"style=" max-height:64px" src="`+fileserver+department.logo+`" > `:'')+
         `          
           <a  class="right local-nav-title" >`+ department.title + `</a>
           <a  class="left local-nav-items-small" >- `+ fName + ` `+lName+`</a>
