@@ -75,7 +75,7 @@ const chartColors = [
     blue: 37
   }
 ];
-var hue = function() {
+var hue = function () {
   return {
     red: Math.floor(Math.random() * 256),
     green: Math.floor(Math.random() * 256),
@@ -87,7 +87,7 @@ function drawChart(element, data, options, type) {
   var ctx = document.getElementById(element);
   var datasets = data.datasets;
   var i = 0;
-  datasets.map(function(item) {
+  datasets.map(function (item) {
     var color, border;
     if (chartColors.length > i) {
       color = chartColors[i];
@@ -130,8 +130,8 @@ function drawChart(element, data, options, type) {
   });
 }
 
-(function($) {
-  $("#btnShow").click(function() {
+(function ($) {
+  $("#btnShow").click(function () {
     var firstday = jing(
       $("#fYear").val(),
       $("#fMonth").val(),
@@ -157,7 +157,7 @@ function drawChart(element, data, options, type) {
         firstday,
         lastday
       },
-      function(response) {
+      function (response) {
         var labels = Array(response.diffDays);
         labels = response.date;
         var datasets = [
@@ -192,14 +192,14 @@ function drawChart(element, data, options, type) {
         };
         var options = {
           scales: {
-              xAxes:[{
-                ticks: {
-                    stepSize: 1,
-                    min: 0,
-                    autoSkip: false
-                }
-                  
-              }],
+            xAxes: [{
+              ticks: {
+                stepSize: 1,
+                min: 0,
+                autoSkip: false
+              }
+
+            }],
             yAxes: [
               {
                 scaleLabel: {
@@ -214,7 +214,7 @@ function drawChart(element, data, options, type) {
       }
     );
   });
-  $(function() {
+  $(function () {
     // if ($.cookie("token")&&!$.cookie("id")) {
     //     window.location.replace("../login.html");
     // }
@@ -227,7 +227,7 @@ function drawChart(element, data, options, type) {
       {
         date: now
       },
-      function(response) {
+      function (response) {
         var labels = [
           "0",
           "1",
@@ -286,32 +286,32 @@ function drawChart(element, data, options, type) {
         };
         var options = {
           scales: {
-            xAxes:[{
-                ticks: {
-                    stepSize: 1,
-                    min: 0,
-                    autoSkip: false
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: "ساعت"
-                  }
-                  
-              }],
-              yAxes: [{
-                ticks: {
-                  stepSize: 1,
-                  min: 0,
-                  autoSkip: false
+            xAxes: [{
+              ticks: {
+                stepSize: 1,
+                min: 0,
+                autoSkip: false
               },
-                
-                  scaleLabel: {
-                    display: true,
-                    labelString: "تعداد پیام ها"
-                  }
-                }
-              ]
+              scaleLabel: {
+                display: true,
+                labelString: "ساعت"
+              }
+
+            }],
+            yAxes: [{
+              ticks: {
+                stepSize: 1,
+                min: 0,
+                autoSkip: false
+              },
+
+              scaleLabel: {
+                display: true,
+                labelString: "تعداد پیام ها"
+              }
             }
+            ]
+          }
         };
 
         drawChart("chart-msg-today", data, options, "line");
@@ -324,7 +324,7 @@ function drawChart(element, data, options, type) {
       {
         date: now
       },
-      function(response) {
+      function (response) {
         var labels = [
           "شنبه",
           "یکشنبه",
@@ -365,14 +365,14 @@ function drawChart(element, data, options, type) {
           datasets
         };
         var options = {
-          scales: { 
+          scales: {
             yAxes: [
               {
                 ticks: {
                   stepSize: 1,
                   min: 0,
                   autoSkip: false
-              },
+                },
                 scaleLabel: {
                   display: true,
                   labelString: "تعداد پیام ها"
@@ -391,42 +391,47 @@ function drawChart(element, data, options, type) {
       {
         date: now
       },
-      function(response) {
-        var labels = [
-          "1",
-          "2",
-          "3",
-          "4",
-          "5",
-          "6",
-          "7",
-          "8",
-          "9",
-          "10",
-          "11",
-          "12",
-          "13",
-          "14",
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-          "21",
-          "22",
-          "23",
-          "24",
-          "25",
-          "26",
-          "27",
-          "28",
-          "29",
-          "30"
-        ];
-        var jalaliDate = gregorian_to_jalali(now);
+      function (response) {
+        var labels = response.date
+        console.log(labels)
+          
 
-        if (jalaliDate[1] < 7) labels.push(31);
+        // var labels = [
+        //   "1",
+        //   "2",
+        //   "3",
+        //   "4",
+        //   "5",
+        //   "6",
+        //   "7",
+        //   "8",
+        //   "9",
+        //   "10",
+        //   "11",
+        //   "12",
+        //   "13",
+        //   "14",
+        //   "15",
+        //   "16",
+        //   "17",
+        //   "18",
+        //   "19",
+        //   "20",
+        //   "21",
+        //   "22",
+        //   "23",
+        //   "24",
+        //   "25",
+        //   "26",
+        //   "27",
+        //   "28",
+        //   "29",
+        //   "30"
+        // ];
+        // var jalaliDate = gregorian_to_jalali(now);
+
+        // if (jalaliDate[1] < 7) labels.push(31);
+
         /*   text: msgCounts,
             voice:audioCount,
             video:videoCount,
@@ -463,27 +468,27 @@ function drawChart(element, data, options, type) {
           datasets
         };
         var options = {
-            scales: { 
-              yAxes: [
-                {
-                  ticks: {
-                    stepSize: 1,
-                    min: 0,
-                    autoSkip: false
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  stepSize: 1,
+                  min: 0,
+                  autoSkip: false
                 },
-                  scaleLabel: {
-                    display: true,
-                    labelString: "تعداد پیام ها"
-                  }
+                scaleLabel: {
+                  display: true,
+                  labelString: "تعداد پیام ها"
                 }
-              ]
-            }
-          };
+              }
+            ]
+          }
+        };
         drawChart("chart-msg-thismonth", data, options, "line");
       }
     );
     /////////////////////////////////////vote chart////////////////////////////
-    post("/votes/all/scores", {}, function(response) {
+    post("/votes/all/scores", {}, function (response) {
       var labels = [];
       var percent = [];
       response.votesArray.map(item => {
@@ -540,8 +545,8 @@ function drawChart(element, data, options, type) {
 
     /////////////////////////////////////survey chart////////////////////////////
 
-    post("/surveys/all", {}, function(surveys) {
-      surveys.surveysArray.map(function(item) {
+    post("/surveys/all", {}, function (surveys) {
+      surveys.surveysArray.map(function (item) {
         $("#survey-charts").append(
           `
                     
@@ -549,8 +554,8 @@ function drawChart(element, data, options, type) {
                     <div class="card modal-trigger" href="#chartModal">
                         <div class="card-content">
                             <canvas id="chart-survey-` +
-            item._id +
-            `" width="400" height="400">
+          item._id +
+          `" width="400" height="400">
                         </div>
                     </div>
                 </div>
@@ -562,7 +567,7 @@ function drawChart(element, data, options, type) {
           {
             surveyId: item._id
           },
-          function(response) {
+          function (response) {
             var labels = [];
             if (response.totalCount > 0) {
               var percents = [];
@@ -622,7 +627,7 @@ function drawChart(element, data, options, type) {
               drawChart("chart-survey-" + item._id, data, options, "bar")
             );
 
-            $("#chart-survey-" + item._id).click(function(e) {
+            $("#chart-survey-" + item._id).click(function (e) {
               chartAfter(item);
               $("#chartModal").modal();
             });
@@ -632,8 +637,8 @@ function drawChart(element, data, options, type) {
                     <div id="chartModal" class="modal chartModal modal-fixed-footer pNums">
                         <div class="modal-content">
                             <canvas id="chart-survey-modal-` +
-                  item._id +
-                  `" width="400" height="400">            
+                item._id +
+                `" width="400" height="400">            
                         </div>
                     </div>
                     `
@@ -650,8 +655,8 @@ function drawChart(element, data, options, type) {
           }
         );
       });
-    }); 
-    
+    });
+
     $('.pNums').persiaNumber();
   }); // end of document ready
 

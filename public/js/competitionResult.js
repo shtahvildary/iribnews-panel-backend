@@ -102,7 +102,7 @@
                       </div>
                   </div> 
                   <div class="card-reveal" >
-                      <span class=" grey-text text-darken-4">` + item.title + `<i class="material-icons right">close</i></span>
+                      <span class=" grey-text text-darken-4 card-title">` + item.title + `<i class="material-icons right">close</i></span>
                       <p id="result-` + item._id + `"></p>
                   
               </div>

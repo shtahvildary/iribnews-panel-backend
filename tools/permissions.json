@@ -53,11 +53,11 @@
     {
         "code": 141,
         "title": "add new competition",
-        "description": " افزودن مسابقه جدید"
+        "description": " افزودن مسابقه جدید، تغییر و مشاهده آنها"
     },
     {
         "code": 142,
         "title": "view competitions",
-        "description": "مشاهده مسابقات "
+        "description": "مشاهده نتایج مسابقات "
     }
 ]

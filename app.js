@@ -23,6 +23,7 @@ var surveys = require('./routes/surveys');
 var competitions = require('./routes/competitions');
 var permissions = require('./routes/permissions');
 var departments = require('./routes/departments');
+// var wordCloud = require('./routes/wordCloud');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
@@ -82,6 +83,7 @@ app.use('/surveys',surveys)
 app.use('/competitions',competitions)
 app.use('/permissions',permissions)
 app.use('/departments',departments)
+// app.use('/wordCloud',departments)
 
 
 

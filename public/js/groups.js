@@ -71,7 +71,6 @@
 
   function cardsAppend(response, permissionsList) {
     response.groupsArray.map(function(item, callback) {
-      console.log(item)
       var groupType;
         switch(item.type){
           case 0: groupType="ادمین";

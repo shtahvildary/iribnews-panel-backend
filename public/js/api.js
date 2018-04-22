@@ -1,7 +1,6 @@
 (function ($) {
     $(function () {
 
-
     }); // end of document ready
 })(jQuery); // end of jQuery name space
 
@@ -36,17 +35,14 @@ var post = function (endpoint, data, callback) {
     }
     if (data) {
         if (data.formData) {
-            console.log("you have formdata")
             request.data = data.formData;
             request.contentType = false;
             request.processData = false;
             request.datatype = "multipart/formdata";
-            console.log(request)
         }
     }
     $.ajax(request)
         .done(function (msg) {
-            console.log('api msg: ',msg)
             callback(msg)
         });
 }

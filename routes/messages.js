@@ -471,6 +471,7 @@ lastday.setHours(23, 59, 59, 999);
     }
   });
 });
+//shows last 30 days messages count
 router.post("/chart/monthly", auth, function(req, res) {
   if (req.session.type >2) {
     // if (req.session.type != 0) {
@@ -481,22 +482,14 @@ router.post("/chart/monthly", auth, function(req, res) {
         .json({ error: "You don't have access to this api." });
   }
   var today = new Date(req.body.date);
-  // var sat = new Date(req.body.date);
-  // var fri = new Date(req.body.date);
   var curr = new Date(); // get current date
 
-  // var first = curr.getDate() - curr.getDay() - 1; // First day is the day of the month - the day of the week
-  // var last = first + 5; // last day is the first day + 6
-
-  // var lastday=today;
-  // var firstday=new Date();
-  // firstday.setDate(today.getDate()-30)
   
-  var firstday = new Date(curr.setDate(1));
-  var lastday = new Date(curr.setDate(31));
+  var firstday=new Date();
+  firstday.setDate(today.getDate()-30)
+  
+  var lastday = today;
 
-  // sat=new Date(today.getFullYear(),today.getMonth,)
-  // if(sat.getDay)
   firstday.setHours(0, 0, 0, 0);
   lastday.setHours(23, 59, 59, 999);
   // console.log("jalaliDate: ",gregorian_to_jalali(new Date()))
@@ -516,13 +509,13 @@ router.post("/chart/monthly", auth, function(req, res) {
       msgCounts.fill(0);
       // var msgType={text,image,video,voice}
 
-      var textCount = Array(31);
-      var audioCount = Array(31);
-      var videoCount = Array(31);
-      var photoCount = Array(31);
-      var documentCount = Array(31);
-      var othersCount = Array(31);
-      var date = Array(31);
+      var textCount = Array(30);
+      var audioCount = Array(30);
+      var videoCount = Array(30);
+      var photoCount = Array(30);
+      var documentCount = Array(30);
+      var othersCount = Array(30);
+      var date = Array(30);
 
       textCount.fill(0);
       audioCount.fill(0);
@@ -556,7 +549,7 @@ router.post("/chart/monthly", auth, function(req, res) {
 
             break;
           }
-          case "video": {
+          case "video"||"video_note": {
             videoCount[index] += 1;
             date[index] = _.join(
               gregorian_to_jalali(new Date(message.date)),
@@ -593,7 +586,7 @@ router.post("/chart/monthly", auth, function(req, res) {
         }
         // msgCounts[gregorian_to_jalali(new Date(message._doc.date))[2]] += 1;
       });
-
+console.log(date)
       res.status(200).json({
         text: textCount,
         voice: audioCount,
@@ -611,6 +604,7 @@ router.post("/chart/monthly", auth, function(req, res) {
   });
 });
 
+//chart for selected date
 router.post("/chart/selectedDate", auth, function(req, res) {
   if (req.session.type >2) {
     // if (req.session.type != 0) {

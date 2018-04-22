@@ -214,6 +214,8 @@ router.post("/login", function (req, res) {
 
             //var token=auth.tokenize(result._id);
             req.session.userId = result._doc._id;
+            req.session.fName = result._doc.firstName;
+            req.session.lName = result._doc.lastName;
             req.session.type = result._doc.group._doc.type;
             req.session.permissions = result._doc.group._doc.permissions;
             req.session.departmentId = result._doc.group._doc.departmentId;

@@ -23,7 +23,7 @@ var _ = require("lodash");
 // }
 ////////////////////////////////////////
 router.post("/new", auth, function(req, res) {
-  var allowedPermissions = [121];
+  var allowedPermissions = [141];
 
   console.log("Now U can save a new competition ...", req.body);
   var { title, voteItemId, question, keyboard } = req.body;
@@ -61,7 +61,7 @@ router.post("/new", auth, function(req, res) {
 
 //Get all surveys
 router.post("/all", auth, function(req, res) {
-  var allowedPermissions = [121];
+  var allowedPermissions = [141];
 
   var data;
   if (req.session.type < 2) data = {};
@@ -90,7 +90,7 @@ router.post("/all", auth, function(req, res) {
 });
 
 router.post("/all/result", auth, function(req, res) {
-  var allowedPermissions = [123];
+  var allowedPermissions = [142];
 
   var data;
   if (req.session.type < 2) data = {};
@@ -152,7 +152,7 @@ router.post("/all/result", auth, function(req, res) {
 //Search competition
 router.post("/search", auth, function(req, res) {
   if (req.session.type != 0) {
-    var allowedPermissions = [121];
+    var allowedPermissions = [141];
     if (!checkPermissions(allowedPermissions, req.session.permissions))
       return res
         .status(403)
@@ -213,6 +213,8 @@ router.post("/search", auth, function(req, res) {
 
 //  Select last 3 competitions sort by date
 router.post("/select/last/date", auth, function(req, res) {
+  var allowedPermissions = [142]
+  
   var data;
   if (req.session.type < 2) data = {};
   else data = { departmentId: req.session.departmentId };

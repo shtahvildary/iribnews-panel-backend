@@ -6,11 +6,11 @@
         $('#profile').append(`
         
 
-        <form class="col s12 rtl" id="UserProfileForm">
-        <div class="row rtl">
+        <form class="col s12 rtl " id="UserProfileForm">
+        <div class="row rtl  ">
             <div class="input-field col s6">
                 <i class="material-icons prefix">account_circle</i>
-                <input id="firstName" disabled value="` + user.firstName + `" type="text" class="validate">
+                <input id="firstName" disabled value="` + user.firstName + `" type="text" class="validate ">
                 <label class="active" for="firstName">نام: </label>
             </div>
             <div class="input-field col s6">

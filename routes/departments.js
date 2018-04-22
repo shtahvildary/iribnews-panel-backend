@@ -101,14 +101,15 @@ router.post("/all", auth, function(req, res) {
 ////////////////select one department by ID/////////////////
 router.post("/select/one", auth, function(req, res) {
     
-
   departments_sc
     .findById(req.session.departmentId)
     .exec(function(err, result) {
       if (!err) {
         if (result) {
           res.status(200).json({
-            department: result
+            department: result,
+            fName:req.session.fName,
+            lName:req.session.lName
           });
         } else {
           res.status(500).json({

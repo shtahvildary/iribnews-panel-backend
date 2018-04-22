@@ -321,7 +321,6 @@ router.post("/select/one/result", auth, function (req, res) {
           error
         });
 
-      console.log("survey: ", result);
       var totalCount = result.length;
       var count = {};
       if (result) {
