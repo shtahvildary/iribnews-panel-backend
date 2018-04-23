@@ -200,11 +200,15 @@ function drawChart(element, data, options, type) {
               }
 
             }],
-            yAxes: [
-              {
+            yAxes: [{
                 scaleLabel: {
                   display: true,
                   labelString: "تعداد پیام ها"
+                },
+                ticks: {
+                  stepSize: 1,
+                  min: 0,
+                  
                 }
               }
             ]
@@ -393,44 +397,6 @@ function drawChart(element, data, options, type) {
       },
       function (response) {
         var labels = response.date
-        console.log(labels)
-          
-
-        // var labels = [
-        //   "1",
-        //   "2",
-        //   "3",
-        //   "4",
-        //   "5",
-        //   "6",
-        //   "7",
-        //   "8",
-        //   "9",
-        //   "10",
-        //   "11",
-        //   "12",
-        //   "13",
-        //   "14",
-        //   "15",
-        //   "16",
-        //   "17",
-        //   "18",
-        //   "19",
-        //   "20",
-        //   "21",
-        //   "22",
-        //   "23",
-        //   "24",
-        //   "25",
-        //   "26",
-        //   "27",
-        //   "28",
-        //   "29",
-        //   "30"
-        // ];
-        // var jalaliDate = gregorian_to_jalali(now);
-
-        // if (jalaliDate[1] < 7) labels.push(31);
 
         /*   text: msgCounts,
             voice:audioCount,
