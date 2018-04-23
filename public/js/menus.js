@@ -85,7 +85,7 @@
         <img class="  right responsive-img"style=" max-height:64px" src="`+fileserver+department.logo+`" > `:'')+
         `          
           <a  class="right local-nav-title" >`+ department.title + `</a>
-          <a  class="left local-nav-items-small" >- `+ fName + ` `+lName+`</a>
+          <a  class="left local-nav-title-small" >- `+ fName + ` `+lName+`</a>
           <div>
       `)
     })

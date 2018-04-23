@@ -141,6 +141,7 @@ function drawChart(element, data, options, type) {
     var fDay = $("#fDay").val();
     var fMonth = $("#fMonth").val();
     var fYear = $("#fYear").val();
+    
     var lastday = jing(
       $("#lYear").val(),
       $("#lMonth").val(),

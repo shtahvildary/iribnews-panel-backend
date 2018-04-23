@@ -627,7 +627,7 @@ router.post("/chart/selectedDate", auth, function (req, res) {
     data.departmentId = req.session.departmentId;
   message_sc.find(data).exec(function (err, result) {
     if (!err) {
-      var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+      var oneDay = 86400000; // hours*minutes*seconds*milliseconds: 24 * 60 * 60 * 1000
       var diffDays = Math.round(
         Math.abs((firstday.getTime() - lastday.getTime()) / oneDay)
       );
