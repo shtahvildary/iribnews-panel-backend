@@ -87,6 +87,7 @@ if (!window.clearImmediate) {
 }
 
 (function(global) {
+  // (function($) {
 
   // Check if WordCloud can run on this browser
   var isSupported = (function isSupported() {
@@ -155,8 +156,7 @@ if (!window.clearImmediate) {
       arr[j] = x) {}
     return arr;
   };
-
-  var WordCloud = function WordCloud(elements, options) {
+    var WordCloud = function WordCloud(elements, options) {
     if (!isSupported) {
       return;
     }
@@ -179,7 +179,21 @@ if (!window.clearImmediate) {
 
     /* Default values to be overwritten by options object */
     var settings = {
-      list: [],
+    
+    
+    
+    
+    
+    
+      // list: [],
+      list:[['foo', 12], ['bar', 6]],
+
+
+
+
+
+
+
       fontFamily: '"Trebuchet MS", "Heiti TC", "微軟正黑體", ' +
                   '"Arial Unicode MS", "Droid Fallback Sans", sans-serif',
       fontWeight: 'normal',
@@ -1216,6 +1230,6 @@ if (!window.clearImmediate) {
   WordCloud($('#my_canvas')[0], { list: list } );
 
 })(this); //jshint ignore:line
-$(function () {
-  // )
-})
+// $(function () {
+//   // )
+// })

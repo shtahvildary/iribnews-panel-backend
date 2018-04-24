@@ -936,4 +936,58 @@ router.post("/pin", auth, function (req, res) {
 
 });
 
+router.post("/select/all/wordcloud", auth, function (req, res, next) {
+  if (req.session.type > 2) {
+    // if (req.session.type != 0) {
+    var allowedPermissions = [111];
+    if (!checkPermissions(allowedPermissions, req.session.permissions))
+      return res
+        .status(403)
+        .json({ error: "You don't have access to this api." });
+  }
+  var data;
+  if (req.session.type < 2) data = {};
+  else data = { departmentId: req.session.departmentId };
+
+  message_sc
+    .find(data,{
+      keywords: 1,
+      _id: 0
+    })
+    .exec(function (err, result) {
+      //pagination should be handled
+      if (!err) {
+        var list=[]
+        var keys=[]
+        var index;
+        console.log(result)
+        result.map(key=>{
+          console.log(key)
+          key.keywords.map(k=>{
+            index=list.map(e=>{
+              console.log(e)
+              return e}).indexOf(k.word)
+            // index=list.indexOf(k.word)
+            if(index==-1)
+          list.push([k.word,k.count])
+          else list[index][1]++;
+        })
+        console.log(list)
+      })
+        
+        
+        res.status(200).json({
+          list,
+          userId: req.session.userId
+        });
+      } else {
+        res.status(500).json({
+          error: err
+        });
+      }
+    });
+});
+
+
+
 module.exports = router;
