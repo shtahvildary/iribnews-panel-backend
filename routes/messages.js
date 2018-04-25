@@ -959,20 +959,28 @@ router.post("/select/all/wordcloud", auth, function (req, res, next) {
       if (!err) {
         var list=[]
         var keys=[]
+        var counts=[];
         var index;
-        console.log(result)
+        var i;
+        console.log('result: ',result)
         result.map(key=>{
-          console.log(key)
+          
           key.keywords.map(k=>{
+            console.log('key: ',k)
+            // index=list.indexOf([k.word])
             index=list.map(e=>{
-              console.log(e)
-              return e}).indexOf(k.word)
+              return e
+              i=k.indexOf(e)
+              
+            }).indexOf(k.word)
+            if(index!=-1) list
+              
             // index=list.indexOf(k.word)
             if(index==-1)
           list.push([k.word,k.count])
           else list[index][1]++;
         })
-        console.log(list)
+        console.log("list: ",list)
       })
         
         

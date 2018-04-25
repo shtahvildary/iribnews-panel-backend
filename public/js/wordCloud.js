@@ -178,6 +178,8 @@ if (!window.clearImmediate) {
     });
 
     /* Default values to be overwritten by options object */
+    post('/messages/select/all/wordcloud', {}, function (response) {
+    
     var settings = {
     
     
@@ -186,7 +188,8 @@ if (!window.clearImmediate) {
     
     
       // list: [],
-      list:[['foo', 12], ['bar', 6]],
+      // list:[['foo', 12], ['bar', 6]],
+      list:response.list,
 
 
 
@@ -230,6 +233,8 @@ if (!window.clearImmediate) {
       hover: null,
       click: null
     };
+    console.log(settings.list)
+  
 
     if (options) {
       for (var key in options) {
@@ -1209,7 +1214,9 @@ if (!window.clearImmediate) {
 
     // All set, start the drawing
     start();
+  })
   };
+  
 
   WordCloud.isSupported = isSupported;
   WordCloud.minFontSize = minFontSize;
