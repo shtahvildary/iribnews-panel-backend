@@ -958,30 +958,28 @@ router.post("/select/all/wordcloud", auth, function (req, res, next) {
       //pagination should be handled
       if (!err) {
         var list=[]
-        var keys=[]
-        var counts=[];
-        var index;
-        var i;
-        console.log('result: ',result)
-        result.map(key=>{
+        var foundKeywords={};
+        var maxWeight=0
+        
+        result.map(msg=>{
+          msg.keywords.map(k=>{
+            if(foundKeywords[k.word]) foundKeywords[k.word]+=k.count;
           
-          key.keywords.map(k=>{
-            console.log('key: ',k)
-            // index=list.indexOf([k.word])
-            index=list.map(e=>{
-              return e
-              i=k.indexOf(e)
-              
-            }).indexOf(k.word)
-            if(index!=-1) list
-              
-            // index=list.indexOf(k.word)
-            if(index==-1)
-          list.push([k.word,k.count])
-          else list[index][1]++;
+            // if(foundKeywords[k.word])return foundKeywords[k.word]+=k.count;
+            else foundKeywords[k.word]=k.count;
+            if (foundKeywords[k.word]>maxWeight) maxWeight=foundKeywords[k.word]
+            
+            
+            
         })
-        console.log("list: ",list)
+        console.log(maxWeight)
+      });
+      _.mapKeys(foundKeywords,(v,k)=>{
+        list.push([k,Math.round(v*100/maxWeight)]);
+        // list.push([k,v]);
+        // list.push([k,v*100/total]);
       })
+      // _.orderBy(list,[],['asc'])
         
         
         res.status(200).json({
