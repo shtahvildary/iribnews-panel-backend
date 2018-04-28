@@ -1,3 +1,4 @@
+// var wordcloud=require("wordcloud")
 var express = require("express");
 var router = express.Router();
 var message_sc = require("../Schema/messages");
@@ -980,6 +981,8 @@ router.post("/select/all/wordcloud", auth, function (req, res, next) {
         // list.push([k,v*100/total]);
       })
       // _.orderBy(list,[],['asc'])
+
+      // wordcloud(req.element,list)
         
         
         res.status(200).json({

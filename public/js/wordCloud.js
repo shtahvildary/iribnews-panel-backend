@@ -139,6 +139,7 @@ if (!window.clearImmediate) {
 
     // start from 20
     var size = 20;
+    // var size = 1;
 
     // two sizes to measure
     var hanWidth, mWidth;
@@ -173,7 +174,10 @@ if (!window.clearImmediate) {
     ) {}
     return arr;
   };
-  var WordCloud = function WordCloud(elements, options) {
+  // var WordCloud = function WordCloud(elements, options) {
+    var WordCloud = function WordCloud(data, options) {
+      var elements=data.elements
+      var list=data.list
     if (!isSupported) {
       return;
     }
@@ -195,101 +199,9 @@ if (!window.clearImmediate) {
     });
 
     /* Default values to be overwritten by options object */
-    post("/messages/select/all/wordcloud", {}, function(response) {
-      // var l = [
-      //   ["4", 7],
-      //   ["hi", 50],
-      //   ["again", 21],
-      //   ["Hello", 7],
-      //   ["مریض", 14],
-      //   ["حالی", 14],
-      //   ["تست", 29],
-      //   ["ویدیو", 14],
-      //   ["دوباره", 21],
-      //   ["algo", 7],
-      //   ["ramznegariig", 7],
-      //   ["pdf", 7],
-      //   ["dear", 7],
-      //   ["پیام", 50],
-      //   ["۲", 7],
-      //   ["۳", 7],
-      //   ["۴", 7],
-      //   ["۵", 7],
-      //   ["۶", 7],
-      //   ["۷", 7],
-      //   ["payam", 7],
-      //   ["سلام", 100],
-      //   ["شما", 21],
-      //   ["i'm", 7],
-      //   ["testing", 7],
-      //   ["are", 7],
-      //   ["you", 7],
-      //   ["ok", 14],
-      //   ["new", 7],
-      //   ["day", 7],
-      //   ["سلامتی", 7],
-      //   ["ثبت", 7],
-      //   ["نمیشه؟", 7],
-      //   ["درست", 7],
-      //   ["نگران", 7],
-      //   ["نباش", 7],
-      //   ["0723f4d932a24a73928ff6a950c36d98", 21],
-      //   ["mp4", 21],
-      //   ["👌", 14],
-      //   ["https", 7],
-      //   ["/t", 7],
-      //   ["me/addstickers/html", 7],
-      //   ["class", 7],
-      //   ["HTML", 7],
-      //   ["Class", 7],
-      //   ["shmt", 29],
-      //   ["merci", 7],
-      //   ["salam", 36],
-      //   ["hello", 7],
-      //   ["irinn", 36],
-      //   ["برنامه", 14],
-      //   ["نبض", 7],
-      //   ["دانشجو", 7],
-      //   ["بسیار", 7],
-      //   ["مفید", 7],
-      //   ["ممنون", 14],
-      //   ["context", 14],
-      //   ["test", 36],
-      //   ["این", 7],
-      //   ["Payamam", 7],
-      //   ["Kfkrkdkdkd", 7],
-      //   ["Djdjdjd", 7],
-      //   ["Bkjbjhvjhgjgv", 7],
-      //   ["just", 7],
-      //   ["for", 7],
-      //   ["chiz", 7],
-      //   ["بیکلام", 14],
-      //   ["❄️ننه", 7],
-      //   ["سرما", 7],
-      //   ["برگشت", 7],
-      //   ["channel", 14],
-      //   ["📸خروج", 7],
-      //   ["جهانگیری", 7],
-      //   ["تلگرام", 7],
-      //   ["\n🔹اسحاق", 7],
-      //   ["جهانگیری،", 7],
-      //   ["معاون", 7],
-      //   ["رئیس", 7],
-      //   ["جمهور", 7],
-      //   ["فعالیت", 7],
-      //   ["کانال", 7],
-      //   ["تلگرامی", 7],
-      //   ["را", 7],
-      //   ["متوقف", 7],
-      //   ["کرد", 7],
-      //   ["\n", 7]
-      // ];
+    
       var settings = {
-        // list: [],
-        // list:[['foo', 4], ['bar', 6]],
-        // list: l,
-        list:response.list,
-
+        list,
         fontFamily:
           '"Trebuchet MS", "Heiti TC", "微軟正黑體", ' +
           '"Arial Unicode MS", "Droid Fallback Sans", sans-serif',
@@ -300,7 +212,8 @@ if (!window.clearImmediate) {
         clearCanvas: true,
         backgroundColor: "#fff", // opaque white = rgba(255, 255, 255, 1)
 
-        gridSize: 8,
+        // gridSize: 8,
+        gridSize: 0,
         drawOutOfBound: false,
         origin: null,
 
@@ -341,7 +254,7 @@ if (!window.clearImmediate) {
       /* Convert weightFactor into a function */
       if (typeof settings.weightFactor !== "function") {
         var factor = settings.weightFactor;
-        console.log("weightFactor: ", settings.weightFactor);
+        // console.log("weightFactor: ", settings.weightFactor);
 
         settings.weightFactor = function weightFactor(pt) {
           return pt * factor; //in px
@@ -1141,7 +1054,7 @@ if (!window.clearImmediate) {
           // If we cannot fit the text at this position, return false
           // and go to the next position.
           if (!canFitText(gx, gy, gw, gh, info.occupied)) {
-            console.log("canFitText: ", false);
+            // console.log("canFitText: ", false);
             // console.log("item: ", item)
 
             return false;
@@ -1409,7 +1322,7 @@ if (!window.clearImmediate) {
 
       // All set, start the drawing
       start();
-    });
+    // });
   };
 
   WordCloud.isSupported = isSupported;
